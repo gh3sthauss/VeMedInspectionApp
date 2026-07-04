@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "84892380374",
+    "project_id": "ve-med-on7ngs",
+    "storage_bucket": "ve-med-on7ngs.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:84892380374:android:ff31cbb58ea718f501ed77",
+        "android_client_info": {
+          "package_name": "com.mycompany.vemed"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgt1yBIuWf_RvRH1FqGAhrzU5jRSPvzao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

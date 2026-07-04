@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyBem-FPupdanBBB8Lxx7-2UhPzaTC9nSQw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>84892380374</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mycompany.vemed</string>
+	<key>PROJECT_ID</key>
+	<string>ve-med-on7ngs</string>
+	<key>STORAGE_BUCKET</key>
+	<string>ve-med-on7ngs.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:84892380374:ios:10f291e19e9fdc8301ed77</string>
+</dict>
+</plist>
