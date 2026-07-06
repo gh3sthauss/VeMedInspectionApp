@@ -21,7 +21,10 @@ platform :ios do
       scheme: "Runner",
       export_method: "app-store",
       skip_build_archive: false,
-      api_key: api_key
+      xcargs: "-allowProvisioningUpdates " \
+              "-authenticationKeyPath #{File.expand_path(ENV['APP_STORE_CONNECT_KEY_PATH'])} " \
+              "-authenticationKeyID #{ENV['APP_STORE_CONNECT_KEY_ID']} " \
+              "-authenticationKeyIssuerID #{ENV['APP_STORE_CONNECT_ISSUER_ID']}"
     )
 
     upload_to_testflight(
