@@ -1,95 +1,59 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /Users/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if true;
-      allow delete: if true;
+    // Users can only read/write their own profile (doc id == auth uid).
+    match /Users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 
+    // Inspection data is shared across the whole team - any signed-in user
+    // may read/write/delete, but the general public may not.
     match /CT/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if true;
-      allow delete: if true;
+      allow read, write: if request.auth != null;
     }
 
     match /MRI/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if true;
-      allow delete: if true;
+      allow read, write: if request.auth != null;
     }
 
     match /Ultrasound/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if true;
-      allow delete: if true;
+      allow read, write: if request.auth != null;
     }
 
     match /CArm/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if true;
-      allow delete: if true;
+      allow read, write: if request.auth != null;
     }
 
     match /Fluoroscopy/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if true;
-      allow delete: if true;
+      allow read, write: if request.auth != null;
     }
 
     match /Mammography/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if true;
-      allow delete: if true;
+      allow read, write: if request.auth != null;
     }
 
     match /XRay/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if true;
-      allow delete: if true;
+      allow read, write: if request.auth != null;
     }
 
     match /PACS/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if true;
-      allow delete: if true;
+      allow read, write: if request.auth != null;
     }
 
     match /DR/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if true;
-      allow delete: if true;
+      allow read, write: if request.auth != null;
     }
 
     match /CR/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if true;
-      allow delete: if true;
+      allow read, write: if request.auth != null;
     }
 
     match /Test/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if true;
-      allow delete: if true;
+      allow read, write: if request.auth != null;
     }
 
     match /Angiography/{document} {
-      allow create: if true;
-      allow read: if true;
-      allow write: if true;
-      allow delete: if true;
+      allow read, write: if request.auth != null;
     }
   }
 }
