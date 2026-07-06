@@ -20,7 +20,8 @@ platform :ios do
       workspace: "Runner.xcworkspace",
       scheme: "Runner",
       export_method: "app-store",
-      skip_build_archive: false
+      skip_build_archive: false,
+      api_key: api_key
     )
 
     upload_to_testflight(
