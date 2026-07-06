@@ -23,7 +23,13 @@ jobs:
         run: flutter pub get
 
       - name: Install CocoaPods
-        run: cd ios && pod install
+        run: |
+          cd ios
+          for i in 1 2 3; do
+            pod install && break
+            echo "pod install failed (attempt $i), retrying in 30s..."
+            sleep 30
+          done
 
       - name: Build Flutter iOS frameworks
         run: flutter build ios --release --no-codesign
