@@ -18,9 +18,13 @@ platform :ios do
     # App Store profiles don't require registered devices, unlike the
     # development profiles Xcode's automatic signing insists on at
     # archive time.
+    # setup_ci's temp keychain must be passed explicitly - cert defaults
+    # to the login keychain, whose password is unknown on CI runners.
     get_certificates(
       development: false,
-      api_key: api_key
+      api_key: api_key,
+      keychain_path: File.expand_path("~/Library/Keychains/fastlane_tmp_keychain-db"),
+      keychain_password: ""
     )
 
     get_provisioning_profile(
