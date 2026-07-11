@@ -14,15 +14,14 @@ platform :ios do
       in_house: false
     )
 
-    # Apple Distribution certificate + App Store provisioning profile.
-    # App Store profiles don't require registered devices, unlike the
-    # development profiles Xcode's automatic signing insists on at
-    # archive time.
-    # setup_ci's temp keychain must be passed explicitly - cert defaults
-    # to the login keychain, whose password is unknown on CI runners.
-    get_certificates(
-      development: false,
-      api_key: api_key,
+    # Import a persistent Apple Distribution certificate instead of
+    # calling get_certificates, which mints a brand new certificate every
+    # run - each one an orphan the moment the ephemeral runner is torn
+    # down, quickly hitting Apple's 2-certificate account cap. This one
+    # cert is reused across all runs.
+    import_certificate(
+      certificate_path: ENV["IOS_CERT_P12_PATH"],
+      certificate_password: ENV["IOS_CERT_P12_PASSWORD"],
       keychain_path: File.expand_path("~/Library/Keychains/fastlane_tmp_keychain-db"),
       keychain_password: ""
     )
