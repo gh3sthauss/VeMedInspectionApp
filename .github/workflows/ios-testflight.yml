@@ -32,7 +32,10 @@ jobs:
           done
 
       - name: Build Flutter iOS frameworks
-        run: flutter build ios --release --no-codesign
+        # Build number must always exceed the highest one on App Store
+        # Connect (FlutterFlow's old deploys reached 6). run_number is
+        # monotonic per workflow; the offset keeps us clear of history.
+        run: flutter build ios --release --no-codesign --build-number=$((100 + ${{ github.run_number }}))
 
       - name: Write App Store Connect API key
         env:
