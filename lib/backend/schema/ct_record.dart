@@ -256,6 +256,11 @@ class CtRecord extends FirestoreRecord {
   List<String> get cosmeticPicURL => _cosmeticPicURL ?? const [];
   bool hasCosmeticPicURL() => _cosmeticPicURL != null;
 
+  // "DeviceImg" field.
+  List<String>? _deviceImg;
+  List<String> get deviceImg => _deviceImg ?? const [];
+  bool hasDeviceImg() => _deviceImg != null;
+
   void _initializeFields() {
     _sysGenBrand = snapshotData['SysGenBrand'] as String?;
     _sysGenModal = snapshotData['SysGenModal'] as String?;
@@ -305,6 +310,7 @@ class CtRecord extends FirestoreRecord {
     _cnWWorkstationOptPURL = getDataList(snapshotData['CnWWorkstationOptPURL']);
     _cnWCMOptPURL = getDataList(snapshotData['CnWCMOptPURL']);
     _cosmeticPicURL = getDataList(snapshotData['CosmeticPicURL']);
+    _deviceImg = getDataList(snapshotData['DeviceImg']);
   }
 
   static CollectionReference get collection =>
@@ -492,7 +498,8 @@ class CtRecordDocumentEquality implements Equality<CtRecord> {
         listEquality.equals(
             e1?.cnWWorkstationOptPURL, e2?.cnWWorkstationOptPURL) &&
         listEquality.equals(e1?.cnWCMOptPURL, e2?.cnWCMOptPURL) &&
-        listEquality.equals(e1?.cosmeticPicURL, e2?.cosmeticPicURL);
+        listEquality.equals(e1?.cosmeticPicURL, e2?.cosmeticPicURL) &&
+        listEquality.equals(e1?.deviceImg, e2?.deviceImg);
   }
 
   @override
@@ -544,7 +551,8 @@ class CtRecordDocumentEquality implements Equality<CtRecord> {
         e?.otherNotesPhotosURL,
         e?.cnWWorkstationOptPURL,
         e?.cnWCMOptPURL,
-        e?.cosmeticPicURL
+        e?.cosmeticPicURL,
+        e?.deviceImg
       ]);
 
   @override

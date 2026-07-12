@@ -1,5 +1,10 @@
+// MANUALLY MIGRATED for offline photo upload (outbox pattern) — see
+// lib/components/photo_upload_outbox/. If this page is re-synced from
+// FlutterFlow, this migration must be reapplied.
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
+import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -28,6 +33,7 @@ class XRSystemGeneralWidget extends StatefulWidget {
 
 class _XRSystemGeneralWidgetState extends State<XRSystemGeneralWidget> {
   late XRSystemGeneralModel _model;
+  late PhotoUploadOutboxModel _photoModel;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -35,6 +41,7 @@ class _XRSystemGeneralWidgetState extends State<XRSystemGeneralWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => XRSystemGeneralModel());
+    _photoModel = createModel(context, () => PhotoUploadOutboxModel());
 
     _model.textFocusNode1 ??= FocusNode();
 
@@ -50,6 +57,7 @@ class _XRSystemGeneralWidgetState extends State<XRSystemGeneralWidget> {
   @override
   void dispose() {
     _model.dispose();
+    _photoModel.dispose();
 
     super.dispose();
   }
@@ -620,6 +628,51 @@ class _XRSystemGeneralWidgetState extends State<XRSystemGeneralWidget> {
                             ),
                           ),
                         ),
+                        Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Align(
+                              alignment: AlignmentDirectional(-1.0, 0.0),
+                              child: Text(
+                                'Pictures',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.readexPro(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                      fontSize: 16.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                              ),
+                            ),
+                            wrapWithModel(
+                              model: _photoModel,
+                              updateCallback: () => safeSetState(() {}),
+                              child: PhotoUploadOutboxWidget(
+                                collectionPath: 'XRay',
+                                docId: widget.docDataSysGen!.id,
+                                arrayFieldName: 'DeviceImg',
+                                storagePathPrefix:
+                                    'users/$currentUserUid/xray/systemGeneral',
+                                existingPhotoUrls: xRSystemGeneralXRayRecord
+                                    .deviceImg
+                                    .toList(),
+                              ),
+                            ),
+                          ],
+                        ),
                       ]
                           .divide(SizedBox(height: 16.0))
                           .addToStart(SizedBox(height: 10.0)),
@@ -629,6 +682,10 @@ class _XRSystemGeneralWidgetState extends State<XRSystemGeneralWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
+                        // Photo upload is handled independently by
+                        // PhotoUploadOutboxWidget (queues locally, uploads in
+                        // the background) - the text save below no longer
+                        // waits on it or branches on its outcome.
                         await widget.docDataSysGen!
                             .update(createXRayRecordData(
                           sysGenBrand: _model.textTextController2.text,

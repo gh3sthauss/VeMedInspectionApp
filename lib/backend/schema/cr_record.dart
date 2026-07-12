@@ -166,6 +166,11 @@ class CrRecord extends FirestoreRecord {
   List<String> get cosmeticPicURL => _cosmeticPicURL ?? const [];
   bool hasCosmeticPicURL() => _cosmeticPicURL != null;
 
+  // "DeviceImg" field.
+  List<String>? _deviceImg;
+  List<String> get deviceImg => _deviceImg ?? const [];
+  bool hasDeviceImg() => _deviceImg != null;
+
   // "DetectorModel" field.
   String? _detectorModel;
   String get detectorModel => _detectorModel ?? '';
@@ -365,6 +370,7 @@ class CrRecord extends FirestoreRecord {
     _cR6Condition = snapshotData['CR6Condition'] as String?;
     _cR7Condition = snapshotData['CR7Condition'] as String?;
     _cR8Condition = snapshotData['CR8Condition'] as String?;
+    _deviceImg = getDataList(snapshotData['DeviceImg']);
   }
 
   static CollectionReference get collection =>
@@ -582,7 +588,8 @@ class CrRecordDocumentEquality implements Equality<CrRecord> {
         e1?.cR5Condition == e2?.cR5Condition &&
         e1?.cR6Condition == e2?.cR6Condition &&
         e1?.cR7Condition == e2?.cR7Condition &&
-        e1?.cR8Condition == e2?.cR8Condition;
+        e1?.cR8Condition == e2?.cR8Condition &&
+        listEquality.equals(e1?.deviceImg, e2?.deviceImg);
   }
 
   @override
@@ -644,7 +651,8 @@ class CrRecordDocumentEquality implements Equality<CrRecord> {
         e?.cR5Condition,
         e?.cR6Condition,
         e?.cR7Condition,
-        e?.cR8Condition
+        e?.cR8Condition,
+        e?.deviceImg
       ]);
 
   @override

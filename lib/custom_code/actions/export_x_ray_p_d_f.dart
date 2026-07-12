@@ -53,16 +53,19 @@ Future<void> exportXRayPDF(XRayRecord docRef) async {
     _loadImages(docRef.otherNotesPhotosURL),
     _loadImages(docRef.cnWWorkstationOptPURL),
     _loadImages(docRef.cnWCMOptPURL),
+    _loadImages(docRef.deviceImg),
   ]);
   final cosmeticGallery = results[0];
   final otherNotesGallery = results[1];
   final workstationOptGallery = results[2];
   final consoleOptGallery = results[3];
+  final deviceImg = results[4];
 
-  // XRayRecord has no dedicated hero/device image field, so the cover
-  // photo falls back to the first cosmetic photo when available.
-  final pw.ImageProvider? heroImage =
-      cosmeticGallery.isNotEmpty ? cosmeticGallery.first : null;
+  // Hero image comes from the dedicated deviceImg field; falls back to the
+  // first cosmetic photo if deviceImg wasn't populated for this record.
+  final pw.ImageProvider? heroImage = deviceImg.isNotEmpty
+      ? deviceImg.first
+      : (cosmeticGallery.isNotEmpty ? cosmeticGallery.first : null);
 
   // -------------------------------------------------------------------------
   // 2. BUILD DOCUMENT

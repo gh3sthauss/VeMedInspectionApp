@@ -176,6 +176,11 @@ class CArmRecord extends FirestoreRecord {
   List<String> get cosmeticPicURL => _cosmeticPicURL ?? const [];
   bool hasCosmeticPicURL() => _cosmeticPicURL != null;
 
+  // "DeviceImg" field.
+  List<String>? _deviceImg;
+  List<String> get deviceImg => _deviceImg ?? const [];
+  bool hasDeviceImg() => _deviceImg != null;
+
   void _initializeFields() {
     _sysGenBrand = snapshotData['SysGenBrand'] as String?;
     _sysGenModal = snapshotData['SysGenModal'] as String?;
@@ -209,6 +214,7 @@ class CArmRecord extends FirestoreRecord {
     _accPhantomModelNo = snapshotData['AccPhantomModelNo'] as String?;
     _accPhantomSN = snapshotData['AccPhantomSN'] as String?;
     _cosmeticPicURL = getDataList(snapshotData['CosmeticPicURL']);
+    _deviceImg = getDataList(snapshotData['DeviceImg']);
   }
 
   static CollectionReference get collection =>
@@ -349,7 +355,8 @@ class CArmRecordDocumentEquality implements Equality<CArmRecord> {
         e1?.accPhantomModel == e2?.accPhantomModel &&
         e1?.accPhantomModelNo == e2?.accPhantomModelNo &&
         e1?.accPhantomSN == e2?.accPhantomSN &&
-        listEquality.equals(e1?.cosmeticPicURL, e2?.cosmeticPicURL);
+        listEquality.equals(e1?.cosmeticPicURL, e2?.cosmeticPicURL) &&
+        listEquality.equals(e1?.deviceImg, e2?.deviceImg);
   }
 
   @override
@@ -385,7 +392,8 @@ class CArmRecordDocumentEquality implements Equality<CArmRecord> {
         e?.accPhantomModel,
         e?.accPhantomModelNo,
         e?.accPhantomSN,
-        e?.cosmeticPicURL
+        e?.cosmeticPicURL,
+        e?.deviceImg
       ]);
 
   @override

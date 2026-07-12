@@ -1,5 +1,10 @@
+// MANUALLY MIGRATED for offline photo upload (outbox pattern) — see
+// lib/components/photo_upload_outbox/. If this page is re-synced from
+// FlutterFlow, this migration must be reapplied.
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
+import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -28,6 +33,7 @@ class MMSystemGeneralWidget extends StatefulWidget {
 
 class _MMSystemGeneralWidgetState extends State<MMSystemGeneralWidget> {
   late MMSystemGeneralModel _model;
+  late PhotoUploadOutboxModel _photoModel;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -35,6 +41,7 @@ class _MMSystemGeneralWidgetState extends State<MMSystemGeneralWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => MMSystemGeneralModel());
+    _photoModel = createModel(context, () => PhotoUploadOutboxModel());
 
     _model.textFocusNode1 ??= FocusNode();
 
@@ -50,6 +57,7 @@ class _MMSystemGeneralWidgetState extends State<MMSystemGeneralWidget> {
   @override
   void dispose() {
     _model.dispose();
+    _photoModel.dispose();
 
     super.dispose();
   }
@@ -621,6 +629,51 @@ class _MMSystemGeneralWidgetState extends State<MMSystemGeneralWidget> {
                             ),
                           ),
                         ),
+                        Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Align(
+                              alignment: AlignmentDirectional(-1.0, 0.0),
+                              child: Text(
+                                'Pictures',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.readexPro(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                      fontSize: 16.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                              ),
+                            ),
+                            wrapWithModel(
+                              model: _photoModel,
+                              updateCallback: () => safeSetState(() {}),
+                              child: PhotoUploadOutboxWidget(
+                                collectionPath: 'Mammography',
+                                docId: widget.docDataSysGen!.id,
+                                arrayFieldName: 'DeviceImg',
+                                storagePathPrefix:
+                                    'users/$currentUserUid/mammography/systemGeneral',
+                                existingPhotoUrls: mMSystemGeneralMammographyRecord
+                                    .deviceImg
+                                    .toList(),
+                              ),
+                            ),
+                          ],
+                        ),
                       ]
                           .divide(SizedBox(height: 16.0))
                           .addToStart(SizedBox(height: 10.0)),
@@ -630,6 +683,10 @@ class _MMSystemGeneralWidgetState extends State<MMSystemGeneralWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
+                        // Photo upload is handled independently by
+                        // PhotoUploadOutboxWidget (queues locally, uploads in
+                        // the background) - the text save below no longer
+                        // waits on it or branches on its outcome.
                         await widget.docDataSysGen!
                             .update(createMammographyRecordData(
                           sysGenBrand: _model.textTextController2.text,

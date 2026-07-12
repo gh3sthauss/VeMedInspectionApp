@@ -166,6 +166,11 @@ class FluoroscopyRecord extends FirestoreRecord {
   List<String> get cosmeticPicURL => _cosmeticPicURL ?? const [];
   bool hasCosmeticPicURL() => _cosmeticPicURL != null;
 
+  // "DeviceImg" field.
+  List<String>? _deviceImg;
+  List<String> get deviceImg => _deviceImg ?? const [];
+  bool hasDeviceImg() => _deviceImg != null;
+
   // "DetectorModel" field.
   String? _detectorModel;
   String get detectorModel => _detectorModel ?? '';
@@ -245,6 +250,7 @@ class FluoroscopyRecord extends FirestoreRecord {
     _tube1YOM = snapshotData['Tube1YOM'] as String?;
     _tableModel = snapshotData['TableModel'] as String?;
     _tableYOM = snapshotData['TableYOM'] as String?;
+    _deviceImg = getDataList(snapshotData['DeviceImg']);
   }
 
   static CollectionReference get collection =>
@@ -403,7 +409,8 @@ class FluoroscopyRecordDocumentEquality implements Equality<FluoroscopyRecord> {
         e1?.tube1Model == e2?.tube1Model &&
         e1?.tube1YOM == e2?.tube1YOM &&
         e1?.tableModel == e2?.tableModel &&
-        e1?.tableYOM == e2?.tableYOM;
+        e1?.tableYOM == e2?.tableYOM &&
+        listEquality.equals(e1?.deviceImg, e2?.deviceImg);
   }
 
   @override
@@ -445,7 +452,8 @@ class FluoroscopyRecordDocumentEquality implements Equality<FluoroscopyRecord> {
         e?.tube1Model,
         e?.tube1YOM,
         e?.tableModel,
-        e?.tableYOM
+        e?.tableYOM,
+        e?.deviceImg
       ]);
 
   @override

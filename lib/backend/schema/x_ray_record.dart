@@ -166,6 +166,11 @@ class XRayRecord extends FirestoreRecord {
   List<String> get cosmeticPicURL => _cosmeticPicURL ?? const [];
   bool hasCosmeticPicURL() => _cosmeticPicURL != null;
 
+  // "DeviceImg" field.
+  List<String>? _deviceImg;
+  List<String> get deviceImg => _deviceImg ?? const [];
+  bool hasDeviceImg() => _deviceImg != null;
+
   // "DetectorModel" field.
   String? _detectorModel;
   String get detectorModel => _detectorModel ?? '';
@@ -257,6 +262,7 @@ class XRayRecord extends FirestoreRecord {
     _tube2YOM = snapshotData['Tube2YOM'] as String?;
     _tableModel = snapshotData['TableModel'] as String?;
     _tableYOM = snapshotData['TableYOM'] as String?;
+    _deviceImg = getDataList(snapshotData['DeviceImg']);
   }
 
   static CollectionReference get collection =>
@@ -420,7 +426,8 @@ class XRayRecordDocumentEquality implements Equality<XRayRecord> {
         e1?.tube1YOM == e2?.tube1YOM &&
         e1?.tube2YOM == e2?.tube2YOM &&
         e1?.tableModel == e2?.tableModel &&
-        e1?.tableYOM == e2?.tableYOM;
+        e1?.tableYOM == e2?.tableYOM &&
+        listEquality.equals(e1?.deviceImg, e2?.deviceImg);
   }
 
   @override
@@ -464,7 +471,8 @@ class XRayRecordDocumentEquality implements Equality<XRayRecord> {
         e?.tube1YOM,
         e?.tube2YOM,
         e?.tableModel,
-        e?.tableYOM
+        e?.tableYOM,
+        e?.deviceImg
       ]);
 
   @override

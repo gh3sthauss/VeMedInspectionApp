@@ -587,6 +587,11 @@ class MriRecord extends FirestoreRecord {
   List<String> get otherNotesPhotosURL => _otherNotesPhotosURL ?? const [];
   bool hasOtherNotesPhotosURL() => _otherNotesPhotosURL != null;
 
+  // "DeviceImg" field.
+  List<String>? _deviceImg;
+  List<String> get deviceImg => _deviceImg ?? const [];
+  bool hasDeviceImg() => _deviceImg != null;
+
   void _initializeFields() {
     _sysGenModal = snapshotData['SysGenModal'] as String?;
     _sysGenBrand = snapshotData['SysGenBrand'] as String?;
@@ -703,6 +708,7 @@ class MriRecord extends FirestoreRecord {
     _cosmeticText = snapshotData['CosmeticText'] as String?;
     _cosmeticPicURL = getDataList(snapshotData['CosmeticPicURL']);
     _otherNotesPhotosURL = getDataList(snapshotData['OtherNotesPhotosURL']);
+    _deviceImg = getDataList(snapshotData['DeviceImg']);
   }
 
   static CollectionReference get collection =>
@@ -1088,7 +1094,8 @@ class MriRecordDocumentEquality implements Equality<MriRecord> {
         e1?.coldHeadLastR == e2?.coldHeadLastR &&
         e1?.cosmeticText == e2?.cosmeticText &&
         listEquality.equals(e1?.cosmeticPicURL, e2?.cosmeticPicURL) &&
-        listEquality.equals(e1?.otherNotesPhotosURL, e2?.otherNotesPhotosURL);
+        listEquality.equals(e1?.otherNotesPhotosURL, e2?.otherNotesPhotosURL) &&
+        listEquality.equals(e1?.deviceImg, e2?.deviceImg);
   }
 
   @override
@@ -1206,7 +1213,8 @@ class MriRecordDocumentEquality implements Equality<MriRecord> {
         e?.coldHeadLastR,
         e?.cosmeticText,
         e?.cosmeticPicURL,
-        e?.otherNotesPhotosURL
+        e?.otherNotesPhotosURL,
+        e?.deviceImg
       ]);
 
   @override
