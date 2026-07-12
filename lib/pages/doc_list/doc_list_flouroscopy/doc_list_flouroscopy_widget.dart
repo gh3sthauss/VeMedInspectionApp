@@ -1,8 +1,12 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/components/doc_actions_sheet.dart';
+import '/components/doc_naming.dart';
 import '/components/logo_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/custom_code/actions/index.dart' as actions;
+import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'doc_list_flouroscopy_model.dart';
@@ -106,88 +110,96 @@ class _DocListFlouroscopyWidgetState extends State<DocListFlouroscopyWidget> {
                               height: 50.0,
                               decoration: BoxDecoration(
                                 color: Color(0xFFF0F7FF),
-                                borderRadius: BorderRadius.circular(24.0),
+                                borderRadius: BorderRadius.circular(16.0),
                               ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Align(
-                                    alignment: AlignmentDirectional(-1.0, 0.0),
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          20.0, 0.0, 0.0, 0.0),
-                                      child: Text(
-                                        valueOrDefault<String>(
-                                          listViewFluoroscopyRecord
-                                              .sysGenDocName,
-                                          'Unnamed Dcoument',
+                              child: InkWell(
+                                splashColor: Colors.transparent,
+                                focusColor: Colors.transparent,
+                                hoverColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                borderRadius: BorderRadius.circular(16.0),
+                                onTap: () async {
+                                  context.pushNamed(
+                                    FlouroscopyWidget.routeName,
+                                    queryParameters: {
+                                      'docRefFL': serializeParam(
+                                        listViewFluoroscopyRecord.reference,
+                                        ParamType.DocumentReference,
+                                      ),
+                                    }.withoutNulls,
+                                  );
+                                },
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Align(
+                                      alignment:
+                                          AlignmentDirectional(-1.0, 0.0),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            20.0, 0.0, 0.0, 0.0),
+                                        child: Text(
+                                          smartDocName(
+                                            listViewFluoroscopyRecord
+                                                .sysGenDocName,
+                                            'Fluoroscopy',
+                                            listViewFluoroscopyRecord
+                                                .reference.id,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.readexPro(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.w600,
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                          ),
                                         ),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              font: GoogleFonts.readexPro(
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .fontStyle,
-                                              ),
-                                              fontSize: 16.0,
-                                              letterSpacing: 0.0,
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontWeight,
-                                              fontStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontStyle,
-                                            ),
                                       ),
                                     ),
-                                  ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      InkWell(
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 0.0, 12.0, 0.0),
+                                      child: InkWell(
                                         splashColor: Colors.transparent,
                                         focusColor: Colors.transparent,
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
-                                        onTap: () async {
-                                          await listViewFluoroscopyRecord
-                                              .reference
-                                              .delete();
+                                        onTap: () {
+                                          showDocActionsSheet(
+                                            context,
+                                            title: smartDocName(
+                                              listViewFluoroscopyRecord
+                                                  .sysGenDocName,
+                                              'Fluoroscopy',
+                                              listViewFluoroscopyRecord
+                                                  .reference.id,
+                                            ),
+                                            onDownload: () async {
+                                              await actions
+                                                  .exportFluoroscopyPDF(
+                                                listViewFluoroscopyRecord,
+                                              );
+                                            },
+                                            onDelete: () async {
+                                              await listViewFluoroscopyRecord
+                                                  .reference
+                                                  .delete();
+                                            },
+                                          );
                                         },
                                         child: Icon(
-                                          Icons.delete,
-                                          color: Color(0xFFE5121F),
+                                          Icons.more_vert_rounded,
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryText,
                                           size: 24.0,
                                         ),
                                       ),
-                                      Icon(
-                                        Icons.download_sharp,
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        size: 24.0,
-                                      ),
-                                      Icon(
-                                        Icons.ios_share,
-                                        color: Color(0xFF4B39EF),
-                                        size: 24.0,
-                                      ),
-                                    ]
-                                        .divide(SizedBox(width: 10.0))
-                                        .addToEnd(SizedBox(width: 10.0)),
-                                  ),
-                                ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ].divide(SizedBox(width: 10.0)),

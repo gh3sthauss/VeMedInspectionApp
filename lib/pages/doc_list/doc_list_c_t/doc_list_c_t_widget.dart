@@ -1,5 +1,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/components/doc_actions_sheet.dart';
+import '/components/doc_naming.dart';
 import '/components/logo_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -105,13 +107,14 @@ class _DocListCTWidgetState extends State<DocListCTWidget> {
                               height: 65.0,
                               decoration: BoxDecoration(
                                 color: Color(0xFFF0F7FF),
-                                borderRadius: BorderRadius.circular(24.0),
+                                borderRadius: BorderRadius.circular(16.0),
                               ),
                               child: InkWell(
                                 splashColor: Colors.transparent,
                                 focusColor: Colors.transparent,
                                 hoverColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
+                                borderRadius: BorderRadius.circular(16.0),
                                 onTap: () async {
                                   context.pushNamed(
                                     CtWidget.routeName,
@@ -135,95 +138,56 @@ class _DocListCTWidgetState extends State<DocListCTWidget> {
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             20.0, 0.0, 0.0, 0.0),
                                         child: Text(
-                                          valueOrDefault<String>(
+                                          smartDocName(
                                             listViewCtRecord.sysGenDocName,
-                                            'Unnamed Document',
+                                            'CT',
+                                            listViewCtRecord.reference.id,
                                           ),
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                font: GoogleFonts.readexPro(
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
-                                                fontSize: 16.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .fontWeight,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .fontStyle,
-                                              ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.readexPro(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.w600,
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          onTap: () async {
-                                            await listViewCtRecord.reference
-                                                .delete();
-                                          },
-                                          child: Icon(
-                                            Icons.delete,
-                                            color: Color(0xFFE5121F),
-                                            size: 30.0,
-                                          ),
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 0.0, 12.0, 0.0),
+                                      child: InkWell(
+                                        splashColor: Colors.transparent,
+                                        focusColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
+                                        onTap: () {
+                                          showDocActionsSheet(
+                                            context,
+                                            title: smartDocName(
+                                              listViewCtRecord.sysGenDocName,
+                                              'CT',
+                                              listViewCtRecord.reference.id,
+                                            ),
+                                            onDownload: () async {
+                                              await actions.exportCtPDF(
+                                                listViewCtRecord,
+                                              );
+                                            },
+                                            onDelete: () async {
+                                              await listViewCtRecord.reference
+                                                  .delete();
+                                            },
+                                          );
+                                        },
+                                        child: Icon(
+                                          Icons.more_vert_rounded,
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryText,
+                                          size: 24.0,
                                         ),
-                                        InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          onTap: () async {
-                                            await actions.exportPDF(
-                                              listViewCtRecord,
-                                            );
-                                          },
-                                          child: Icon(
-                                            Icons.download_sharp,
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            size: 30.0,
-                                          ),
-                                        ),
-                                        InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          onTap: () async {
-                                            await actions.sharePDFCT(
-                                              listViewCtRecord,
-                                            );
-                                          },
-                                          child: Icon(
-                                            Icons.ios_share,
-                                            color: Color(0xFF4B39EF),
-                                            size: 30.0,
-                                          ),
-                                        ),
-                                      ]
-                                          .divide(SizedBox(width: 16.0))
-                                          .addToEnd(SizedBox(width: 10.0)),
+                                      ),
                                     ),
                                   ],
                                 ),
