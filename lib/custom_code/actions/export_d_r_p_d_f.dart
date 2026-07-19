@@ -1,9 +1,5 @@
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
-import '/backend/sqlite/sqlite_manager.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
-import 'index.dart'; // Imports other custom actions
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -54,12 +50,20 @@ Future<void> exportDrPDF(DrRecord docRef) async {
     _loadImages(docRef.cnWWorkstationOptPURL),
     _loadImages(docRef.cnWCMOptPURL),
     _loadImages(docRef.deviceImg),
+    _loadImages(docRef.accessoriesPicURL),
+    _loadImages(docRef.cassettesPicURL),
+    _loadImages(docRef.detectorPicURL),
+    _loadImages(docRef.dnTPicURL),
   ]);
   final cosmeticGallery = results[0];
   final otherNotesGallery = results[1];
   final workstationOptGallery = results[2];
   final consoleOptGallery = results[3];
   final deviceImg = results[4];
+  final accessoriesGallery = results[5];
+  final cassettesGallery = results[6];
+  final detectorGallery = results[7];
+  final dnTGallery = results[8];
 
   // Hero image comes from the dedicated deviceImg field; falls back to the
   // first cosmetic photo if deviceImg wasn't populated for this record.
@@ -115,10 +119,18 @@ Future<void> exportDrPDF(DrRecord docRef) async {
           ['Year of Manufacture', docRef.detectorYOM],
           ['Condition', docRef.detectorCondition],
         ]),
+        if (detectorGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(detectorGallery),
+        ],
 
         // ========================== CASSETTES ================================
         _sectionHeader('Cassettes'),
         _cassettesTable(docRef),
+        if (cassettesGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(cassettesGallery),
+        ],
 
         // ========================= ACCESSORIES ================================
         _sectionHeader('Accessories'),
@@ -129,6 +141,10 @@ Future<void> exportDrPDF(DrRecord docRef) async {
           ['CDs', docRef.accessoriesCDs],
           ['Spare Parts', docRef.accessoriesSpareP],
         ]),
+        if (accessoriesGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(accessoriesGallery),
+        ],
 
         pw.NewPage(),
 
@@ -153,6 +169,10 @@ Future<void> exportDrPDF(DrRecord docRef) async {
           ['Tools Required', docRef.dnTTools],
           ['Special Attention', docRef.dnTSpecialAttention],
         ]),
+        if (dnTGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(dnTGallery),
+        ],
 
         // =========================== OTHER NOTES ================================
         _sectionHeader('Other Notes'),
@@ -176,10 +196,12 @@ Future<void> exportDrPDF(DrRecord docRef) async {
     final file = File('${tempDir.path}/$fileName');
     await file.writeAsBytes(pdfBytes);
 
-    await Share.shareXFiles(
-      [XFile(file.path, mimeType: 'application/pdf', name: fileName)],
-      subject: fileName,
-      sharePositionOrigin: const Rect.fromLTWH(0, 0, 100, 100),
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(file.path, mimeType: 'application/pdf', name: fileName)],
+        subject: fileName,
+        sharePositionOrigin: const Rect.fromLTWH(0, 0, 100, 100),
+      ),
     );
   } catch (e) {
     print('PDF export failed: $e');

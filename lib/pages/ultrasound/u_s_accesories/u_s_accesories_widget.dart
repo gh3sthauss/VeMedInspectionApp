@@ -1,5 +1,10 @@
+// MANUALLY MIGRATED for offline photo upload (outbox pattern) — see
+// lib/components/photo_upload_outbox/. If this page is re-synced from
+// FlutterFlow, this migration must be reapplied.
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
+import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -28,6 +33,7 @@ class USAccesoriesWidget extends StatefulWidget {
 
 class _USAccesoriesWidgetState extends State<USAccesoriesWidget> {
   late USAccesoriesModel _model;
+  late PhotoUploadOutboxModel _photoModel;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -35,6 +41,7 @@ class _USAccesoriesWidgetState extends State<USAccesoriesWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => USAccesoriesModel());
+    _photoModel = createModel(context, () => PhotoUploadOutboxModel());
 
     _model.textInputFocusNode1 ??= FocusNode();
 
@@ -44,6 +51,7 @@ class _USAccesoriesWidgetState extends State<USAccesoriesWidget> {
   @override
   void dispose() {
     _model.dispose();
+    _photoModel.dispose();
 
     super.dispose();
   }
@@ -398,6 +406,51 @@ class _USAccesoriesWidgetState extends State<USAccesoriesWidget> {
                         borderRadius: BorderRadius.circular(24.0),
                       ),
                     ),
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Align(
+                        alignment: AlignmentDirectional(-1.0, 0.0),
+                        child: Text(
+                          'Pictures',
+                          style: FlutterFlowTheme.of(context)
+                              .bodyMedium
+                              .override(
+                                font: GoogleFonts.readexPro(
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontStyle,
+                                ),
+                                fontSize: 16.0,
+                                letterSpacing: 0.0,
+                                fontWeight: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .fontWeight,
+                                fontStyle: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .fontStyle,
+                              ),
+                        ),
+                      ),
+                      wrapWithModel(
+                        model: _photoModel,
+                        updateCallback: () => safeSetState(() {}),
+                        child: PhotoUploadOutboxWidget(
+                          collectionPath: 'Ultrasound',
+                          docId: widget.docDataA!.id,
+                          arrayFieldName: 'AccessoriesPicURL',
+                          storagePathPrefix:
+                              'users/$currentUserUid/ultrasound/accessories',
+                          existingPhotoUrls: uSAccesoriesUltrasoundRecord
+                              .accessoriesPicURL
+                              .toList(),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

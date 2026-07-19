@@ -171,6 +171,31 @@ class FluoroscopyRecord extends FirestoreRecord {
   List<String> get deviceImg => _deviceImg ?? const [];
   bool hasDeviceImg() => _deviceImg != null;
 
+  // "AccessoriesPicURL" field.
+  List<String>? _accessoriesPicURL;
+  List<String> get accessoriesPicURL => _accessoriesPicURL ?? const [];
+  bool hasAccessoriesPicURL() => _accessoriesPicURL != null;
+
+  // "DetectorPicURL" field.
+  List<String>? _detectorPicURL;
+  List<String> get detectorPicURL => _detectorPicURL ?? const [];
+  bool hasDetectorPicURL() => _detectorPicURL != null;
+
+  // "DnTPicURL" field.
+  List<String>? _dnTPicURL;
+  List<String> get dnTPicURL => _dnTPicURL ?? const [];
+  bool hasDnTPicURL() => _dnTPicURL != null;
+
+  // "TablePicURL" field.
+  List<String>? _tablePicURL;
+  List<String> get tablePicURL => _tablePicURL ?? const [];
+  bool hasTablePicURL() => _tablePicURL != null;
+
+  // "TubePicURL" field.
+  List<String>? _tubePicURL;
+  List<String> get tubePicURL => _tubePicURL ?? const [];
+  bool hasTubePicURL() => _tubePicURL != null;
+
   // "DetectorModel" field.
   String? _detectorModel;
   String get detectorModel => _detectorModel ?? '';
@@ -251,6 +276,11 @@ class FluoroscopyRecord extends FirestoreRecord {
     _tableModel = snapshotData['TableModel'] as String?;
     _tableYOM = snapshotData['TableYOM'] as String?;
     _deviceImg = getDataList(snapshotData['DeviceImg']);
+    _accessoriesPicURL = getDataList(snapshotData['AccessoriesPicURL']);
+    _detectorPicURL = getDataList(snapshotData['DetectorPicURL']);
+    _dnTPicURL = getDataList(snapshotData['DnTPicURL']);
+    _tablePicURL = getDataList(snapshotData['TablePicURL']);
+    _tubePicURL = getDataList(snapshotData['TubePicURL']);
   }
 
   static CollectionReference get collection =>
@@ -410,7 +440,12 @@ class FluoroscopyRecordDocumentEquality implements Equality<FluoroscopyRecord> {
         e1?.tube1YOM == e2?.tube1YOM &&
         e1?.tableModel == e2?.tableModel &&
         e1?.tableYOM == e2?.tableYOM &&
-        listEquality.equals(e1?.deviceImg, e2?.deviceImg);
+        listEquality.equals(e1?.deviceImg, e2?.deviceImg) &&
+        listEquality.equals(e1?.accessoriesPicURL, e2?.accessoriesPicURL) &&
+        listEquality.equals(e1?.detectorPicURL, e2?.detectorPicURL) &&
+        listEquality.equals(e1?.dnTPicURL, e2?.dnTPicURL) &&
+        listEquality.equals(e1?.tablePicURL, e2?.tablePicURL) &&
+        listEquality.equals(e1?.tubePicURL, e2?.tubePicURL);
   }
 
   @override
@@ -453,7 +488,12 @@ class FluoroscopyRecordDocumentEquality implements Equality<FluoroscopyRecord> {
         e?.tube1YOM,
         e?.tableModel,
         e?.tableYOM,
-        e?.deviceImg
+        e?.deviceImg,
+        e?.accessoriesPicURL,
+        e?.detectorPicURL,
+        e?.dnTPicURL,
+        e?.tablePicURL,
+        e?.tubePicURL
       ]);
 
   @override

@@ -111,7 +111,7 @@ class _USProbesWidgetState extends State<USProbesWidget> {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  CompactAppBar(title: 'Gantry'),
+                  CompactAppBar(title: 'Probes'),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
@@ -421,7 +421,7 @@ class _USProbesWidgetState extends State<USProbesWidget> {
                                             TextCapitalization.words,
                                         obscureText: false,
                                         decoration: InputDecoration(
-                                          labelText: 'Scan Seconds',
+                                          labelText: 'Condition',
                                           labelStyle: FlutterFlowTheme.of(
                                                   context)
                                               .bodyMedium
@@ -833,7 +833,7 @@ class _USProbesWidgetState extends State<USProbesWidget> {
                                             TextCapitalization.words,
                                         obscureText: false,
                                         decoration: InputDecoration(
-                                          labelText: 'Scan Seconds',
+                                          labelText: 'Condition',
                                           labelStyle: FlutterFlowTheme.of(
                                                   context)
                                               .bodyMedium
@@ -1245,7 +1245,7 @@ class _USProbesWidgetState extends State<USProbesWidget> {
                                             TextCapitalization.words,
                                         obscureText: false,
                                         decoration: InputDecoration(
-                                          labelText: 'Scan Seconds',
+                                          labelText: 'Condition',
                                           labelStyle: FlutterFlowTheme.of(
                                                   context)
                                               .bodyMedium
@@ -1657,7 +1657,7 @@ class _USProbesWidgetState extends State<USProbesWidget> {
                                             TextCapitalization.words,
                                         obscureText: false,
                                         decoration: InputDecoration(
-                                          labelText: 'Scan Seconds',
+                                          labelText: 'Condition',
                                           labelStyle: FlutterFlowTheme.of(
                                                   context)
                                               .bodyMedium
@@ -2069,7 +2069,7 @@ class _USProbesWidgetState extends State<USProbesWidget> {
                                             TextCapitalization.words,
                                         obscureText: false,
                                         decoration: InputDecoration(
-                                          labelText: 'Scan Seconds',
+                                          labelText: 'Condition',
                                           labelStyle: FlutterFlowTheme.of(
                                                   context)
                                               .bodyMedium

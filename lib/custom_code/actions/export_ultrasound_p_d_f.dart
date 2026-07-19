@@ -1,9 +1,5 @@
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
-import '/backend/sqlite/sqlite_manager.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
-import 'index.dart'; // Imports other custom actions
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -64,11 +60,15 @@ Future<void> exportUltrasoundPDF(UltrasoundRecord docRef) async {
     _loadImages(docRef.otherNotesPhotosURL),
     _loadImages(docRef.softwareOptPicsURL),
     _loadImages(docRef.deviceImg),
+    _loadImages(docRef.accessoriesPicURL),
+    _loadImages(docRef.dnTPicURL),
   ]);
   final cosmeticGallery = results[0];
   final otherNotesGallery = results[1];
   final softwareOptGallery = results[2];
   final deviceImg = results[3];
+  final accessoriesGallery = results[4];
+  final dnTGallery = results[5];
 
   // Hero image comes from the dedicated deviceImg field; falls back to the
   // first cosmetic photo if deviceImg wasn't populated for this record.
@@ -124,6 +124,10 @@ Future<void> exportUltrasoundPDF(UltrasoundRecord docRef) async {
           ['CDs', docRef.accessoriesCDs],
           ['Spare Parts', docRef.accessoriesSpareP],
         ]),
+        if (accessoriesGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(accessoriesGallery),
+        ],
 
         pw.NewPage(),
 
@@ -148,6 +152,10 @@ Future<void> exportUltrasoundPDF(UltrasoundRecord docRef) async {
           ['Tools Required', docRef.dnTTools],
           ['Special Attention', docRef.dnTSpecialAttention],
         ]),
+        if (dnTGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(dnTGallery),
+        ],
 
         // =========================== OTHER NOTES ================================
         _sectionHeader('Other Notes'),
@@ -181,13 +189,15 @@ Future<void> exportUltrasoundPDF(UltrasoundRecord docRef) async {
     final file = File('${tempDir.path}/$fileName');
     await file.writeAsBytes(pdfBytes);
 
-    await Share.shareXFiles(
-      [XFile(file.path, mimeType: 'application/pdf', name: fileName)],
-      subject: fileName,
-      // Required on iOS 26+ (even for iPhone — previously only iPad needed
-      // this for the popover anchor) and always required on iPad. A rough
-      // rect is fine; it just needs to be non-zero.
-      sharePositionOrigin: const Rect.fromLTWH(0, 0, 100, 100),
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(file.path, mimeType: 'application/pdf', name: fileName)],
+        subject: fileName,
+        // Required on iOS 26+ (even for iPhone — previously only iPad needed
+        // this for the popover anchor) and always required on iPad. A rough
+        // rect is fine; it just needs to be non-zero.
+        sharePositionOrigin: const Rect.fromLTWH(0, 0, 100, 100),
+      ),
     );
   } catch (e) {
     // TODO: surface this to the user (e.g. via a FlutterFlow snackbar

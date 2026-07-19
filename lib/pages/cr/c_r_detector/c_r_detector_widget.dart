@@ -1,5 +1,10 @@
+// MANUALLY MIGRATED for offline photo upload (outbox pattern) — see
+// lib/components/photo_upload_outbox/. If this page is re-synced from
+// FlutterFlow, this migration must be reapplied.
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
+import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -28,6 +33,7 @@ class CRDetectorWidget extends StatefulWidget {
 
 class _CRDetectorWidgetState extends State<CRDetectorWidget> {
   late CRDetectorModel _model;
+  late PhotoUploadOutboxModel _photoModel;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -35,6 +41,7 @@ class _CRDetectorWidgetState extends State<CRDetectorWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => CRDetectorModel());
+    _photoModel = createModel(context, () => PhotoUploadOutboxModel());
 
     _model.textFocusNode1 ??= FocusNode();
 
@@ -43,13 +50,12 @@ class _CRDetectorWidgetState extends State<CRDetectorWidget> {
     _model.textFocusNode3 ??= FocusNode();
 
     _model.textFocusNode4 ??= FocusNode();
-
-    _model.textFocusNode5 ??= FocusNode();
   }
 
   @override
   void dispose() {
     _model.dispose();
+    _photoModel.dispose();
 
     super.dispose();
   }
@@ -92,7 +98,7 @@ class _CRDetectorWidgetState extends State<CRDetectorWidget> {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  CompactAppBar(title: 'System General Information'),
+                  CompactAppBar(title: 'Detector'),
                   Expanded(
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
@@ -106,13 +112,13 @@ class _CRDetectorWidgetState extends State<CRDetectorWidget> {
                             child: TextFormField(
                               controller: _model.textTextController1 ??=
                                   TextEditingController(
-                                text: cRDetectorCrRecord.sysGenDocName,
+                                text: cRDetectorCrRecord.detectorModel,
                               ),
                               focusNode: _model.textFocusNode1,
                               textCapitalization: TextCapitalization.words,
                               obscureText: false,
                               decoration: InputDecoration(
-                                labelText: 'Document Name',
+                                labelText: 'Model',
                                 labelStyle: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(
@@ -206,7 +212,7 @@ class _CRDetectorWidgetState extends State<CRDetectorWidget> {
                             child: TextFormField(
                               controller: _model.textTextController2 ??=
                                   TextEditingController(
-                                text: cRDetectorCrRecord.sysGenBrand,
+                                text: cRDetectorCrRecord.detectorSize,
                               ),
                               focusNode: _model.textFocusNode2,
                               onChanged: (_) => EasyDebounce.debounce(
@@ -217,7 +223,7 @@ class _CRDetectorWidgetState extends State<CRDetectorWidget> {
                               textCapitalization: TextCapitalization.words,
                               obscureText: false,
                               decoration: InputDecoration(
-                                labelText: 'Brand',
+                                labelText: 'Size',
                                 labelStyle: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(
@@ -325,13 +331,13 @@ class _CRDetectorWidgetState extends State<CRDetectorWidget> {
                             child: TextFormField(
                               controller: _model.textTextController3 ??=
                                   TextEditingController(
-                                text: cRDetectorCrRecord.sysGenModal,
+                                text: cRDetectorCrRecord.detectorYOM,
                               ),
                               focusNode: _model.textFocusNode3,
                               textCapitalization: TextCapitalization.words,
                               obscureText: false,
                               decoration: InputDecoration(
-                                labelText: 'Model',
+                                labelText: 'Year of Manufacture',
                                 labelStyle: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(
@@ -425,13 +431,13 @@ class _CRDetectorWidgetState extends State<CRDetectorWidget> {
                             child: TextFormField(
                               controller: _model.textTextController4 ??=
                                   TextEditingController(
-                                text: cRDetectorCrRecord.sysGenYOM,
+                                text: cRDetectorCrRecord.detectorCondition,
                               ),
                               focusNode: _model.textFocusNode4,
                               textCapitalization: TextCapitalization.words,
                               obscureText: false,
                               decoration: InputDecoration(
-                                labelText: 'Year of Manufacture',
+                                labelText: 'Condition',
                                 labelStyle: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(
@@ -517,110 +523,54 @@ class _CRDetectorWidgetState extends State<CRDetectorWidget> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              25.0, 0.0, 25.0, 0.0),
-                          child: Container(
-                            width: 320.0,
-                            child: TextFormField(
-                              controller: _model.textTextController5 ??=
-                                  TextEditingController(
-                                text: cRDetectorCrRecord.sysGenSN,
-                              ),
-                              focusNode: _model.textFocusNode5,
-                              textCapitalization: TextCapitalization.words,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                labelText: 'Serial Number',
-                                labelStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      font: GoogleFonts.plusJakartaSans(
-                                        fontWeight: FontWeight.normal,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
-                                      ),
-                                      color: Color(0xFF14181B),
-                                      fontSize: 16.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FontWeight.normal,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                alignLabelWithHint: false,
-                                hintText: ' ',
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xFFE0E3E7),
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(50.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xFF4B39EF),
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(50.0),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xFFFF5963),
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(50.0),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xFFFF5963),
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(50.0),
-                                ),
-                                filled: true,
-                                fillColor: Color(0xFFF0F7FF),
-                                contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                    20.0, 10.0, 0.0, 10.0),
-                              ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    font: GoogleFonts.plusJakartaSans(
-                                      fontWeight: FontWeight.normal,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                    color: Color(0xFF14181B),
-                                    fontSize: 16.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.normal,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                              validator: _model.textTextController5Validator
-                                  .asValidator(context),
-                              inputFormatters: [
-                                if (!isAndroid && !isiOS)
-                                  TextInputFormatter.withFunction(
-                                      (oldValue, newValue) {
-                                    return TextEditingValue(
-                                      selection: newValue.selection,
-                                      text: newValue.text.toCapitalization(
-                                          TextCapitalization.words),
-                                    );
-                                  }),
-                              ],
-                            ),
-                          ),
-                        ),
                       ]
                           .divide(SizedBox(height: 16.0))
                           .addToStart(SizedBox(height: 10.0)),
                     ),
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Align(
+                        alignment: AlignmentDirectional(-1.0, 0.0),
+                        child: Text(
+                          'Pictures',
+                          style: FlutterFlowTheme.of(context)
+                              .bodyMedium
+                              .override(
+                                font: GoogleFonts.readexPro(
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontStyle,
+                                ),
+                                fontSize: 16.0,
+                                letterSpacing: 0.0,
+                                fontWeight: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .fontWeight,
+                                fontStyle: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .fontStyle,
+                              ),
+                        ),
+                      ),
+                      wrapWithModel(
+                        model: _photoModel,
+                        updateCallback: () => safeSetState(() {}),
+                        child: PhotoUploadOutboxWidget(
+                          collectionPath: 'CR',
+                          docId: widget.docDataDetector!.id,
+                          arrayFieldName: 'DetectorPicURL',
+                          storagePathPrefix:
+                              'users/$currentUserUid/cr/detector',
+                          existingPhotoUrls:
+                              cRDetectorCrRecord.detectorPicURL.toList(),
+                        ),
+                      ),
+                    ],
                   ),
                   Align(
                     alignment: AlignmentDirectional(0.0, 1.0),
@@ -628,11 +578,10 @@ class _CRDetectorWidgetState extends State<CRDetectorWidget> {
                       onPressed: () async {
                         await widget.docDataDetector!
                             .update(createCrRecordData(
-                          sysGenBrand: _model.textTextController2.text,
-                          sysGenModal: _model.textTextController3.text,
-                          sysGenYOM: _model.textTextController4.text,
-                          sysGenSN: _model.textTextController5.text,
-                          sysGenDocName: _model.textTextController1.text,
+                          detectorModel: _model.textTextController1.text,
+                          detectorSize: _model.textTextController2.text,
+                          detectorYOM: _model.textTextController3.text,
+                          detectorCondition: _model.textTextController4.text,
                         ));
 
                         context.pushNamed(

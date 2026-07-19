@@ -181,6 +181,26 @@ class CArmRecord extends FirestoreRecord {
   List<String> get deviceImg => _deviceImg ?? const [];
   bool hasDeviceImg() => _deviceImg != null;
 
+  // "AccessoriesPicURL" field.
+  List<String>? _accessoriesPicURL;
+  List<String> get accessoriesPicURL => _accessoriesPicURL ?? const [];
+  bool hasAccessoriesPicURL() => _accessoriesPicURL != null;
+
+  // "DetectorPicURL" field.
+  List<String>? _detectorPicURL;
+  List<String> get detectorPicURL => _detectorPicURL ?? const [];
+  bool hasDetectorPicURL() => _detectorPicURL != null;
+
+  // "DnTPicURL" field.
+  List<String>? _dnTPicURL;
+  List<String> get dnTPicURL => _dnTPicURL ?? const [];
+  bool hasDnTPicURL() => _dnTPicURL != null;
+
+  // "TubePicURL" field.
+  List<String>? _tubePicURL;
+  List<String> get tubePicURL => _tubePicURL ?? const [];
+  bool hasTubePicURL() => _tubePicURL != null;
+
   void _initializeFields() {
     _sysGenBrand = snapshotData['SysGenBrand'] as String?;
     _sysGenModal = snapshotData['SysGenModal'] as String?;
@@ -215,6 +235,10 @@ class CArmRecord extends FirestoreRecord {
     _accPhantomSN = snapshotData['AccPhantomSN'] as String?;
     _cosmeticPicURL = getDataList(snapshotData['CosmeticPicURL']);
     _deviceImg = getDataList(snapshotData['DeviceImg']);
+    _accessoriesPicURL = getDataList(snapshotData['AccessoriesPicURL']);
+    _detectorPicURL = getDataList(snapshotData['DetectorPicURL']);
+    _dnTPicURL = getDataList(snapshotData['DnTPicURL']);
+    _tubePicURL = getDataList(snapshotData['TubePicURL']);
   }
 
   static CollectionReference get collection =>
@@ -356,7 +380,11 @@ class CArmRecordDocumentEquality implements Equality<CArmRecord> {
         e1?.accPhantomModelNo == e2?.accPhantomModelNo &&
         e1?.accPhantomSN == e2?.accPhantomSN &&
         listEquality.equals(e1?.cosmeticPicURL, e2?.cosmeticPicURL) &&
-        listEquality.equals(e1?.deviceImg, e2?.deviceImg);
+        listEquality.equals(e1?.deviceImg, e2?.deviceImg) &&
+        listEquality.equals(e1?.accessoriesPicURL, e2?.accessoriesPicURL) &&
+        listEquality.equals(e1?.detectorPicURL, e2?.detectorPicURL) &&
+        listEquality.equals(e1?.dnTPicURL, e2?.dnTPicURL) &&
+        listEquality.equals(e1?.tubePicURL, e2?.tubePicURL);
   }
 
   @override
@@ -393,7 +421,11 @@ class CArmRecordDocumentEquality implements Equality<CArmRecord> {
         e?.accPhantomModelNo,
         e?.accPhantomSN,
         e?.cosmeticPicURL,
-        e?.deviceImg
+        e?.deviceImg,
+        e?.accessoriesPicURL,
+        e?.detectorPicURL,
+        e?.dnTPicURL,
+        e?.tubePicURL
       ]);
 
   @override

@@ -1,9 +1,5 @@
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
-import '/backend/sqlite/sqlite_manager.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
-import 'index.dart'; // Imports other custom actions
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -54,12 +50,34 @@ Future<void> exportMriPDF(MriRecord docRef) async {
     _loadImages(docRef.cnWConsoleOptionsPicsURL),
     _loadImages(docRef.cnWWSOptionsPicsURL),
     _loadImages(docRef.deviceImg),
+    _loadImages(docRef.accessoriesPicURL),
+    _loadImages(docRef.coilsPicURL),
+    _loadImages(docRef.coolingSystemPicURL),
+    _loadImages(docRef.dnTPicURL),
+    _loadImages(docRef.localServicePicURL),
+    _loadImages(docRef.magnetPicURL),
+    _loadImages(docRef.marsImagerPicURL),
+    _loadImages(docRef.patientTablePicURL),
+    _loadImages(docRef.powerstagesPicURL),
+    _loadImages(docRef.talesLastReplacementPicURL),
+    _loadImages(docRef.ecgPicURL),
   ]);
   final cosmeticGallery = results[0];
   final otherNotesGallery = results[1];
   final consoleOptGallery = results[2];
   final wsOptGallery = results[3];
   final deviceImg = results[4];
+  final accessoriesGallery = results[5];
+  final coilsGallery = results[6];
+  final coolingSystemGallery = results[7];
+  final dnTGallery = results[8];
+  final localServiceGallery = results[9];
+  final magnetGallery = results[10];
+  final marsImagerGallery = results[11];
+  final patientTableGallery = results[12];
+  final powerstagesGallery = results[13];
+  final talesLastReplacementGallery = results[14];
+  final ecgGallery = results[15];
 
   // Hero image comes from the dedicated deviceImg field; falls back to the
   // first cosmetic photo if deviceImg wasn't populated for this record.
@@ -102,6 +120,10 @@ Future<void> exportMriPDF(MriRecord docRef) async {
           ['Shield Temperature', docRef.magnetShieldTemp],
           ['Helium Level', docRef.magnetHELevel],
         ]),
+        if (magnetGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(magnetGallery),
+        ],
 
         // ==================== COOLER / COMPRESSOR ===========================
         _sectionHeader('Cooler / Compressor'),
@@ -112,6 +134,10 @@ Future<void> exportMriPDF(MriRecord docRef) async {
           ['Pressure', docRef.coolerCompPressure],
           ['LAR', docRef.coolerCompLAR],
         ]),
+        if (coolingSystemGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(coolingSystemGallery),
+        ],
 
         // ========================== COLD HEAD ================================
         _sectionHeader('Cold Head'),
@@ -132,6 +158,10 @@ Future<void> exportMriPDF(MriRecord docRef) async {
           ['PCI RX2 Model', docRef.imagerPCIRX2Model],
           ['PCI RX2 Serial Number', docRef.imagerPCIRX2ModelSN],
         ]),
+        if (marsImagerGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(marsImagerGallery),
+        ],
 
         pw.NewPage(),
 
@@ -142,6 +172,10 @@ Future<void> exportMriPDF(MriRecord docRef) async {
           ['Serial Number', docRef.ecgsn],
           ['Function Checked', docRef.eCGFuncChecked],
         ]),
+        if (ecgGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(ecgGallery),
+        ],
 
         // ========================= POWER STAGES ================================
         _sectionHeader('Power Stages'),
@@ -151,6 +185,12 @@ Future<void> exportMriPDF(MriRecord docRef) async {
           ['Power Stage 3 Serial Number', docRef.powerStages3SN],
           ['Tales Last Replacement', docRef.talesLastReplacement],
         ]),
+        if (powerstagesGallery.isNotEmpty ||
+            talesLastReplacementGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(
+              [...powerstagesGallery, ...talesLastReplacementGallery]),
+        ],
 
         // ====================== PATIENT TABLE ================================
         _sectionHeader('Patient Table'),
@@ -159,6 +199,10 @@ Future<void> exportMriPDF(MriRecord docRef) async {
           ['Serial Number', docRef.patientTableSN],
           ['Move Tests', docRef.patientTableMoveTests],
         ]),
+        if (patientTableGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(patientTableGallery),
+        ],
 
         // ================== CONSOLE AND WORKSTATION ======================
         _sectionHeader('Console and Workstation Information'),
@@ -191,10 +235,18 @@ Future<void> exportMriPDF(MriRecord docRef) async {
           ['General QA Test', docRef.localSGeneralQATest],
           ['ICS Cabinet Active', docRef.iCSCabinetActive],
         ]),
+        if (localServiceGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(localServiceGallery),
+        ],
 
         // ============================ COILS ==================================
         _sectionHeader('Coils'),
         _coilsTable(docRef),
+        if (coilsGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(coilsGallery),
+        ],
 
         pw.NewPage(),
 
@@ -212,6 +264,10 @@ Future<void> exportMriPDF(MriRecord docRef) async {
           ['Headphone', docRef.accHeadphone],
           ['Magnet Spare Bag', docRef.accMagnetSpareBag],
         ]),
+        if (accessoriesGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(accessoriesGallery),
+        ],
 
         // ====================== COSMETIC CONDITION =============================
         _sectionHeader('Cosmetic Condition'),
@@ -235,6 +291,10 @@ Future<void> exportMriPDF(MriRecord docRef) async {
           ['Tools Required', docRef.dntTools],
           ['Special Attention', docRef.dntSpecialAttention],
         ]),
+        if (dnTGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(dnTGallery),
+        ],
 
         // =========================== OTHER NOTES ================================
         _sectionHeader('Other Notes'),
@@ -258,10 +318,12 @@ Future<void> exportMriPDF(MriRecord docRef) async {
     final file = File('${tempDir.path}/$fileName');
     await file.writeAsBytes(pdfBytes);
 
-    await Share.shareXFiles(
-      [XFile(file.path, mimeType: 'application/pdf', name: fileName)],
-      subject: fileName,
-      sharePositionOrigin: const Rect.fromLTWH(0, 0, 100, 100),
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(file.path, mimeType: 'application/pdf', name: fileName)],
+        subject: fileName,
+        sharePositionOrigin: const Rect.fromLTWH(0, 0, 100, 100),
+      ),
     );
   } catch (e) {
     print('PDF export failed: $e');

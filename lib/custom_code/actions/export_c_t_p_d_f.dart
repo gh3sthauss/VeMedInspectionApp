@@ -1,9 +1,5 @@
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
-import '/backend/sqlite/sqlite_manager.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
-import 'index.dart'; // Imports other custom actions
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -54,12 +50,22 @@ Future<void> exportCtPDF(CtRecord docRef) async {
     _loadImages(docRef.cnWWorkstationOptPURL),
     _loadImages(docRef.cnWCMOptPURL),
     _loadImages(docRef.deviceImg),
+    _loadImages(docRef.accessoriesPicURL),
+    _loadImages(docRef.gantryPicURL),
+    _loadImages(docRef.coolingSystemPicURL),
+    _loadImages(docRef.patientTablePicURL),
+    _loadImages(docRef.dnTPicURL),
   ]);
   final cosmeticGallery = results[0];
   final otherNotesGallery = results[1];
   final workstationOptGallery = results[2];
   final consoleOptGallery = results[3];
   final deviceImg = results[4];
+  final accessoriesGallery = results[5];
+  final gantryGallery = results[6];
+  final coolingSystemGallery = results[7];
+  final patientTableGallery = results[8];
+  final dnTGallery = results[9];
 
   // Hero image comes from the dedicated deviceImg field; falls back to the
   // first cosmetic photo if deviceImg wasn't populated for this record.
@@ -105,6 +111,10 @@ Future<void> exportCtPDF(CtRecord docRef) async {
           ['Detector Serial Number', docRef.gantryDetSN],
           ['Detector Duty Cycle', docRef.gantryDetDC],
         ]),
+        if (gantryGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(gantryGallery),
+        ],
 
         // ======================== COOLING SYSTEM ==============================
         _sectionHeader('Cooling System'),
@@ -112,6 +122,10 @@ Future<void> exportCtPDF(CtRecord docRef) async {
           ['Water/Air', docRef.cSWaterAir],
           ['Comes With', docRef.cSComesWith],
         ]),
+        if (coolingSystemGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(coolingSystemGallery),
+        ],
 
         // ======================== PATIENT TABLE ================================
         _sectionHeader('Patient Table Information'),
@@ -120,6 +134,10 @@ Future<void> exportCtPDF(CtRecord docRef) async {
           ['Serial Number', docRef.ptsn],
           ['Move Check', docRef.ptmc],
         ]),
+        if (patientTableGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(patientTableGallery),
+        ],
 
         pw.NewPage(),
 
@@ -151,6 +169,10 @@ Future<void> exportCtPDF(CtRecord docRef) async {
           ['Injector', docRef.accessoriesInjector],
           ['Spare Parts', docRef.accessoriesSpareP],
         ]),
+        if (accessoriesGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(accessoriesGallery),
+        ],
 
         // ====================== COSMETIC CONDITION =============================
         _sectionHeader('Cosmetic Condition'),
@@ -173,6 +195,10 @@ Future<void> exportCtPDF(CtRecord docRef) async {
           ['Tools Required', docRef.dnTTools],
           ['Special Attention', docRef.dnTSpecialAttention],
         ]),
+        if (dnTGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(dnTGallery),
+        ],
 
         // =========================== OTHER NOTES ================================
         _sectionHeader('Other Notes'),
@@ -196,10 +222,12 @@ Future<void> exportCtPDF(CtRecord docRef) async {
     final file = File('${tempDir.path}/$fileName');
     await file.writeAsBytes(pdfBytes);
 
-    await Share.shareXFiles(
-      [XFile(file.path, mimeType: 'application/pdf', name: fileName)],
-      subject: fileName,
-      sharePositionOrigin: const Rect.fromLTWH(0, 0, 100, 100),
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(file.path, mimeType: 'application/pdf', name: fileName)],
+        subject: fileName,
+        sharePositionOrigin: const Rect.fromLTWH(0, 0, 100, 100),
+      ),
     );
   } catch (e) {
     print('PDF export failed: $e');

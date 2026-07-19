@@ -129,7 +129,7 @@ class _FlouroscopyWidgetState extends State<FlouroscopyWidget> {
                               }.withoutNulls,
                             );
                           },
-                          text: 'Tube',
+                          text: 'Table',
                           options: FFButtonOptions(
                             width: 300.0,
                             height: 50.0,
@@ -182,7 +182,7 @@ class _FlouroscopyWidgetState extends State<FlouroscopyWidget> {
                               }.withoutNulls,
                             );
                           },
-                          text: 'Table',
+                          text: 'Tube',
                           options: FFButtonOptions(
                             width: 300.0,
                             height: 50.0,

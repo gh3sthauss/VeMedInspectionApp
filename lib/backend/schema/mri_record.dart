@@ -592,6 +592,62 @@ class MriRecord extends FirestoreRecord {
   List<String> get deviceImg => _deviceImg ?? const [];
   bool hasDeviceImg() => _deviceImg != null;
 
+  // "AccessoriesPicURL" field.
+  List<String>? _accessoriesPicURL;
+  List<String> get accessoriesPicURL => _accessoriesPicURL ?? const [];
+  bool hasAccessoriesPicURL() => _accessoriesPicURL != null;
+
+  // "CoilsPicURL" field.
+  List<String>? _coilsPicURL;
+  List<String> get coilsPicURL => _coilsPicURL ?? const [];
+  bool hasCoilsPicURL() => _coilsPicURL != null;
+
+  // "CoolingSystemPicURL" field.
+  List<String>? _coolingSystemPicURL;
+  List<String> get coolingSystemPicURL => _coolingSystemPicURL ?? const [];
+  bool hasCoolingSystemPicURL() => _coolingSystemPicURL != null;
+
+  // "DnTPicURL" field.
+  List<String>? _dnTPicURL;
+  List<String> get dnTPicURL => _dnTPicURL ?? const [];
+  bool hasDnTPicURL() => _dnTPicURL != null;
+
+  // "LocalServicePicURL" field.
+  List<String>? _localServicePicURL;
+  List<String> get localServicePicURL => _localServicePicURL ?? const [];
+  bool hasLocalServicePicURL() => _localServicePicURL != null;
+
+  // "MagnetPicURL" field.
+  List<String>? _magnetPicURL;
+  List<String> get magnetPicURL => _magnetPicURL ?? const [];
+  bool hasMagnetPicURL() => _magnetPicURL != null;
+
+  // "MarsImagerPicURL" field.
+  List<String>? _marsImagerPicURL;
+  List<String> get marsImagerPicURL => _marsImagerPicURL ?? const [];
+  bool hasMarsImagerPicURL() => _marsImagerPicURL != null;
+
+  // "PatientTablePicURL" field.
+  List<String>? _patientTablePicURL;
+  List<String> get patientTablePicURL => _patientTablePicURL ?? const [];
+  bool hasPatientTablePicURL() => _patientTablePicURL != null;
+
+  // "PowerstagesPicURL" field.
+  List<String>? _powerstagesPicURL;
+  List<String> get powerstagesPicURL => _powerstagesPicURL ?? const [];
+  bool hasPowerstagesPicURL() => _powerstagesPicURL != null;
+
+  // "TalesLastReplacementPicURL" field.
+  List<String>? _talesLastReplacementPicURL;
+  List<String> get talesLastReplacementPicURL =>
+      _talesLastReplacementPicURL ?? const [];
+  bool hasTalesLastReplacementPicURL() => _talesLastReplacementPicURL != null;
+
+  // "EcgPicURL" field.
+  List<String>? _ecgPicURL;
+  List<String> get ecgPicURL => _ecgPicURL ?? const [];
+  bool hasEcgPicURL() => _ecgPicURL != null;
+
   void _initializeFields() {
     _sysGenModal = snapshotData['SysGenModal'] as String?;
     _sysGenBrand = snapshotData['SysGenBrand'] as String?;
@@ -709,6 +765,18 @@ class MriRecord extends FirestoreRecord {
     _cosmeticPicURL = getDataList(snapshotData['CosmeticPicURL']);
     _otherNotesPhotosURL = getDataList(snapshotData['OtherNotesPhotosURL']);
     _deviceImg = getDataList(snapshotData['DeviceImg']);
+    _accessoriesPicURL = getDataList(snapshotData['AccessoriesPicURL']);
+    _coilsPicURL = getDataList(snapshotData['CoilsPicURL']);
+    _coolingSystemPicURL = getDataList(snapshotData['CoolingSystemPicURL']);
+    _dnTPicURL = getDataList(snapshotData['DnTPicURL']);
+    _localServicePicURL = getDataList(snapshotData['LocalServicePicURL']);
+    _magnetPicURL = getDataList(snapshotData['MagnetPicURL']);
+    _marsImagerPicURL = getDataList(snapshotData['MarsImagerPicURL']);
+    _patientTablePicURL = getDataList(snapshotData['PatientTablePicURL']);
+    _powerstagesPicURL = getDataList(snapshotData['PowerstagesPicURL']);
+    _talesLastReplacementPicURL =
+        getDataList(snapshotData['TalesLastReplacementPicURL']);
+    _ecgPicURL = getDataList(snapshotData['EcgPicURL']);
   }
 
   static CollectionReference get collection =>
@@ -1095,7 +1163,20 @@ class MriRecordDocumentEquality implements Equality<MriRecord> {
         e1?.cosmeticText == e2?.cosmeticText &&
         listEquality.equals(e1?.cosmeticPicURL, e2?.cosmeticPicURL) &&
         listEquality.equals(e1?.otherNotesPhotosURL, e2?.otherNotesPhotosURL) &&
-        listEquality.equals(e1?.deviceImg, e2?.deviceImg);
+        listEquality.equals(e1?.deviceImg, e2?.deviceImg) &&
+        listEquality.equals(e1?.accessoriesPicURL, e2?.accessoriesPicURL) &&
+        listEquality.equals(e1?.coilsPicURL, e2?.coilsPicURL) &&
+        listEquality.equals(
+            e1?.coolingSystemPicURL, e2?.coolingSystemPicURL) &&
+        listEquality.equals(e1?.dnTPicURL, e2?.dnTPicURL) &&
+        listEquality.equals(e1?.localServicePicURL, e2?.localServicePicURL) &&
+        listEquality.equals(e1?.magnetPicURL, e2?.magnetPicURL) &&
+        listEquality.equals(e1?.marsImagerPicURL, e2?.marsImagerPicURL) &&
+        listEquality.equals(e1?.patientTablePicURL, e2?.patientTablePicURL) &&
+        listEquality.equals(e1?.powerstagesPicURL, e2?.powerstagesPicURL) &&
+        listEquality.equals(e1?.talesLastReplacementPicURL,
+            e2?.talesLastReplacementPicURL) &&
+        listEquality.equals(e1?.ecgPicURL, e2?.ecgPicURL);
   }
 
   @override
@@ -1214,7 +1295,18 @@ class MriRecordDocumentEquality implements Equality<MriRecord> {
         e?.cosmeticText,
         e?.cosmeticPicURL,
         e?.otherNotesPhotosURL,
-        e?.deviceImg
+        e?.deviceImg,
+        e?.accessoriesPicURL,
+        e?.coilsPicURL,
+        e?.coolingSystemPicURL,
+        e?.dnTPicURL,
+        e?.localServicePicURL,
+        e?.magnetPicURL,
+        e?.marsImagerPicURL,
+        e?.patientTablePicURL,
+        e?.powerstagesPicURL,
+        e?.talesLastReplacementPicURL,
+        e?.ecgPicURL
       ]);
 
   @override

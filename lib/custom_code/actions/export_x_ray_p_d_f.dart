@@ -1,9 +1,5 @@
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
-import '/backend/sqlite/sqlite_manager.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
-import 'index.dart'; // Imports other custom actions
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -54,12 +50,22 @@ Future<void> exportXRayPDF(XRayRecord docRef) async {
     _loadImages(docRef.cnWWorkstationOptPURL),
     _loadImages(docRef.cnWCMOptPURL),
     _loadImages(docRef.deviceImg),
+    _loadImages(docRef.accessoriesPicURL),
+    _loadImages(docRef.detectorPicURL),
+    _loadImages(docRef.dnTPicURL),
+    _loadImages(docRef.tablePicURL),
+    _loadImages(docRef.tubePicURL),
   ]);
   final cosmeticGallery = results[0];
   final otherNotesGallery = results[1];
   final workstationOptGallery = results[2];
   final consoleOptGallery = results[3];
   final deviceImg = results[4];
+  final accessoriesGallery = results[5];
+  final detectorGallery = results[6];
+  final dnTGallery = results[7];
+  final tableGallery = results[8];
+  final tubeGallery = results[9];
 
   // Hero image comes from the dedicated deviceImg field; falls back to the
   // first cosmetic photo if deviceImg wasn't populated for this record.
@@ -115,6 +121,10 @@ Future<void> exportXRayPDF(XRayRecord docRef) async {
           ['Year of Manufacture', docRef.detectorYOM],
           ['Condition', docRef.detectorCondition],
         ]),
+        if (detectorGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(detectorGallery),
+        ],
 
         // ============================ TUBE =================================
         _sectionHeader('Tube Information'),
@@ -124,6 +134,10 @@ Future<void> exportXRayPDF(XRayRecord docRef) async {
           ['Tube 2 Model', docRef.tube2Model],
           ['Tube 2 Year of Manufacture', docRef.tube2YOM],
         ]),
+        if (tubeGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(tubeGallery),
+        ],
 
         // ====================== PATIENT TABLE ================================
         _sectionHeader('Table Information'),
@@ -131,6 +145,10 @@ Future<void> exportXRayPDF(XRayRecord docRef) async {
           ['Model', docRef.tableModel],
           ['Year of Manufacture', docRef.tableYOM],
         ]),
+        if (tableGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(tableGallery),
+        ],
 
         // ========================= ACCESSORIES ================================
         _sectionHeader('Accessories'),
@@ -141,6 +159,10 @@ Future<void> exportXRayPDF(XRayRecord docRef) async {
           ['CDs', docRef.accessoriesCDs],
           ['Spare Parts', docRef.accessoriesSpareP],
         ]),
+        if (accessoriesGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(accessoriesGallery),
+        ],
 
         pw.NewPage(),
 
@@ -165,6 +187,10 @@ Future<void> exportXRayPDF(XRayRecord docRef) async {
           ['Tools Required', docRef.dnTTools],
           ['Special Attention', docRef.dnTSpecialAttention],
         ]),
+        if (dnTGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(dnTGallery),
+        ],
 
         // =========================== OTHER NOTES ================================
         _sectionHeader('Other Notes'),
@@ -188,10 +214,12 @@ Future<void> exportXRayPDF(XRayRecord docRef) async {
     final file = File('${tempDir.path}/$fileName');
     await file.writeAsBytes(pdfBytes);
 
-    await Share.shareXFiles(
-      [XFile(file.path, mimeType: 'application/pdf', name: fileName)],
-      subject: fileName,
-      sharePositionOrigin: const Rect.fromLTWH(0, 0, 100, 100),
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(file.path, mimeType: 'application/pdf', name: fileName)],
+        subject: fileName,
+        sharePositionOrigin: const Rect.fromLTWH(0, 0, 100, 100),
+      ),
     );
   } catch (e) {
     print('PDF export failed: $e');

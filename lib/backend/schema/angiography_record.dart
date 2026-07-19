@@ -226,6 +226,11 @@ class AngiographyRecord extends FirestoreRecord {
   List<String> get cnWCMOptPURL => _cnWCMOptPURL ?? const [];
   bool hasCnWCMOptPURL() => _cnWCMOptPURL != null;
 
+  // "CnWWorkstationOptPURL" field.
+  List<String>? _cnWWorkstationOptPURL;
+  List<String> get cnWWorkstationOptPURL => _cnWWorkstationOptPURL ?? const [];
+  bool hasCnWWorkstationOptPURL() => _cnWWorkstationOptPURL != null;
+
   // "CnWConsoleMOptions" field.
   String? _cnWConsoleMOptions;
   String get cnWConsoleMOptions => _cnWConsoleMOptions ?? '';
@@ -291,6 +296,31 @@ class AngiographyRecord extends FirestoreRecord {
   String get photosURL => _photosURL ?? '';
   bool hasPhotosURL() => _photosURL != null;
 
+  // "AccessoriesPicURL" field.
+  List<String>? _accessoriesPicURL;
+  List<String> get accessoriesPicURL => _accessoriesPicURL ?? const [];
+  bool hasAccessoriesPicURL() => _accessoriesPicURL != null;
+
+  // "DetectorPicURL" field.
+  List<String>? _detectorPicURL;
+  List<String> get detectorPicURL => _detectorPicURL ?? const [];
+  bool hasDetectorPicURL() => _detectorPicURL != null;
+
+  // "DnTPicURL" field.
+  List<String>? _dnTPicURL;
+  List<String> get dnTPicURL => _dnTPicURL ?? const [];
+  bool hasDnTPicURL() => _dnTPicURL != null;
+
+  // "PatientTablePicURL" field.
+  List<String>? _patientTablePicURL;
+  List<String> get patientTablePicURL => _patientTablePicURL ?? const [];
+  bool hasPatientTablePicURL() => _patientTablePicURL != null;
+
+  // "TubePicURL" field.
+  List<String>? _tubePicURL;
+  List<String> get tubePicURL => _tubePicURL ?? const [];
+  bool hasTubePicURL() => _tubePicURL != null;
+
   void _initializeFields() {
     _sysGenBrand = snapshotData['SysGenBrand'] as String?;
     _sysGenModal = snapshotData['SysGenModal'] as String?;
@@ -334,6 +364,8 @@ class AngiographyRecord extends FirestoreRecord {
     _accPhantom3ModelNo = snapshotData['AccPhantom3ModelNo'] as String?;
     _accPhantom3ModelSN = snapshotData['AccPhantom3ModelSN'] as String?;
     _cnWCMOptPURL = getDataList(snapshotData['CnWCMOptPURL']);
+    _cnWWorkstationOptPURL =
+        getDataList(snapshotData['CnWWorkstationOptPURL']);
     _cnWConsoleMOptions = snapshotData['CnWConsoleMOptions'] as String?;
     _cnWConsoleMSN = snapshotData['CnWConsoleMSN'] as String?;
     _cnWConsoleMSW = snapshotData['CnWConsoleMSW'] as String?;
@@ -347,6 +379,11 @@ class AngiographyRecord extends FirestoreRecord {
     _ptmc = snapshotData['PTMC'] as String?;
     _deviceImg = getDataList(snapshotData['DeviceImg']);
     _photosURL = snapshotData['PhotosURL'] as String?;
+    _accessoriesPicURL = getDataList(snapshotData['AccessoriesPicURL']);
+    _detectorPicURL = getDataList(snapshotData['DetectorPicURL']);
+    _dnTPicURL = getDataList(snapshotData['DnTPicURL']);
+    _patientTablePicURL = getDataList(snapshotData['PatientTablePicURL']);
+    _tubePicURL = getDataList(snapshotData['TubePicURL']);
   }
 
   static CollectionReference get collection =>
@@ -541,6 +578,8 @@ class AngiographyRecordDocumentEquality implements Equality<AngiographyRecord> {
         e1?.accPhantom3ModelNo == e2?.accPhantom3ModelNo &&
         e1?.accPhantom3ModelSN == e2?.accPhantom3ModelSN &&
         listEquality.equals(e1?.cnWCMOptPURL, e2?.cnWCMOptPURL) &&
+        listEquality.equals(
+            e1?.cnWWorkstationOptPURL, e2?.cnWWorkstationOptPURL) &&
         e1?.cnWConsoleMOptions == e2?.cnWConsoleMOptions &&
         e1?.cnWConsoleMSN == e2?.cnWConsoleMSN &&
         e1?.cnWConsoleMSW == e2?.cnWConsoleMSW &&
@@ -553,7 +592,12 @@ class AngiographyRecordDocumentEquality implements Equality<AngiographyRecord> {
         e1?.ptsn == e2?.ptsn &&
         e1?.ptmc == e2?.ptmc &&
         listEquality.equals(e1?.deviceImg, e2?.deviceImg) &&
-        e1?.photosURL == e2?.photosURL;
+        e1?.photosURL == e2?.photosURL &&
+        listEquality.equals(e1?.accessoriesPicURL, e2?.accessoriesPicURL) &&
+        listEquality.equals(e1?.detectorPicURL, e2?.detectorPicURL) &&
+        listEquality.equals(e1?.dnTPicURL, e2?.dnTPicURL) &&
+        listEquality.equals(e1?.patientTablePicURL, e2?.patientTablePicURL) &&
+        listEquality.equals(e1?.tubePicURL, e2?.tubePicURL);
   }
 
   @override
@@ -600,6 +644,7 @@ class AngiographyRecordDocumentEquality implements Equality<AngiographyRecord> {
         e?.accPhantom3ModelNo,
         e?.accPhantom3ModelSN,
         e?.cnWCMOptPURL,
+        e?.cnWWorkstationOptPURL,
         e?.cnWConsoleMOptions,
         e?.cnWConsoleMSN,
         e?.cnWConsoleMSW,
@@ -612,7 +657,12 @@ class AngiographyRecordDocumentEquality implements Equality<AngiographyRecord> {
         e?.ptsn,
         e?.ptmc,
         e?.deviceImg,
-        e?.photosURL
+        e?.photosURL,
+        e?.accessoriesPicURL,
+        e?.detectorPicURL,
+        e?.dnTPicURL,
+        e?.patientTablePicURL,
+        e?.tubePicURL
       ]);
 
   @override

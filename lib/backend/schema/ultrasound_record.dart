@@ -216,6 +216,16 @@ class UltrasoundRecord extends FirestoreRecord {
   List<String> get deviceImg => _deviceImg ?? const [];
   bool hasDeviceImg() => _deviceImg != null;
 
+  // "AccessoriesPicURL" field.
+  List<String>? _accessoriesPicURL;
+  List<String> get accessoriesPicURL => _accessoriesPicURL ?? const [];
+  bool hasAccessoriesPicURL() => _accessoriesPicURL != null;
+
+  // "DnTPicURL" field.
+  List<String>? _dnTPicURL;
+  List<String> get dnTPicURL => _dnTPicURL ?? const [];
+  bool hasDnTPicURL() => _dnTPicURL != null;
+
   void _initializeFields() {
     _sysGenBrand = snapshotData['SysGenBrand'] as String?;
     _sysGenModal = snapshotData['SysGenModal'] as String?;
@@ -257,6 +267,8 @@ class UltrasoundRecord extends FirestoreRecord {
     _cosmeticPicURL = getDataList(snapshotData['CosmeticPicURL']);
     _photosURL = snapshotData['PhotosURL'] as String?;
     _deviceImg = getDataList(snapshotData['DeviceImg']);
+    _accessoriesPicURL = getDataList(snapshotData['AccessoriesPicURL']);
+    _dnTPicURL = getDataList(snapshotData['DnTPicURL']);
   }
 
   static CollectionReference get collection =>
@@ -420,7 +432,9 @@ class UltrasoundRecordDocumentEquality implements Equality<UltrasoundRecord> {
         e1?.probe5Condition == e2?.probe5Condition &&
         listEquality.equals(e1?.cosmeticPicURL, e2?.cosmeticPicURL) &&
         e1?.photosURL == e2?.photosURL &&
-        listEquality.equals(e1?.deviceImg, e2?.deviceImg);
+        listEquality.equals(e1?.deviceImg, e2?.deviceImg) &&
+        listEquality.equals(e1?.accessoriesPicURL, e2?.accessoriesPicURL) &&
+        listEquality.equals(e1?.dnTPicURL, e2?.dnTPicURL);
   }
 
   @override
@@ -464,7 +478,9 @@ class UltrasoundRecordDocumentEquality implements Equality<UltrasoundRecord> {
         e?.probe5Condition,
         e?.cosmeticPicURL,
         e?.photosURL,
-        e?.deviceImg
+        e?.deviceImg,
+        e?.accessoriesPicURL,
+        e?.dnTPicURL
       ]);
 
   @override

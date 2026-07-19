@@ -1,5 +1,10 @@
+// MANUALLY MIGRATED for offline photo upload (outbox pattern) — see
+// lib/components/photo_upload_outbox/. If this page is re-synced from
+// FlutterFlow, this migration must be reapplied.
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
+import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -28,6 +33,7 @@ class CADetectorWidget extends StatefulWidget {
 
 class _CADetectorWidgetState extends State<CADetectorWidget> {
   late CADetectorModel _model;
+  late PhotoUploadOutboxModel _photoModel;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -35,6 +41,7 @@ class _CADetectorWidgetState extends State<CADetectorWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => CADetectorModel());
+    _photoModel = createModel(context, () => PhotoUploadOutboxModel());
 
     _model.textFocusNode1 ??= FocusNode();
 
@@ -43,13 +50,12 @@ class _CADetectorWidgetState extends State<CADetectorWidget> {
     _model.textFocusNode3 ??= FocusNode();
 
     _model.textFocusNode4 ??= FocusNode();
-
-    _model.textFocusNode5 ??= FocusNode();
   }
 
   @override
   void dispose() {
     _model.dispose();
+    _photoModel.dispose();
 
     super.dispose();
   }
@@ -92,7 +98,7 @@ class _CADetectorWidgetState extends State<CADetectorWidget> {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  CompactAppBar(title: 'System General Information'),
+                  CompactAppBar(title: 'Detector'),
                   Expanded(
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
@@ -106,13 +112,13 @@ class _CADetectorWidgetState extends State<CADetectorWidget> {
                             child: TextFormField(
                               controller: _model.textTextController1 ??=
                                   TextEditingController(
-                                text: cADetectorCArmRecord.sysGenDocName,
+                                text: cADetectorCArmRecord.detectorModel,
                               ),
                               focusNode: _model.textFocusNode1,
                               textCapitalization: TextCapitalization.words,
                               obscureText: false,
                               decoration: InputDecoration(
-                                labelText: 'Document Name',
+                                labelText: 'Model',
                                 labelStyle: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(
@@ -206,7 +212,7 @@ class _CADetectorWidgetState extends State<CADetectorWidget> {
                             child: TextFormField(
                               controller: _model.textTextController2 ??=
                                   TextEditingController(
-                                text: cADetectorCArmRecord.sysGenBrand,
+                                text: cADetectorCArmRecord.detectorSize,
                               ),
                               focusNode: _model.textFocusNode2,
                               onChanged: (_) => EasyDebounce.debounce(
@@ -217,7 +223,7 @@ class _CADetectorWidgetState extends State<CADetectorWidget> {
                               textCapitalization: TextCapitalization.words,
                               obscureText: false,
                               decoration: InputDecoration(
-                                labelText: 'Brand',
+                                labelText: 'Size',
                                 labelStyle: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(
@@ -325,13 +331,13 @@ class _CADetectorWidgetState extends State<CADetectorWidget> {
                             child: TextFormField(
                               controller: _model.textTextController3 ??=
                                   TextEditingController(
-                                text: cADetectorCArmRecord.sysGenModal,
+                                text: cADetectorCArmRecord.detectorYOM,
                               ),
                               focusNode: _model.textFocusNode3,
                               textCapitalization: TextCapitalization.words,
                               obscureText: false,
                               decoration: InputDecoration(
-                                labelText: 'Model',
+                                labelText: 'Year of Manufacture',
                                 labelStyle: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(
@@ -425,13 +431,13 @@ class _CADetectorWidgetState extends State<CADetectorWidget> {
                             child: TextFormField(
                               controller: _model.textTextController4 ??=
                                   TextEditingController(
-                                text: cADetectorCArmRecord.sysGenYOM,
+                                text: cADetectorCArmRecord.detectorCondition,
                               ),
                               focusNode: _model.textFocusNode4,
                               textCapitalization: TextCapitalization.words,
                               obscureText: false,
                               decoration: InputDecoration(
-                                labelText: 'Year of Manufacture',
+                                labelText: 'Condition',
                                 labelStyle: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(
@@ -517,105 +523,49 @@ class _CADetectorWidgetState extends State<CADetectorWidget> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              25.0, 0.0, 25.0, 0.0),
-                          child: Container(
-                            width: 320.0,
-                            child: TextFormField(
-                              controller: _model.textTextController5 ??=
-                                  TextEditingController(
-                                text: cADetectorCArmRecord.sysGenSN,
-                              ),
-                              focusNode: _model.textFocusNode5,
-                              textCapitalization: TextCapitalization.words,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                labelText: 'Serial Number',
-                                labelStyle: FlutterFlowTheme.of(context)
+                        Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Align(
+                              alignment: AlignmentDirectional(-1.0, 0.0),
+                              child: Text(
+                                'Pictures',
+                                style: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(
-                                      font: GoogleFonts.plusJakartaSans(
-                                        fontWeight: FontWeight.normal,
+                                      font: GoogleFonts.readexPro(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontWeight,
                                         fontStyle: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .fontStyle,
                                       ),
-                                      color: Color(0xFF14181B),
                                       fontSize: 16.0,
                                       letterSpacing: 0.0,
-                                      fontWeight: FontWeight.normal,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontWeight,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .fontStyle,
                                     ),
-                                alignLabelWithHint: false,
-                                hintText: ' ',
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xFFE0E3E7),
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(50.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xFF4B39EF),
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(50.0),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xFFFF5963),
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(50.0),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xFFFF5963),
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(50.0),
-                                ),
-                                filled: true,
-                                fillColor: Color(0xFFF0F7FF),
-                                contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                    20.0, 10.0, 0.0, 10.0),
                               ),
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    font: GoogleFonts.plusJakartaSans(
-                                      fontWeight: FontWeight.normal,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                    color: Color(0xFF14181B),
-                                    fontSize: 16.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.normal,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                              validator: _model.textTextController5Validator
-                                  .asValidator(context),
-                              inputFormatters: [
-                                if (!isAndroid && !isiOS)
-                                  TextInputFormatter.withFunction(
-                                      (oldValue, newValue) {
-                                    return TextEditingValue(
-                                      selection: newValue.selection,
-                                      text: newValue.text.toCapitalization(
-                                          TextCapitalization.words),
-                                    );
-                                  }),
-                              ],
                             ),
-                          ),
+                            wrapWithModel(
+                              model: _photoModel,
+                              updateCallback: () => safeSetState(() {}),
+                              child: PhotoUploadOutboxWidget(
+                                collectionPath: 'CArm',
+                                docId: widget.docDataDetector!.id,
+                                arrayFieldName: 'DetectorPicURL',
+                                storagePathPrefix:
+                                    'users/$currentUserUid/cArm/detector',
+                                existingPhotoUrls:
+                                    cADetectorCArmRecord.detectorPicURL.toList(),
+                              ),
+                            ),
+                          ],
                         ),
                       ]
                           .divide(SizedBox(height: 16.0))
@@ -628,11 +578,10 @@ class _CADetectorWidgetState extends State<CADetectorWidget> {
                       onPressed: () async {
                         await widget.docDataDetector!
                             .update(createCArmRecordData(
-                          sysGenBrand: _model.textTextController2.text,
-                          sysGenModal: _model.textTextController3.text,
-                          sysGenYOM: _model.textTextController4.text,
-                          sysGenSN: _model.textTextController5.text,
-                          sysGenDocName: _model.textTextController1.text,
+                          detectorModel: _model.textTextController1.text,
+                          detectorSize: _model.textTextController2.text,
+                          detectorYOM: _model.textTextController3.text,
+                          detectorCondition: _model.textTextController4.text,
                         ));
 
                         context.pushNamed(

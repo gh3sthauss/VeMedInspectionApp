@@ -1,5 +1,10 @@
+// MANUALLY MIGRATED for offline photo upload (outbox pattern) — see
+// lib/components/photo_upload_outbox/. If this page is re-synced from
+// FlutterFlow, this migration must be reapplied.
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
+import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -28,6 +33,7 @@ class XRDetectorWidget extends StatefulWidget {
 
 class _XRDetectorWidgetState extends State<XRDetectorWidget> {
   late XRDetectorModel _model;
+  late PhotoUploadOutboxModel _photoModel;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -35,6 +41,7 @@ class _XRDetectorWidgetState extends State<XRDetectorWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => XRDetectorModel());
+    _photoModel = createModel(context, () => PhotoUploadOutboxModel());
 
     _model.textFocusNode1 ??= FocusNode();
 
@@ -48,6 +55,7 @@ class _XRDetectorWidgetState extends State<XRDetectorWidget> {
   @override
   void dispose() {
     _model.dispose();
+    _photoModel.dispose();
 
     super.dispose();
   }
@@ -514,6 +522,51 @@ class _XRDetectorWidgetState extends State<XRDetectorWidget> {
                               ],
                             ),
                           ),
+                        ),
+                        Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Align(
+                              alignment: AlignmentDirectional(-1.0, 0.0),
+                              child: Text(
+                                'Pictures',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.readexPro(
+                                        fontWeight: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontWeight,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                      fontSize: 16.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontWeight,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                              ),
+                            ),
+                            wrapWithModel(
+                              model: _photoModel,
+                              updateCallback: () => safeSetState(() {}),
+                              child: PhotoUploadOutboxWidget(
+                                collectionPath: 'XRay',
+                                docId: widget.docDataDetector!.id,
+                                arrayFieldName: 'DetectorPicURL',
+                                storagePathPrefix:
+                                    'users/$currentUserUid/xray/detector',
+                                existingPhotoUrls: xRDetectorXRayRecord
+                                    .detectorPicURL
+                                    .toList(),
+                              ),
+                            ),
+                          ],
                         ),
                       ]
                           .divide(SizedBox(height: 16.0))

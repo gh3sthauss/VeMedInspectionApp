@@ -261,6 +261,31 @@ class CtRecord extends FirestoreRecord {
   List<String> get deviceImg => _deviceImg ?? const [];
   bool hasDeviceImg() => _deviceImg != null;
 
+  // "AccessoriesPicURL" field.
+  List<String>? _accessoriesPicURL;
+  List<String> get accessoriesPicURL => _accessoriesPicURL ?? const [];
+  bool hasAccessoriesPicURL() => _accessoriesPicURL != null;
+
+  // "GantryPicURL" field.
+  List<String>? _gantryPicURL;
+  List<String> get gantryPicURL => _gantryPicURL ?? const [];
+  bool hasGantryPicURL() => _gantryPicURL != null;
+
+  // "CoolingSystemPicURL" field.
+  List<String>? _coolingSystemPicURL;
+  List<String> get coolingSystemPicURL => _coolingSystemPicURL ?? const [];
+  bool hasCoolingSystemPicURL() => _coolingSystemPicURL != null;
+
+  // "PatientTablePicURL" field.
+  List<String>? _patientTablePicURL;
+  List<String> get patientTablePicURL => _patientTablePicURL ?? const [];
+  bool hasPatientTablePicURL() => _patientTablePicURL != null;
+
+  // "DnTPicURL" field.
+  List<String>? _dnTPicURL;
+  List<String> get dnTPicURL => _dnTPicURL ?? const [];
+  bool hasDnTPicURL() => _dnTPicURL != null;
+
   void _initializeFields() {
     _sysGenBrand = snapshotData['SysGenBrand'] as String?;
     _sysGenModal = snapshotData['SysGenModal'] as String?;
@@ -311,6 +336,11 @@ class CtRecord extends FirestoreRecord {
     _cnWCMOptPURL = getDataList(snapshotData['CnWCMOptPURL']);
     _cosmeticPicURL = getDataList(snapshotData['CosmeticPicURL']);
     _deviceImg = getDataList(snapshotData['DeviceImg']);
+    _accessoriesPicURL = getDataList(snapshotData['AccessoriesPicURL']);
+    _gantryPicURL = getDataList(snapshotData['GantryPicURL']);
+    _coolingSystemPicURL = getDataList(snapshotData['CoolingSystemPicURL']);
+    _patientTablePicURL = getDataList(snapshotData['PatientTablePicURL']);
+    _dnTPicURL = getDataList(snapshotData['DnTPicURL']);
   }
 
   static CollectionReference get collection =>
@@ -499,7 +529,13 @@ class CtRecordDocumentEquality implements Equality<CtRecord> {
             e1?.cnWWorkstationOptPURL, e2?.cnWWorkstationOptPURL) &&
         listEquality.equals(e1?.cnWCMOptPURL, e2?.cnWCMOptPURL) &&
         listEquality.equals(e1?.cosmeticPicURL, e2?.cosmeticPicURL) &&
-        listEquality.equals(e1?.deviceImg, e2?.deviceImg);
+        listEquality.equals(e1?.deviceImg, e2?.deviceImg) &&
+        listEquality.equals(e1?.accessoriesPicURL, e2?.accessoriesPicURL) &&
+        listEquality.equals(e1?.gantryPicURL, e2?.gantryPicURL) &&
+        listEquality.equals(
+            e1?.coolingSystemPicURL, e2?.coolingSystemPicURL) &&
+        listEquality.equals(e1?.patientTablePicURL, e2?.patientTablePicURL) &&
+        listEquality.equals(e1?.dnTPicURL, e2?.dnTPicURL);
   }
 
   @override
@@ -552,7 +588,12 @@ class CtRecordDocumentEquality implements Equality<CtRecord> {
         e?.cnWWorkstationOptPURL,
         e?.cnWCMOptPURL,
         e?.cosmeticPicURL,
-        e?.deviceImg
+        e?.deviceImg,
+        e?.accessoriesPicURL,
+        e?.gantryPicURL,
+        e?.coolingSystemPicURL,
+        e?.patientTablePicURL,
+        e?.dnTPicURL
       ]);
 
   @override

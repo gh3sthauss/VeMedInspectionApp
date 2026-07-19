@@ -1177,12 +1177,13 @@ class _AngConsoleAndWorkstationWidgetState
                                         child: PhotoUploadOutboxWidget(
                                           collectionPath: 'Angiography',
                                           docId: widget.docDataCW!.id,
-                                          arrayFieldName: 'CnWCMOptPURL',
+                                          arrayFieldName:
+                                              'CnWWorkstationOptPURL',
                                           storagePathPrefix:
                                               'users/$currentUserUid/angiography/workstation',
                                           existingPhotoUrls:
                                               angConsoleAndWorkstationAngiographyRecord
-                                                  .cnWCMOptPURL
+                                                  .cnWWorkstationOptPURL
                                                   .toList(),
                                         ),
                                       ),

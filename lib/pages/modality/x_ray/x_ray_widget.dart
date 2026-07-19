@@ -129,7 +129,7 @@ class _XRayWidgetState extends State<XRayWidget> {
                               }.withoutNulls,
                             );
                           },
-                          text: 'Tube',
+                          text: 'Table',
                           options: FFButtonOptions(
                             width: 300.0,
                             height: 50.0,
@@ -182,7 +182,7 @@ class _XRayWidgetState extends State<XRayWidget> {
                               }.withoutNulls,
                             );
                           },
-                          text: 'Table',
+                          text: 'Tube',
                           options: FFButtonOptions(
                             width: 300.0,
                             height: 50.0,

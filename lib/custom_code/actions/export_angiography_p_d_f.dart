@@ -1,9 +1,5 @@
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
-import '/backend/sqlite/sqlite_manager.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
-import 'index.dart'; // Imports other custom actions
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -68,12 +64,24 @@ Future<void> exportAngiographyPDF(AngiographyRecord docRef) async {
     _loadImages(docRef.softwareOptPicsURL),
     _loadImages(docRef.cnWCMOptPURL),
     _loadImages(docRef.deviceImg),
+    _loadImages(docRef.accessoriesPicURL),
+    _loadImages(docRef.detectorPicURL),
+    _loadImages(docRef.dnTPicURL),
+    _loadImages(docRef.patientTablePicURL),
+    _loadImages(docRef.tubePicURL),
+    _loadImages(docRef.cnWWorkstationOptPURL),
   ]);
   final cosmeticGallery = results[0];
   final otherNotesGallery = results[1];
   final softwareOptGallery = results[2];
   final consoleOptGallery = results[3];
   final deviceImg = results[4];
+  final accessoriesGallery = results[5];
+  final detectorGallery = results[6];
+  final dnTGallery = results[7];
+  final patientTableGallery = results[8];
+  final tubeGallery = results[9];
+  final workstationOptGallery = results[10];
 
   // Hero image comes from the dedicated deviceImg field.
   final pw.ImageProvider? heroImage =
@@ -111,6 +119,10 @@ Future<void> exportAngiographyPDF(AngiographyRecord docRef) async {
           ['Model', docRef.tube1Model],
           ['Year of Manufacture', docRef.tube1YOM],
         ]),
+        if (tubeGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(tubeGallery),
+        ],
 
         // ========================== DETECTOR ================================
         _sectionHeader('Detector Information'),
@@ -120,6 +132,10 @@ Future<void> exportAngiographyPDF(AngiographyRecord docRef) async {
           ['Year of Manufacture', docRef.detectorYOM],
           ['Condition', docRef.detectorCondition],
         ]),
+        if (detectorGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(detectorGallery),
+        ],
 
         // ========================== SOFTWARE ================================
         _sectionHeader('Software Information'),
@@ -145,9 +161,9 @@ Future<void> exportAngiographyPDF(AngiographyRecord docRef) async {
           ['Workstation Serial Number', docRef.cnWWorkSSN],
           ['Workstation Software Version', docRef.cnWWorkSSW],
         ]),
-        if (consoleOptGallery.isNotEmpty) ...[
+        if (consoleOptGallery.isNotEmpty || workstationOptGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
-          _imageGrid(consoleOptGallery),
+          _imageGrid([...consoleOptGallery, ...workstationOptGallery]),
         ],
 
         // ====================== PATIENT TABLE ================================
@@ -157,6 +173,10 @@ Future<void> exportAngiographyPDF(AngiographyRecord docRef) async {
           // TODO: add any remaining Patient Table fields from your schema here
           // (e.g. Serial Number, Year of Manufacture) once confirmed.
         ]),
+        if (patientTableGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(patientTableGallery),
+        ],
 
         // ========================= ACCESSORIES ================================
         _sectionHeader('Accessories'),
@@ -164,6 +184,10 @@ Future<void> exportAngiographyPDF(AngiographyRecord docRef) async {
           ['CDs', docRef.accessoriesCDs],
           ['Spare Parts', docRef.accessoriesSpareP],
         ]),
+        if (accessoriesGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(accessoriesGallery),
+        ],
 
         pw.NewPage(),
 
@@ -192,6 +216,10 @@ Future<void> exportAngiographyPDF(AngiographyRecord docRef) async {
           ['Tools Required', docRef.dnTTools],
           ['Special Attention', docRef.dnTSpecialAttention],
         ]),
+        if (dnTGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(dnTGallery),
+        ],
 
         // =========================== OTHER NOTES ================================
         _sectionHeader('Other Notes'),
@@ -221,13 +249,15 @@ Future<void> exportAngiographyPDF(AngiographyRecord docRef) async {
     final file = File('${tempDir.path}/$fileName');
     await file.writeAsBytes(pdfBytes);
 
-    await Share.shareXFiles(
-      [XFile(file.path, mimeType: 'application/pdf', name: fileName)],
-      subject: fileName,
-      // Required on iOS 26+ (even for iPhone — previously only iPad needed
-      // this for the popover anchor) and always required on iPad. A rough
-      // rect is fine; it just needs to be non-zero.
-      sharePositionOrigin: const Rect.fromLTWH(0, 0, 100, 100),
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(file.path, mimeType: 'application/pdf', name: fileName)],
+        subject: fileName,
+        // Required on iOS 26+ (even for iPhone — previously only iPad needed
+        // this for the popover anchor) and always required on iPad. A rough
+        // rect is fine; it just needs to be non-zero.
+        sharePositionOrigin: const Rect.fromLTWH(0, 0, 100, 100),
+      ),
     );
   } catch (e) {
     // TODO: surface this to the user (e.g. via a FlutterFlow snackbar

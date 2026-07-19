@@ -1,9 +1,5 @@
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
-import '/backend/sqlite/sqlite_manager.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
-import 'index.dart'; // Imports other custom actions
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -55,11 +51,19 @@ Future<void> exportCArmPDF(CArmRecord docRef) async {
     _loadImages(docRef.otherNotesPhotosURL),
     _loadImages(docRef.softwareOptPicsURL),
     _loadImages(docRef.deviceImg),
+    _loadImages(docRef.accessoriesPicURL),
+    _loadImages(docRef.detectorPicURL),
+    _loadImages(docRef.dnTPicURL),
+    _loadImages(docRef.tubePicURL),
   ]);
   final cosmeticGallery = results[0];
   final otherNotesGallery = results[1];
   final softwareOptGallery = results[2];
   final deviceImg = results[3];
+  final accessoriesGallery = results[4];
+  final detectorGallery = results[5];
+  final dnTGallery = results[6];
+  final tubeGallery = results[7];
 
   // Hero image comes from the dedicated deviceImg field; falls back to the
   // first cosmetic photo if deviceImg wasn't populated for this record.
@@ -98,6 +102,10 @@ Future<void> exportCArmPDF(CArmRecord docRef) async {
           ['Model', docRef.tube1Model],
           ['Year of Manufacture', docRef.tube1YOM],
         ]),
+        if (tubeGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(tubeGallery),
+        ],
 
         // ========================== DETECTOR ================================
         _sectionHeader('Detector Information'),
@@ -107,6 +115,10 @@ Future<void> exportCArmPDF(CArmRecord docRef) async {
           ['Year of Manufacture', docRef.detectorYOM],
           ['Condition', docRef.detectorCondition],
         ]),
+        if (detectorGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(detectorGallery),
+        ],
 
         // ========================== SOFTWARE ================================
         _sectionHeader('Software Information'),
@@ -134,6 +146,10 @@ Future<void> exportCArmPDF(CArmRecord docRef) async {
           ['CDs', docRef.accessoriesCDs],
           ['Spare Parts', docRef.accessoriesSpareP],
         ]),
+        if (accessoriesGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(accessoriesGallery),
+        ],
 
         pw.NewPage(),
 
@@ -158,6 +174,10 @@ Future<void> exportCArmPDF(CArmRecord docRef) async {
           ['Tools Required', docRef.dnTTools],
           ['Special Attention', docRef.dnTSpecialAttention],
         ]),
+        if (dnTGallery.isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _imageGrid(dnTGallery),
+        ],
 
         // =========================== OTHER NOTES ================================
         _sectionHeader('Other Notes'),
@@ -181,10 +201,12 @@ Future<void> exportCArmPDF(CArmRecord docRef) async {
     final file = File('${tempDir.path}/$fileName');
     await file.writeAsBytes(pdfBytes);
 
-    await Share.shareXFiles(
-      [XFile(file.path, mimeType: 'application/pdf', name: fileName)],
-      subject: fileName,
-      sharePositionOrigin: const Rect.fromLTWH(0, 0, 100, 100),
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(file.path, mimeType: 'application/pdf', name: fileName)],
+        subject: fileName,
+        sharePositionOrigin: const Rect.fromLTWH(0, 0, 100, 100),
+      ),
     );
   } catch (e) {
     print('PDF export failed: $e');

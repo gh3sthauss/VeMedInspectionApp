@@ -311,6 +311,26 @@ class PacsRecord extends FirestoreRecord {
   String get cR8Condition => _cR8Condition ?? '';
   bool hasCR8Condition() => _cR8Condition != null;
 
+  // "AccessoriesPicURL" field.
+  List<String>? _accessoriesPicURL;
+  List<String> get accessoriesPicURL => _accessoriesPicURL ?? const [];
+  bool hasAccessoriesPicURL() => _accessoriesPicURL != null;
+
+  // "CassettesPicURL" field.
+  List<String>? _cassettesPicURL;
+  List<String> get cassettesPicURL => _cassettesPicURL ?? const [];
+  bool hasCassettesPicURL() => _cassettesPicURL != null;
+
+  // "DetectorPicURL" field.
+  List<String>? _detectorPicURL;
+  List<String> get detectorPicURL => _detectorPicURL ?? const [];
+  bool hasDetectorPicURL() => _detectorPicURL != null;
+
+  // "DnTPicURL" field.
+  List<String>? _dnTPicURL;
+  List<String> get dnTPicURL => _dnTPicURL ?? const [];
+  bool hasDnTPicURL() => _dnTPicURL != null;
+
   void _initializeFields() {
     _sysGenBrand = snapshotData['SysGenBrand'] as String?;
     _sysGenModal = snapshotData['SysGenModal'] as String?;
@@ -371,6 +391,10 @@ class PacsRecord extends FirestoreRecord {
     _cR7Condition = snapshotData['CR7Condition'] as String?;
     _cR8Condition = snapshotData['CR8Condition'] as String?;
     _deviceImg = getDataList(snapshotData['DeviceImg']);
+    _accessoriesPicURL = getDataList(snapshotData['AccessoriesPicURL']);
+    _cassettesPicURL = getDataList(snapshotData['CassettesPicURL']);
+    _detectorPicURL = getDataList(snapshotData['DetectorPicURL']);
+    _dnTPicURL = getDataList(snapshotData['DnTPicURL']);
   }
 
   static CollectionReference get collection =>
@@ -589,7 +613,11 @@ class PacsRecordDocumentEquality implements Equality<PacsRecord> {
         e1?.cR6Condition == e2?.cR6Condition &&
         e1?.cR7Condition == e2?.cR7Condition &&
         e1?.cR8Condition == e2?.cR8Condition &&
-        listEquality.equals(e1?.deviceImg, e2?.deviceImg);
+        listEquality.equals(e1?.deviceImg, e2?.deviceImg) &&
+        listEquality.equals(e1?.accessoriesPicURL, e2?.accessoriesPicURL) &&
+        listEquality.equals(e1?.cassettesPicURL, e2?.cassettesPicURL) &&
+        listEquality.equals(e1?.detectorPicURL, e2?.detectorPicURL) &&
+        listEquality.equals(e1?.dnTPicURL, e2?.dnTPicURL);
   }
 
   @override
@@ -652,7 +680,11 @@ class PacsRecordDocumentEquality implements Equality<PacsRecord> {
         e?.cR6Condition,
         e?.cR7Condition,
         e?.cR8Condition,
-        e?.deviceImg
+        e?.deviceImg,
+        e?.accessoriesPicURL,
+        e?.cassettesPicURL,
+        e?.detectorPicURL,
+        e?.dnTPicURL
       ]);
 
   @override

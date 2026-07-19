@@ -1,5 +1,10 @@
+// MANUALLY MIGRATED for offline photo upload (outbox pattern) — see
+// lib/components/photo_upload_outbox/. If this page is re-synced from
+// FlutterFlow, this migration must be reapplied.
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
+import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -27,6 +32,7 @@ class FLTableWidget extends StatefulWidget {
 
 class _FLTableWidgetState extends State<FLTableWidget> {
   late FLTableModel _model;
+  late PhotoUploadOutboxModel _photoModel;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -34,6 +40,7 @@ class _FLTableWidgetState extends State<FLTableWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => FLTableModel());
+    _photoModel = createModel(context, () => PhotoUploadOutboxModel());
 
     _model.textFocusNode1 ??= FocusNode();
 
@@ -43,6 +50,7 @@ class _FLTableWidgetState extends State<FLTableWidget> {
   @override
   void dispose() {
     _model.dispose();
+    _photoModel.dispose();
 
     super.dispose();
   }
@@ -85,7 +93,7 @@ class _FLTableWidgetState extends State<FLTableWidget> {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  CompactAppBar(title: 'Tube'),
+                  CompactAppBar(title: 'Table'),
                   Expanded(
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
@@ -98,7 +106,7 @@ class _FLTableWidgetState extends State<FLTableWidget> {
                             child: TextFormField(
                               controller: _model.textTextController1 ??=
                                   TextEditingController(
-                                text: fLTableFluoroscopyRecord.tube1Model,
+                                text: fLTableFluoroscopyRecord.tableModel,
                               ),
                               focusNode: _model.textFocusNode1,
                               textCapitalization: TextCapitalization.words,
@@ -198,7 +206,7 @@ class _FLTableWidgetState extends State<FLTableWidget> {
                             child: TextFormField(
                               controller: _model.textTextController2 ??=
                                   TextEditingController(
-                                text: fLTableFluoroscopyRecord.tube1YOM,
+                                text: fLTableFluoroscopyRecord.tableYOM,
                               ),
                               focusNode: _model.textFocusNode2,
                               textCapitalization: TextCapitalization.words,
@@ -295,14 +303,58 @@ class _FLTableWidgetState extends State<FLTableWidget> {
                           .addToStart(SizedBox(height: 20.0)),
                     ),
                   ),
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Align(
+                        alignment: AlignmentDirectional(-1.0, 0.0),
+                        child: Text(
+                          'Pictures',
+                          style: FlutterFlowTheme.of(context)
+                              .bodyMedium
+                              .override(
+                                font: GoogleFonts.readexPro(
+                                  fontWeight: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontWeight,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontStyle,
+                                ),
+                                fontSize: 16.0,
+                                letterSpacing: 0.0,
+                                fontWeight: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .fontWeight,
+                                fontStyle: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .fontStyle,
+                              ),
+                        ),
+                      ),
+                      wrapWithModel(
+                        model: _photoModel,
+                        updateCallback: () => safeSetState(() {}),
+                        child: PhotoUploadOutboxWidget(
+                          collectionPath: 'Fluoroscopy',
+                          docId: widget.docRefSoft!.id,
+                          arrayFieldName: 'TablePicURL',
+                          storagePathPrefix:
+                              'users/$currentUserUid/fluoroscopy/table',
+                          existingPhotoUrls:
+                              fLTableFluoroscopyRecord.tablePicURL.toList(),
+                        ),
+                      ),
+                    ],
+                  ),
                   Align(
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
                         await widget.docRefSoft!
                             .update(createFluoroscopyRecordData(
-                          tube1Model: _model.textTextController1.text,
-                          tube1YOM: _model.textTextController2.text,
+                          tableModel: _model.textTextController1.text,
+                          tableYOM: _model.textTextController2.text,
                         ));
 
                         context.pushNamed(
