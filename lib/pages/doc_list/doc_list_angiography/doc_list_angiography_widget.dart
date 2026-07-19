@@ -88,6 +88,15 @@ class _DocListAngiographyWidgetState extends State<DocListAngiographyWidget> {
                     List<AngiographyRecord> listViewAngiographyRecordList =
                         snapshot.data!;
 
+                    if (listViewAngiographyRecordList.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No documents created yet',
+                          style: FlutterFlowTheme.of(context).bodyMedium,
+                        ),
+                      );
+                    }
+
                     return ListView.separated(
                       padding: EdgeInsets.fromLTRB(
                         0,

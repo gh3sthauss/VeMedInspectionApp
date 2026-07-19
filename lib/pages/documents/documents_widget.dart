@@ -115,8 +115,8 @@ class _DocumentsWidgetState extends State<DocumentsWidget> {
                             return _ModalityCountRow(
                               label: 'Ultrasound',
                               count: snapshot.data,
-                              onTap: () => context.pushNamed(
-                                  DocListUltrasoundWidget.routeName),
+                              onTap: () => context
+                                  .pushNamed(DocListUltrasoundWidget.routeName),
                             );
                           },
                         ),
@@ -134,8 +134,8 @@ class _DocumentsWidgetState extends State<DocumentsWidget> {
                             return _ModalityCountRow(
                               label: 'MRI',
                               count: snapshot.data,
-                              onTap: () => context
-                                  .pushNamed(DocListMRIWidget.routeName),
+                              onTap: () =>
+                                  context.pushNamed(DocListMRIWidget.routeName),
                             );
                           },
                         ),

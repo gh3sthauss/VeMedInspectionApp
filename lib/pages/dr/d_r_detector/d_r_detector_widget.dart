@@ -100,7 +100,8 @@ class _DRDetectorWidgetState extends State<DRDetectorWidget> {
                 children: [
                   CompactAppBar(title: 'Detector'),
                   Expanded(
-                    child: Column(
+                    child: SingleChildScrollView(
+                        child: Column(
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -526,17 +527,21 @@ class _DRDetectorWidgetState extends State<DRDetectorWidget> {
                       ]
                           .divide(SizedBox(height: 16.0))
                           .addToStart(SizedBox(height: 10.0)),
-                    ),
+                    )),
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Align(
-                        alignment: AlignmentDirectional(-1.0, 0.0),
-                        child: Text(
-                          'Pictures',
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
+                      Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              25.0, 0.0, 25.0, 0.0),
+                          child: Align(
+                            alignment: AlignmentDirectional(-1.0, 0.0),
+                            child: Text(
+                              'Pictures',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
                                     font: GoogleFonts.readexPro(
                                       fontWeight: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -554,8 +559,8 @@ class _DRDetectorWidgetState extends State<DRDetectorWidget> {
                                         .bodyMedium
                                         .fontStyle,
                                   ),
-                        ),
-                      ),
+                            ),
+                          )),
                       wrapWithModel(
                         model: _photoModel,
                         updateCallback: () => safeSetState(() {}),
@@ -575,8 +580,7 @@ class _DRDetectorWidgetState extends State<DRDetectorWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataDetector!
-                            .update(createDrRecordData(
+                        await widget.docDataDetector!.update(createDrRecordData(
                           detectorModel: _model.textTextController1.text,
                           detectorSize: _model.textTextController2.text,
                           detectorYOM: _model.textTextController3.text,

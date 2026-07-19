@@ -3434,12 +3434,16 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                   Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Align(
-                        alignment: AlignmentDirectional(-1.0, 0.0),
-                        child: Text(
-                          'Pictures',
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
+                      Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              25.0, 0.0, 25.0, 0.0),
+                          child: Align(
+                            alignment: AlignmentDirectional(-1.0, 0.0),
+                            child: Text(
+                              'Pictures',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
                                     font: GoogleFonts.readexPro(
                                       fontWeight: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -3457,8 +3461,8 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                                         .bodyMedium
                                         .fontStyle,
                                   ),
-                        ),
-                      ),
+                            ),
+                          )),
                       wrapWithModel(
                         model: _photoModel,
                         updateCallback: () => safeSetState(() {}),

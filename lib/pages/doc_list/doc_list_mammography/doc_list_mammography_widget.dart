@@ -88,6 +88,15 @@ class _DocListMammographyWidgetState extends State<DocListMammographyWidget> {
                     List<MammographyRecord> listViewMammographyRecordList =
                         snapshot.data!;
 
+                    if (listViewMammographyRecordList.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No documents created yet',
+                          style: FlutterFlowTheme.of(context).bodyMedium,
+                        ),
+                      );
+                    }
+
                     return ListView.separated(
                       padding: EdgeInsets.fromLTRB(
                         0,

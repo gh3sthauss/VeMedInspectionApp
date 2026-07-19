@@ -85,6 +85,15 @@ class _DocListCRWidgetState extends State<DocListCRWidget> {
                     }
                     List<CrRecord> listViewCrRecordList = snapshot.data!;
 
+                    if (listViewCrRecordList.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No documents created yet',
+                          style: FlutterFlowTheme.of(context).bodyMedium,
+                        ),
+                      );
+                    }
+
                     return ListView.separated(
                       padding: EdgeInsets.fromLTRB(
                         0,

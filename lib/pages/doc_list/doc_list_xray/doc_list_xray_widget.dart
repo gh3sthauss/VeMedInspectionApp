@@ -85,6 +85,15 @@ class _DocListXrayWidgetState extends State<DocListXrayWidget> {
                     }
                     List<XRayRecord> listViewXRayRecordList = snapshot.data!;
 
+                    if (listViewXRayRecordList.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No documents created yet',
+                          style: FlutterFlowTheme.of(context).bodyMedium,
+                        ),
+                      );
+                    }
+
                     return ListView.separated(
                       padding: EdgeInsets.fromLTRB(
                         0,
@@ -176,8 +185,7 @@ class _DocListXrayWidgetState extends State<DocListXrayWidget> {
                                               );
                                             },
                                             onDelete: () async {
-                                              await listViewXRayRecord
-                                                  .reference
+                                              await listViewXRayRecord.reference
                                                   .delete();
                                             },
                                           );

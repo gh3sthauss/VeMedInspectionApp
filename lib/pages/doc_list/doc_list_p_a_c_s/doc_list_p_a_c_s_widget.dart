@@ -85,6 +85,15 @@ class _DocListPACSWidgetState extends State<DocListPACSWidget> {
                     }
                     List<PacsRecord> listViewPacsRecordList = snapshot.data!;
 
+                    if (listViewPacsRecordList.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No documents created yet',
+                          style: FlutterFlowTheme.of(context).bodyMedium,
+                        ),
+                      );
+                    }
+
                     return ListView.separated(
                       padding: EdgeInsets.fromLTRB(
                         0,
@@ -176,8 +185,7 @@ class _DocListPACSWidgetState extends State<DocListPACSWidget> {
                                               );
                                             },
                                             onDelete: () async {
-                                              await listViewPacsRecord
-                                                  .reference
+                                              await listViewPacsRecord.reference
                                                   .delete();
                                             },
                                           );

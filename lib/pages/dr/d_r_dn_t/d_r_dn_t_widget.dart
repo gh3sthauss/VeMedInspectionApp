@@ -106,7 +106,8 @@ class _DRDnTWidgetState extends State<DRDnTWidget> {
                 children: [
                   CompactAppBar(title: 'Dismantling & Transport'),
                   Expanded(
-                    child: Column(
+                    child: SingleChildScrollView(
+                        child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Padding(
@@ -945,17 +946,21 @@ class _DRDnTWidgetState extends State<DRDnTWidget> {
                       ]
                           .divide(SizedBox(height: 16.0))
                           .addToStart(SizedBox(height: 20.0)),
-                    ),
+                    )),
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Align(
-                        alignment: AlignmentDirectional(-1.0, 0.0),
-                        child: Text(
-                          'Pictures',
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
+                      Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              25.0, 0.0, 25.0, 0.0),
+                          child: Align(
+                            alignment: AlignmentDirectional(-1.0, 0.0),
+                            child: Text(
+                              'Pictures',
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
                                     font: GoogleFonts.readexPro(
                                       fontWeight: FlutterFlowTheme.of(context)
                                           .bodyMedium
@@ -973,8 +978,8 @@ class _DRDnTWidgetState extends State<DRDnTWidget> {
                                         .bodyMedium
                                         .fontStyle,
                                   ),
-                        ),
-                      ),
+                            ),
+                          )),
                       wrapWithModel(
                         model: _photoModel,
                         updateCallback: () => safeSetState(() {}),
@@ -983,8 +988,7 @@ class _DRDnTWidgetState extends State<DRDnTWidget> {
                           docId: widget.docDataDT!.id,
                           arrayFieldName: 'DnTPicURL',
                           storagePathPrefix: 'users/$currentUserUid/dr/dnT',
-                          existingPhotoUrls:
-                              dRDnTDrRecord.dnTPicURL.toList(),
+                          existingPhotoUrls: dRDnTDrRecord.dnTPicURL.toList(),
                         ),
                       ),
                     ],

@@ -87,6 +87,15 @@ class _DocListUltrasoundWidgetState extends State<DocListUltrasoundWidget> {
                     List<UltrasoundRecord> listViewUltrasoundRecordList =
                         snapshot.data!;
 
+                    if (listViewUltrasoundRecordList.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No documents created yet',
+                          style: FlutterFlowTheme.of(context).bodyMedium,
+                        ),
+                      );
+                    }
+
                     return ListView.separated(
                       padding: EdgeInsets.fromLTRB(
                         0,
@@ -177,8 +186,7 @@ class _DocListUltrasoundWidgetState extends State<DocListUltrasoundWidget> {
                                                   .reference.id,
                                             ),
                                             onDownload: () async {
-                                              await actions
-                                                  .exportUltrasoundPDF(
+                                              await actions.exportUltrasoundPDF(
                                                 listViewUltrasoundRecord,
                                               );
                                             },

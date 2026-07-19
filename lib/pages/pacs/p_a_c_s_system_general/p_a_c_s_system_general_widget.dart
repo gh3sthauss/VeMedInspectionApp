@@ -103,7 +103,8 @@ class _PACSSystemGeneralWidgetState extends State<PACSSystemGeneralWidget> {
                 children: [
                   CompactAppBar(title: 'System General Information'),
                   Expanded(
-                    child: Column(
+                    child: SingleChildScrollView(
+                        child: Column(
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -629,32 +630,39 @@ class _PACSSystemGeneralWidgetState extends State<PACSSystemGeneralWidget> {
                         Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            Align(
-                              alignment: AlignmentDirectional(-1.0, 0.0),
-                              child: Text(
-                                'Pictures',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      font: GoogleFonts.readexPro(
-                                        fontWeight: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontWeight,
-                                        fontStyle: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .fontStyle,
-                                      ),
-                                      fontSize: 16.0,
-                                      letterSpacing: 0.0,
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                              ),
-                            ),
+                            Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    25.0, 0.0, 25.0, 0.0),
+                                child: Align(
+                                  alignment: AlignmentDirectional(-1.0, 0.0),
+                                  child: Text(
+                                    'Pictures',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          font: GoogleFonts.readexPro(
+                                            fontWeight:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontWeight,
+                                            fontStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyMedium
+                                                    .fontStyle,
+                                          ),
+                                          fontSize: 16.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontWeight,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                  ),
+                                )),
                             wrapWithModel(
                               model: _photoModel,
                               updateCallback: () => safeSetState(() {}),
@@ -674,7 +682,7 @@ class _PACSSystemGeneralWidgetState extends State<PACSSystemGeneralWidget> {
                       ]
                           .divide(SizedBox(height: 16.0))
                           .addToStart(SizedBox(height: 10.0)),
-                    ),
+                    )),
                   ),
                   Align(
                     alignment: AlignmentDirectional(0.0, 1.0),
@@ -684,8 +692,7 @@ class _PACSSystemGeneralWidgetState extends State<PACSSystemGeneralWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await widget.docDataSysGen!
-                            .update(createPacsRecordData(
+                        await widget.docDataSysGen!.update(createPacsRecordData(
                           sysGenBrand: _model.textTextController2.text,
                           sysGenModal: _model.textTextController3.text,
                           sysGenYOM: _model.textTextController4.text,

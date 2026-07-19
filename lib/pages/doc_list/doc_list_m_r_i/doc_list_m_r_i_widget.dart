@@ -85,6 +85,15 @@ class _DocListMRIWidgetState extends State<DocListMRIWidget> {
                     }
                     List<MriRecord> listViewMriRecordList = snapshot.data!;
 
+                    if (listViewMriRecordList.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No documents created yet',
+                          style: FlutterFlowTheme.of(context).bodyMedium,
+                        ),
+                      );
+                    }
+
                     return ListView.separated(
                       padding: EdgeInsets.fromLTRB(
                         0,

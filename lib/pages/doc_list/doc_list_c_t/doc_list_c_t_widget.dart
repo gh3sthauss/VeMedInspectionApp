@@ -85,6 +85,15 @@ class _DocListCTWidgetState extends State<DocListCTWidget> {
                     }
                     List<CtRecord> listViewCtRecordList = snapshot.data!;
 
+                    if (listViewCtRecordList.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No documents created yet',
+                          style: FlutterFlowTheme.of(context).bodyMedium,
+                        ),
+                      );
+                    }
+
                     return ListView.separated(
                       padding: EdgeInsets.fromLTRB(
                         0,

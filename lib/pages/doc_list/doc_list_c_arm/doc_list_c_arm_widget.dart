@@ -85,6 +85,15 @@ class _DocListCArmWidgetState extends State<DocListCArmWidget> {
                     }
                     List<CArmRecord> listViewCArmRecordList = snapshot.data!;
 
+                    if (listViewCArmRecordList.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No documents created yet',
+                          style: FlutterFlowTheme.of(context).bodyMedium,
+                        ),
+                      );
+                    }
+
                     return ListView.separated(
                       padding: EdgeInsets.fromLTRB(
                         0,
@@ -166,11 +175,9 @@ class _DocListCArmWidgetState extends State<DocListCArmWidget> {
                                           showDocActionsSheet(
                                             context,
                                             title: smartDocName(
-                                              listViewCArmRecord
-                                                  .sysGenDocName,
+                                              listViewCArmRecord.sysGenDocName,
                                               'C-Arm',
-                                              listViewCArmRecord
-                                                  .reference.id,
+                                              listViewCArmRecord.reference.id,
                                             ),
                                             onDownload: () async {
                                               await actions.exportCArmPDF(
@@ -178,8 +185,7 @@ class _DocListCArmWidgetState extends State<DocListCArmWidget> {
                                               );
                                             },
                                             onDelete: () async {
-                                              await listViewCArmRecord
-                                                  .reference
+                                              await listViewCArmRecord.reference
                                                   .delete();
                                             },
                                           );
