@@ -265,7 +265,7 @@ class _PACSOtherNotesWidgetState extends State<PACSOtherNotesWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await widget.docDataON!.update(createPacsRecordData(
+                        widget.docDataON!.update(createPacsRecordData(
                           otherNotes: _model.textTextController.text,
                         ));
 

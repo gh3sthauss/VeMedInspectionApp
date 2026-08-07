@@ -460,7 +460,7 @@ class _MRIPowerstagesWidgetState extends State<MRIPowerstagesWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await mRIPowerstagesMriRecord.reference
+                        mRIPowerstagesMriRecord.reference
                             .update(createMriRecordData(
                           powerStages1SN: _model.textTextController1.text,
                           powerStages2SN: _model.textTextController2.text,

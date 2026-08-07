@@ -4432,7 +4432,7 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docRefCoil!.update(createMriRecordData(
+                        widget.docRefCoil!.update(createMriRecordData(
                           coil1SN: _model.textInputTextController2.text,
                           coil2SN: _model.textInputTextController6.text,
                           coil3SN: _model.textInputTextController10.text,

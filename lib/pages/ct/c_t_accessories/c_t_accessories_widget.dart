@@ -1132,7 +1132,7 @@ class _CTAccessoriesWidgetState extends State<CTAccessoriesWidget> {
                           alignment: AlignmentDirectional(0.0, 1.0),
                           child: FFButtonWidget(
                             onPressed: () async {
-                              await widget.docDataA!.update(createCtRecordData(
+                              widget.docDataA!.update(createCtRecordData(
                                 accessoriesPModal:
                                     _model.textInputTextController1.text,
                                 accessoriesPModelNo:

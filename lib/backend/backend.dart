@@ -532,9 +532,14 @@ Future<int> queryCollectionCount(
     query = query.limit(limit);
   }
 
-  return query.count().get().catchError((err) {
+  // Use a normal document query (not count() aggregation): count() is a
+  // server-only operation that never resolves while offline, which would
+  // leave the Documents page spinning forever in the field. A regular get()
+  // is served from the local persistence cache when offline.
+  return query.get().then((value) => value.size).catchError((err) {
     print('Error querying $collection: $err');
-  }).then((value) => value.count!);
+    return 0;
+  });
 }
 
 Stream<List<T>> queryCollection<T>(

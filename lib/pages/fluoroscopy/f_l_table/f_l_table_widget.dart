@@ -355,7 +355,7 @@ class _FLTableWidgetState extends State<FLTableWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docRefSoft!
+                        widget.docRefSoft!
                             .update(createFluoroscopyRecordData(
                           tableModel: _model.textTextController1.text,
                           tableYOM: _model.textTextController2.text,

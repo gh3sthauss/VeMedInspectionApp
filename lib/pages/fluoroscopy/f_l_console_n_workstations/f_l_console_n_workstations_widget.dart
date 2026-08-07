@@ -1219,7 +1219,7 @@ class _FLConsoleNWorkstationsWidgetState
                         // locally, uploads in the background) - the text save
                         // below no longer waits on them or branches on their
                         // outcome.
-                        await widget.docDataCW!
+                        widget.docDataCW!
                             .update(createFluoroscopyRecordData(
                           cnWConsoleMSN:
                               _model.cTConsoleModelSNTextController.text,

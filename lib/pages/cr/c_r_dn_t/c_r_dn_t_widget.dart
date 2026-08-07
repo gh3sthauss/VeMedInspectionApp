@@ -997,7 +997,7 @@ class _CRDnTWidgetState extends State<CRDnTWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataDT!.update(createCrRecordData(
+                        widget.docDataDT!.update(createCrRecordData(
                           dnTAddress: _model.textTextController1.text,
                           dnTFloor: _model.textTextController2.text,
                           dnTDoorS: _model.textTextController3.text,

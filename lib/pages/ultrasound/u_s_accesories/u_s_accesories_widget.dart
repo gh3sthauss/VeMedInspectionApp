@@ -353,7 +353,7 @@ class _USAccesoriesWidgetState extends State<USAccesoriesWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataA!
+                        widget.docDataA!
                             .update(createUltrasoundRecordData(
                           accessoriesCDs: _model.textInputTextController1.text,
                           accessoriesSpareP:

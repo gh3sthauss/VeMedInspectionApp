@@ -269,7 +269,7 @@ class _CTOtherNotesWidgetState extends State<CTOtherNotesWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await widget.docDataON!.update(createCtRecordData(
+                        widget.docDataON!.update(createCtRecordData(
                           otherNotes: _model.textTextController.text,
                         ));
 

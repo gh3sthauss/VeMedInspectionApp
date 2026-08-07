@@ -267,7 +267,7 @@ class _DRCosmeticWidgetState extends State<DRCosmeticWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await widget.docDataCC!.update(createDrRecordData(
+                        widget.docDataCC!.update(createDrRecordData(
                           cosmeticText: _model.textTextController.text,
                         ));
 

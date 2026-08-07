@@ -267,7 +267,7 @@ class _CACosmeticWidgetState extends State<CACosmeticWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await widget.docDataCC!.update(createCArmRecordData(
+                        widget.docDataCC!.update(createCArmRecordData(
                           cosmeticText: _model.textTextController.text,
                         ));
 

@@ -797,7 +797,7 @@ class _USSystemGeneralWidgetState extends State<USSystemGeneralWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await uSSystemGeneralUltrasoundRecord.reference
+                        uSSystemGeneralUltrasoundRecord.reference
                             .update(createUltrasoundRecordData(
                           sysGenBrand: _model.textTextController2.text,
                           sysGenModal: _model.textTextController3.text,

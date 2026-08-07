@@ -403,7 +403,7 @@ class _XRAccessoriesWidgetState extends State<XRAccessoriesWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataA!.update(createXRayRecordData(
+                        widget.docDataA!.update(createXRayRecordData(
                           accessoriesCDs: _model.textInputTextController1.text,
                           accessoriesSpareP:
                               _model.textInputTextController2.text,

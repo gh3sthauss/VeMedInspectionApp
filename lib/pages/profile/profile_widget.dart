@@ -479,7 +479,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
                 child: FFButtonWidget(
                   onPressed: () async {
-                    await currentUserReference!.update(createUsersRecordData(
+                    currentUserReference!.update(createUsersRecordData(
                       email: _model.textInputTextController2.text,
                       displayName: _model.textInputTextController1.text,
                     ));

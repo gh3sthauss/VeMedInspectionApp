@@ -98,7 +98,11 @@ class _CreateReportWidgetState extends State<CreateReportWidget> {
                           onPressed: () async {
                             var angiographyRecordReference =
                                 AngiographyRecord.collection.doc();
-                            await angiographyRecordReference.set({
+                            // Do not await: offline, set() persists to the
+                            // local cache immediately but its Future does not
+                            // resolve until the server acks. Awaiting it would
+                            // hang the button spinner forever with no signal.
+                            angiographyRecordReference.set({
                               ...createAngiographyRecordData(
                                 sysGenBrand: '',
                                 sysGenModal: '',
@@ -282,7 +286,7 @@ class _CreateReportWidgetState extends State<CreateReportWidget> {
                         child: FFButtonWidget(
                           onPressed: () async {
                             var ctRecordReference = CtRecord.collection.doc();
-                            await ctRecordReference.set(createCtRecordData(
+                            ctRecordReference.set(createCtRecordData(
                               sysGenBrand: '',
                               sysGenModal: '',
                               sysGenYOM: '',
@@ -434,7 +438,7 @@ class _CreateReportWidgetState extends State<CreateReportWidget> {
                           onPressed: () async {
                             var ultrasoundRecordReference =
                                 UltrasoundRecord.collection.doc();
-                            await ultrasoundRecordReference.set({
+                            ultrasoundRecordReference.set({
                               ...createUltrasoundRecordData(
                                 sysGenBrand: '',
                                 sysGenModal: '',
@@ -588,7 +592,7 @@ class _CreateReportWidgetState extends State<CreateReportWidget> {
                         child: FFButtonWidget(
                           onPressed: () async {
                             var mriRecordReference = MriRecord.collection.doc();
-                            await mriRecordReference.set(createMriRecordData(
+                            mriRecordReference.set(createMriRecordData(
                               userID: currentUserUid,
                             ));
                             _model.newDocMRI = MriRecord.getDocumentFromData(
@@ -654,7 +658,7 @@ class _CreateReportWidgetState extends State<CreateReportWidget> {
                           onPressed: () async {
                             var xRayRecordReference =
                                 XRayRecord.collection.doc();
-                            await xRayRecordReference.set(createXRayRecordData(
+                            xRayRecordReference.set(createXRayRecordData(
                               userID: currentUserUid,
                             ));
                             _model.newDocXRay = XRayRecord.getDocumentFromData(
@@ -720,7 +724,7 @@ class _CreateReportWidgetState extends State<CreateReportWidget> {
                           onPressed: () async {
                             var fluoroscopyRecordReference =
                                 FluoroscopyRecord.collection.doc();
-                            await fluoroscopyRecordReference
+                            fluoroscopyRecordReference
                                 .set(createFluoroscopyRecordData(
                               userID: currentUserUid,
                             ));
@@ -788,7 +792,7 @@ class _CreateReportWidgetState extends State<CreateReportWidget> {
                           onPressed: () async {
                             var cArmRecordReference =
                                 CArmRecord.collection.doc();
-                            await cArmRecordReference.set(createCArmRecordData(
+                            cArmRecordReference.set(createCArmRecordData(
                               userID: currentUserUid,
                               sysGenBrand: '',
                               sysGenModal: '',
@@ -910,7 +914,7 @@ class _CreateReportWidgetState extends State<CreateReportWidget> {
                           onPressed: () async {
                             var mammographyRecordReference =
                                 MammographyRecord.collection.doc();
-                            await mammographyRecordReference
+                            mammographyRecordReference
                                 .set(createMammographyRecordData(
                               userID: currentUserUid,
                             ));
@@ -978,7 +982,7 @@ class _CreateReportWidgetState extends State<CreateReportWidget> {
                           onPressed: () async {
                             var pacsRecordReference =
                                 PacsRecord.collection.doc();
-                            await pacsRecordReference.set(createPacsRecordData(
+                            pacsRecordReference.set(createPacsRecordData(
                               userID: currentUserUid,
                             ));
                             _model.newDocPACS = PacsRecord.getDocumentFromData(
@@ -1043,7 +1047,7 @@ class _CreateReportWidgetState extends State<CreateReportWidget> {
                         child: FFButtonWidget(
                           onPressed: () async {
                             var drRecordReference = DrRecord.collection.doc();
-                            await drRecordReference.set(createDrRecordData(
+                            drRecordReference.set(createDrRecordData(
                               userID: currentUserUid,
                             ));
                             _model.newDocDR = DrRecord.getDocumentFromData(
@@ -1108,7 +1112,7 @@ class _CreateReportWidgetState extends State<CreateReportWidget> {
                         child: FFButtonWidget(
                           onPressed: () async {
                             var crRecordReference = CrRecord.collection.doc();
-                            await crRecordReference.set(createCrRecordData(
+                            crRecordReference.set(createCrRecordData(
                               userID: currentUserUid,
                             ));
                             _model.newDocCR = CrRecord.getDocumentFromData(

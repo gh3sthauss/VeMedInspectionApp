@@ -265,7 +265,7 @@ class _CAOtherNotesWidgetState extends State<CAOtherNotesWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await cAOtherNotesCArmRecord.reference
+                        cAOtherNotesCArmRecord.reference
                             .update(createCArmRecordData(
                           otherNotes: _model.textTextController.text,
                         ));

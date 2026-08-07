@@ -259,7 +259,7 @@ class _MRITalesLastReplacementWidgetState
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await mRITalesLastReplacementMriRecord.reference
+                        mRITalesLastReplacementMriRecord.reference
                             .update(createMriRecordData(
                           talesLastReplacement: _model.textTextController.text,
                         ));

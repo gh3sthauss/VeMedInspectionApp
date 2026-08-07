@@ -694,7 +694,7 @@ class _XRSystemGeneralWidgetState extends State<XRSystemGeneralWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await widget.docDataSysGen!.update(createXRayRecordData(
+                        widget.docDataSysGen!.update(createXRayRecordData(
                           sysGenBrand: _model.textTextController2.text,
                           sysGenModal: _model.textTextController3.text,
                           sysGenYOM: _model.textTextController4.text,

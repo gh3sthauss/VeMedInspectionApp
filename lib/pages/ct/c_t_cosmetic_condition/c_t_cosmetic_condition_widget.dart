@@ -269,7 +269,7 @@ class _CTCosmeticConditionWidgetState extends State<CTCosmeticConditionWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await widget.docDataCC!.update(createCtRecordData(
+                        widget.docDataCC!.update(createCtRecordData(
                           cosmeticText: _model.textTextController.text,
                         ));
 

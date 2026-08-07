@@ -403,7 +403,7 @@ class _CAAccessoriesWidgetState extends State<CAAccessoriesWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataA!.update(createCArmRecordData(
+                        widget.docDataA!.update(createCArmRecordData(
                           accessoriesCDs: _model.textInputTextController1.text,
                           accessoriesSpareP:
                               _model.textInputTextController2.text,

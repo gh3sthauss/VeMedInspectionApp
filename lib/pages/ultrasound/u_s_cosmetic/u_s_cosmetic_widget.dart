@@ -267,7 +267,7 @@ class _USCosmeticWidgetState extends State<USCosmeticWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await widget.docDataCC!
+                        widget.docDataCC!
                             .update(createUltrasoundRecordData(
                           cosmeticText: _model.textTextController.text,
                         ));

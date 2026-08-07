@@ -873,7 +873,7 @@ class _MRILocalServiceWidgetState extends State<MRILocalServiceWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await mRILocalServiceMriRecord.reference
+                        mRILocalServiceMriRecord.reference
                             .update(createMriRecordData(
                           localSMeasSettings: _model.textTextController1.text,
                           localSTuneUpPage: _model.textTextController2.text,

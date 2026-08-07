@@ -691,7 +691,7 @@ class _MRISystemGeneralWidgetState extends State<MRISystemGeneralWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await widget.docDataSysGen!.update(createMriRecordData(
+                        widget.docDataSysGen!.update(createMriRecordData(
                           sysGenBrand: _model.textTextController2.text,
                           sysGenModal: _model.textTextController3.text,
                           sysGenYOM: _model.textTextController4.text,
