@@ -15,3 +15,21 @@ Future<String?> uploadData(String path, Uint8List data) async {
     return null;
   }
 }
+
+/// Deletes a Storage object given its public download URL. Returns true on
+/// success (including "already gone"), false if the delete could not be made
+/// (e.g. offline) so the caller can retry later. Requires connectivity.
+Future<bool> deleteDataByUrl(String downloadUrl) async {
+  try {
+    await FirebaseStorage.instance.refFromURL(downloadUrl).delete();
+    return true;
+  } on FirebaseException catch (e) {
+    // Object is already gone — treat as success so we stop retrying.
+    if (e.code == 'object-not-found') {
+      return true;
+    }
+    return false;
+  } catch (e) {
+    return false;
+  }
+}

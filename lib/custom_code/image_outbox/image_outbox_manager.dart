@@ -24,6 +24,12 @@ class ImageOutboxManager {
   Database? _db;
   bool _draining = false;
 
+  /// Bumps whenever the pending set changes (enqueue, upload success, remove).
+  /// Preview widgets listen to this so a queued photo shows up immediately
+  /// offline and disappears once it has finished uploading.
+  final ValueNotifier<int> changes = ValueNotifier<int>(0);
+  void _notify() => changes.value++;
+
   Future<void> init() async {
     if (kIsWeb) return;
     _db = await openOutboxDatabase();
@@ -58,11 +64,70 @@ class ImageOutboxManager {
       'attempt_count': 0,
       'created_at': DateTime.now().millisecondsSinceEpoch,
     });
+    // Row is now persisted — let previews pick it up right away, even offline.
+    _notify();
 
     unawaited(drainPending());
   }
 
-  /// Uploads every queued photo it can. Safe to call repeatedly/concurrently.
+  /// Pending (not-yet-uploaded) photos queued for one document field, oldest
+  /// first. Used to render local previews before the upload has synced.
+  Future<List<PendingUpload>> pendingFor({
+    required String collectionPath,
+    required String docId,
+    required String arrayFieldName,
+  }) async {
+    if (kIsWeb || _db == null) return const [];
+    final rows = await _db!.query(
+      'pending_uploads',
+      where: 'collection_path = ? AND doc_id = ? AND array_field_name = ?',
+      whereArgs: [collectionPath, docId, arrayFieldName],
+      orderBy: 'created_at ASC, id ASC',
+    );
+    return rows.map(PendingUpload.fromRow).toList();
+  }
+
+  /// The locally-cached bytes for a pending upload, or null if the cache file
+  /// is gone.
+  Future<Uint8List?> readPendingBytes(PendingUpload item) async {
+    final file = File(item.bytesCachePath);
+    if (!await file.exists()) return null;
+    return file.readAsBytes();
+  }
+
+  /// Cancels a still-pending upload: drops the queue row and its cached bytes.
+  /// Nothing was uploaded yet, so there is no Storage object to clean up.
+  Future<void> removePending(int id) async {
+    if (kIsWeb || _db == null) return;
+    final rows =
+        await _db!.query('pending_uploads', where: 'id = ?', whereArgs: [id]);
+    for (final row in rows) {
+      final item = PendingUpload.fromRow(row);
+      final file = File(item.bytesCachePath);
+      if (await file.exists()) {
+        await file.delete();
+      }
+    }
+    await _db!.delete('pending_uploads', where: 'id = ?', whereArgs: [id]);
+    _notify();
+  }
+
+  /// Queues an already-uploaded photo's Storage object for deletion. The
+  /// caller has already removed the URL from the Firestore document (which
+  /// Firestore syncs on its own); this ensures the underlying file is deleted
+  /// too, retrying until connectivity allows it.
+  Future<void> enqueueDeletion(String downloadUrl) async {
+    if (kIsWeb || _db == null) return;
+    await _db!.insert('pending_deletions', {
+      'download_url': downloadUrl,
+      'attempt_count': 0,
+      'created_at': DateTime.now().millisecondsSinceEpoch,
+    });
+    unawaited(drainDeletions());
+  }
+
+  /// Uploads every queued photo it can, then drains queued deletions. Safe to
+  /// call repeatedly/concurrently.
   Future<void> drainPending() async {
     if (kIsWeb || _db == null || _draining) return;
     _draining = true;
@@ -74,6 +139,7 @@ class ImageOutboxManager {
     } finally {
       _draining = false;
     }
+    await drainDeletions();
   }
 
   Future<void> _drainOne(PendingUpload item) async {
@@ -81,6 +147,7 @@ class ImageOutboxManager {
     if (!await file.exists()) {
       // Cached bytes are gone (e.g. cache cleared) - nothing more we can do.
       await _db!.delete('pending_uploads', where: 'id = ?', whereArgs: [item.id]);
+      _notify();
       return;
     }
 
@@ -110,6 +177,30 @@ class ImageOutboxManager {
     await _db!.delete('pending_uploads', where: 'id = ?', whereArgs: [item.id]);
     if (await file.exists()) {
       await file.delete();
+    }
+    // Upload done — drop the local preview; the real URL now renders instead.
+    _notify();
+  }
+
+  /// Deletes queued Storage objects for photos removed while offline. Rows are
+  /// only dropped on confirmed deletion so nothing is orphaned.
+  Future<void> drainDeletions() async {
+    if (kIsWeb || _db == null) return;
+    final rows = await _db!.query('pending_deletions');
+    for (final row in rows) {
+      final id = row['id'] as int;
+      final url = row['download_url'] as String;
+      final ok = await deleteDataByUrl(url);
+      if (ok) {
+        await _db!.delete('pending_deletions', where: 'id = ?', whereArgs: [id]);
+      } else {
+        await _db!.update(
+          'pending_deletions',
+          {'attempt_count': (row['attempt_count'] as int) + 1},
+          where: 'id = ?',
+          whereArgs: [id],
+        );
+      }
     }
   }
 }
