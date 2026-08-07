@@ -474,7 +474,7 @@ class _CASoftwareWidgetState extends State<CASoftwareWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await widget.docRefSoft!.update(createCArmRecordData(
+                        widget.docRefSoft!.update(createCArmRecordData(
                           softwareSN: _model.textTextController1.text,
                           softwareVersion: _model.textTextController2.text,
                           softwareOptionsText: _model.textTextController3.text,

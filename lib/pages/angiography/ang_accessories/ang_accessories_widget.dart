@@ -873,7 +873,7 @@ class _AngAccessoriesWidgetState extends State<AngAccessoriesWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataAng!
+                        widget.docDataAng!
                             .update(createAngiographyRecordData(
                           accessoriesCDs: _model.textInputTextController1.text,
                           accessoriesSpareP:

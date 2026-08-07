@@ -265,7 +265,7 @@ class _MRIOtherNotesWidgetState extends State<MRIOtherNotesWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await widget.docDataON!.update(createMriRecordData(
+                        widget.docDataON!.update(createMriRecordData(
                           otherNotes: _model.textTextController.text,
                         ));
 

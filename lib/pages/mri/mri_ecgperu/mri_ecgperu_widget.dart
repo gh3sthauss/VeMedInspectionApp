@@ -459,7 +459,7 @@ class _MriEcgperuWidgetState extends State<MriEcgperuWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await mriEcgperuMriRecord.reference
+                        mriEcgperuMriRecord.reference
                             .update(createMriRecordData(
                           eCGModel: _model.textTextController1.text,
                           ecgsn: _model.textTextController2.text,

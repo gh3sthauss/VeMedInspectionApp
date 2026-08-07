@@ -1000,7 +1000,7 @@ class _FLDnTWidgetState extends State<FLDnTWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataDT!
+                        widget.docDataDT!
                             .update(createFluoroscopyRecordData(
                           dnTAddress: _model.textTextController1.text,
                           dnTFloor: _model.textTextController2.text,

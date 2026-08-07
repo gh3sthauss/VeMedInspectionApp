@@ -1003,7 +1003,7 @@ class _XRDnTWidgetState extends State<XRDnTWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataDT!.update(createXRayRecordData(
+                        widget.docDataDT!.update(createXRayRecordData(
                           dnTAddress: _model.textTextController1.text,
                           dnTFloor: _model.textTextController2.text,
                           dnTDoorS: _model.textTextController3.text,

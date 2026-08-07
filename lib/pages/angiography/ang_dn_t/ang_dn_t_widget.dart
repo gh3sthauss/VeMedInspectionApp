@@ -1000,7 +1000,7 @@ class _AngDnTWidgetState extends State<AngDnTWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataDT!
+                        widget.docDataDT!
                             .update(createAngiographyRecordData(
                           dnTAddress: _model.textTextController1.text,
                           dnTFloor: _model.textTextController2.text,

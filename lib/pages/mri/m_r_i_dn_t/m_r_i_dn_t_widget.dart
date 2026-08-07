@@ -997,7 +997,7 @@ class _MRIDnTWidgetState extends State<MRIDnTWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataDT!.update(createMriRecordData(
+                        widget.docDataDT!.update(createMriRecordData(
                           dnTAddress: _model.textTextController1.text,
                           dntFloor: _model.textTextController2.text,
                           dntDoors: _model.textTextController3.text,

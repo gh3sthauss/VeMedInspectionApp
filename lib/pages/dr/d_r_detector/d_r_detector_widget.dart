@@ -580,7 +580,7 @@ class _DRDetectorWidgetState extends State<DRDetectorWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataDetector!.update(createDrRecordData(
+                        widget.docDataDetector!.update(createDrRecordData(
                           detectorModel: _model.textTextController1.text,
                           detectorSize: _model.textTextController2.text,
                           detectorYOM: _model.textTextController3.text,

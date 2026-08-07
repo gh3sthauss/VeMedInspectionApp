@@ -476,7 +476,7 @@ class _AngSoftwareWidgetState extends State<AngSoftwareWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await widget.docRefSoft!
+                        widget.docRefSoft!
                             .update(createAngiographyRecordData(
                           softwareSN: _model.textTextController1.text,
                           softwareVersion: _model.textTextController2.text,

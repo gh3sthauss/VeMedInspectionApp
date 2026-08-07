@@ -783,7 +783,7 @@ class _MRIMagnetWidgetState extends State<MRIMagnetWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataSysGen!.update(createMriRecordData(
+                        widget.docDataSysGen!.update(createMriRecordData(
                           magnetYOM: _model.textTextController3.text,
                           magnetModel: _model.textTextController1.text,
                           magnetSN: _model.textTextController2.text,

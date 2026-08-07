@@ -1213,7 +1213,7 @@ class _DRConsoleNWorkstationsWidgetState
                         // locally, uploads in the background) - the text save
                         // below no longer waits on them or branches on their
                         // outcome.
-                        await widget.docDataCW!.update(createDrRecordData(
+                        widget.docDataCW!.update(createDrRecordData(
                           cnWConsoleMSN:
                               _model.cTConsoleModelSNTextController.text,
                           cnWConsoleMSW: _model.textInputTextController1.text,

@@ -1000,7 +1000,7 @@ class _MMDnTWidgetState extends State<MMDnTWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataDT!
+                        widget.docDataDT!
                             .update(createMammographyRecordData(
                           dnTAddress: _model.textTextController1.text,
                           dnTFloor: _model.textTextController2.text,

@@ -273,7 +273,7 @@ class _AngCosmeticWidgetState extends State<AngCosmeticWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await widget.docDataCC!
+                        widget.docDataCC!
                             .update(createAngiographyRecordData(
                           cosmeticText: _model.textTextController.text,
                         ));

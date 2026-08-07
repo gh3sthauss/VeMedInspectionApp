@@ -2189,7 +2189,7 @@ class _USProbesWidgetState extends State<USProbesWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docRefProbes!
+                        widget.docRefProbes!
                             .update(createUltrasoundRecordData(
                           probe1Model: _model.textInputTextController1.text,
                           probe2Model: _model.textInputTextController4.text,

@@ -1285,7 +1285,7 @@ class _CTGantryWidgetState extends State<CTGantryWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataGantry!.update(createCtRecordData(
+                        widget.docDataGantry!.update(createCtRecordData(
                           gantryModelSN: _model.textInputTextController1.text,
                           gantryTubeYOM: _model.textInputTextController3.text,
                           gantryTubeScanSec:

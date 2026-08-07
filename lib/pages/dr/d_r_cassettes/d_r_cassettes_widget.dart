@@ -3482,7 +3482,7 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docRefProbes!.update(createDrRecordData(
+                        widget.docRefProbes!.update(createDrRecordData(
                           cR1Model: _model.textInputTextController1.text,
                           cR2Model: _model.textInputTextController4.text,
                           cR3Model: _model.textInputTextController7.text,

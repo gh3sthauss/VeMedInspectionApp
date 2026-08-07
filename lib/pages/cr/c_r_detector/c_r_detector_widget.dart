@@ -580,7 +580,7 @@ class _CRDetectorWidgetState extends State<CRDetectorWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataDetector!.update(createCrRecordData(
+                        widget.docDataDetector!.update(createCrRecordData(
                           detectorModel: _model.textTextController1.text,
                           detectorSize: _model.textTextController2.text,
                           detectorYOM: _model.textTextController3.text,

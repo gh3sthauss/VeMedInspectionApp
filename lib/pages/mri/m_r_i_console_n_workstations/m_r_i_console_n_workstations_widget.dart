@@ -1340,7 +1340,7 @@ class _MRIConsoleNWorkstationsWidgetState
                         // locally, uploads in the background) - the text save
                         // below no longer waits on them or branches on their
                         // outcome.
-                        await widget.docDataCW!.update(createMriRecordData(
+                        widget.docDataCW!.update(createMriRecordData(
                           cnWConsoleSN:
                               _model.cTConsoleModelSNTextController.text,
                           cnWConsoleSW: _model.textInputTextController1.text,

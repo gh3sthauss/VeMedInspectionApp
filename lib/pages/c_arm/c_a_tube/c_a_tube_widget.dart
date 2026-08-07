@@ -359,7 +359,7 @@ class _CATubeWidgetState extends State<CATubeWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docRefSoft!.update(createCArmRecordData(
+                        widget.docRefSoft!.update(createCArmRecordData(
                           tube1Model: _model.textTextController1.text,
                           tube1YOM: _model.textTextController2.text,
                         ));

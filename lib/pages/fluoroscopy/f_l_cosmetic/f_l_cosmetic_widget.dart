@@ -268,7 +268,7 @@ class _FLCosmeticWidgetState extends State<FLCosmeticWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await widget.docDataCC!
+                        widget.docDataCC!
                             .update(createFluoroscopyRecordData(
                           cosmeticText: _model.textTextController.text,
                         ));

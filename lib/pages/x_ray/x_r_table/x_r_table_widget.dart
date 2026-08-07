@@ -359,7 +359,7 @@ class _XRTableWidgetState extends State<XRTableWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docRefSoft!.update(createXRayRecordData(
+                        widget.docRefSoft!.update(createXRayRecordData(
                           tableModel: _model.textTextController1.text,
                           tableYOM: _model.textTextController2.text,
                         ));

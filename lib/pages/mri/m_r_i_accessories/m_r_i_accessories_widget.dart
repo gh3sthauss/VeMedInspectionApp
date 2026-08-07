@@ -2367,7 +2367,7 @@ class _MRIAccessoriesWidgetState extends State<MRIAccessoriesWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataA!.update(createMriRecordData(
+                        widget.docDataA!.update(createMriRecordData(
                           accPhantom1Model:
                               _model.textInputTextController1.text,
                           accPhantom2Model:

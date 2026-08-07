@@ -267,7 +267,7 @@ class _PACSCosmeticWidgetState extends State<PACSCosmeticWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await widget.docDataCC!.update(createPacsRecordData(
+                        widget.docDataCC!.update(createPacsRecordData(
                           cosmeticText: _model.textTextController.text,
                         ));
 

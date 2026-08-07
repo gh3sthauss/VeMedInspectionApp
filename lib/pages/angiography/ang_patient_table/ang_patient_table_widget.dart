@@ -460,7 +460,7 @@ class _AngPatientTableWidgetState extends State<AngPatientTableWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await angPatientTableAngiographyRecord.reference
+                        angPatientTableAngiographyRecord.reference
                             .update(createAngiographyRecordData(
                           pTModal: _model.textTextController1.text,
                           ptsn: _model.textTextController2.text,

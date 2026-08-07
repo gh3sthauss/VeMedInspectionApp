@@ -355,7 +355,7 @@ class _FLTubeWidgetState extends State<FLTubeWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docRefSoft!
+                        widget.docRefSoft!
                             .update(createFluoroscopyRecordData(
                           tube1Model: _model.textTextController1.text,
                           tube1YOM: _model.textTextController2.text,

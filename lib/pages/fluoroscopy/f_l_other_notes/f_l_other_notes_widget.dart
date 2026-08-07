@@ -267,7 +267,7 @@ class _FLOtherNotesWidgetState extends State<FLOtherNotesWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await fLOtherNotesFluoroscopyRecord.reference
+                        fLOtherNotesFluoroscopyRecord.reference
                             .update(createFluoroscopyRecordData(
                           otherNotes: _model.textTextController.text,
                         ));

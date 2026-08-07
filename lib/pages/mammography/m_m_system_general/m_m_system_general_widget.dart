@@ -695,7 +695,7 @@ class _MMSystemGeneralWidgetState extends State<MMSystemGeneralWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await widget.docDataSysGen!
+                        widget.docDataSysGen!
                             .update(createMammographyRecordData(
                           sysGenBrand: _model.textTextController2.text,
                           sysGenModal: _model.textTextController3.text,

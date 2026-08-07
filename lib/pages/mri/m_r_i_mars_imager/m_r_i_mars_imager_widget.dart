@@ -1341,7 +1341,7 @@ class _MRIMarsImagerWidgetState extends State<MRIMarsImagerWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await mRIMarsImagerMriRecord.reference
+                        mRIMarsImagerMriRecord.reference
                             .update(createMriRecordData(
                           imagerModel: _model.textInputTextController1.text,
                           imagerModelSN: _model.textInputTextController2.text,

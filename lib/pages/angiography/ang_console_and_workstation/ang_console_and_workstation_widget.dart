@@ -1565,7 +1565,7 @@ class _AngConsoleAndWorkstationWidgetState
                         // locally, uploads in the background) - the text save
                         // below no longer waits on them or branches on their
                         // outcome.
-                        await widget.docDataCW!
+                        widget.docDataCW!
                             .update(createAngiographyRecordData(
                           cnWConsoleMSN:
                               _model.cTConsoleModelSNTextController.text,

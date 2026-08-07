@@ -362,7 +362,7 @@ class _CTCoolingSystemWidgetState extends State<CTCoolingSystemWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataCS!.update(createCtRecordData(
+                        widget.docDataCS!.update(createCtRecordData(
                           cSWaterAir: _model.textInputTextController1.text,
                           cSComesWith: _model.textInputTextController2.text,
                         ));

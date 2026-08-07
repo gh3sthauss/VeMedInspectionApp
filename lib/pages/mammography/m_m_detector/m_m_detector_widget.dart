@@ -582,7 +582,7 @@ class _MMDetectorWidgetState extends State<MMDetectorWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataDetector!
+                        widget.docDataDetector!
                             .update(createMammographyRecordData(
                           detectorModel: _model.textTextController1.text,
                           detectorSize: _model.textTextController2.text,

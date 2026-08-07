@@ -267,7 +267,7 @@ class _AngOtherNotesWidgetState extends State<AngOtherNotesWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await angOtherNotesAngiographyRecord.reference
+                        angOtherNotesAngiographyRecord.reference
                             .update(createAngiographyRecordData(
                           otherNotes: _model.textTextController.text,
                         ));

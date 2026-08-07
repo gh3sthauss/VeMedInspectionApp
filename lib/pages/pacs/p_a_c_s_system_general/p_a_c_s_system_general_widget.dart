@@ -692,7 +692,7 @@ class _PACSSystemGeneralWidgetState extends State<PACSSystemGeneralWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await widget.docDataSysGen!.update(createPacsRecordData(
+                        widget.docDataSysGen!.update(createPacsRecordData(
                           sysGenBrand: _model.textTextController2.text,
                           sysGenModal: _model.textTextController3.text,
                           sysGenYOM: _model.textTextController4.text,

@@ -462,7 +462,7 @@ class _MRIPatientTableWidgetState extends State<MRIPatientTableWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await mRIPatientTableMriRecord.reference
+                        mRIPatientTableMriRecord.reference
                             .update(createMriRecordData(
                           patientTableModel: _model.textTextController1.text,
                           patientTableSN: _model.textTextController2.text,

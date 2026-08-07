@@ -1112,7 +1112,7 @@ class _MRICoolingSystemWidgetState extends State<MRICoolingSystemWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docRefCooling!.update(createMriRecordData(
+                        widget.docRefCooling!.update(createMriRecordData(
                           coolerCompModel: _model.textInputTextController1.text,
                           coolerCompYOM: _model.textInputTextController2.text,
                           coolerCompHours: _model.textInputTextController3.text,

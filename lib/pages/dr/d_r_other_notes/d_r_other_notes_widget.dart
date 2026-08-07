@@ -265,7 +265,7 @@ class _DROtherNotesWidgetState extends State<DROtherNotesWidget> {
                         // PhotoUploadOutboxWidget (queues locally, uploads in
                         // the background) - the text save below no longer
                         // waits on it or branches on its outcome.
-                        await widget.docDataON!.update(createDrRecordData(
+                        widget.docDataON!.update(createDrRecordData(
                           otherNotes: _model.textTextController.text,
                         ));
 

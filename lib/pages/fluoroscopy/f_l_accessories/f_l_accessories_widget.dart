@@ -401,7 +401,7 @@ class _FLAccessoriesWidgetState extends State<FLAccessoriesWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docDataA!
+                        widget.docDataA!
                             .update(createFluoroscopyRecordData(
                           accessoriesCDs: _model.textInputTextController1.text,
                           accessoriesSpareP:

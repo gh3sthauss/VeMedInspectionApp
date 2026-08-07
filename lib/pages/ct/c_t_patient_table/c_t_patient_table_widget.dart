@@ -464,7 +464,7 @@ class _CTPatientTableWidgetState extends State<CTPatientTableWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await cTPatientTableCtRecord.reference
+                        cTPatientTableCtRecord.reference
                             .update(createCtRecordData(
                           pTModal: _model.textTextController1.text,
                           ptsn: _model.textTextController2.text,

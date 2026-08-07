@@ -3490,7 +3490,7 @@ class _PACSCassettesWidgetState extends State<PACSCassettesWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await widget.docRefProbes!.update(createPacsRecordData(
+                        widget.docRefProbes!.update(createPacsRecordData(
                           cR1Model: _model.textInputTextController1.text,
                           cR2Model: _model.textInputTextController4.text,
                           cR3Model: _model.textInputTextController7.text,
