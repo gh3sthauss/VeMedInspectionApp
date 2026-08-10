@@ -24,9 +24,16 @@ final PdfColor _textMuted = PdfColor.fromInt(0xFF6B7280);
 final PdfColor _borderColor = PdfColor.fromInt(0xFFD1D5DB);
 final PdfColor _zebraColor = PdfColor.fromInt(0xFFF7F9F9);
 
-// TODO: rename to match your actual generated FlutterFlow class for this
-// collection (e.g. AngiographyRecord) if it differs.
-Future<void> exportAngiographyPDF(AngiographyRecord docRef) async {
+// [includeSections] is the set of section keys (see kAngiographyPdfSections in
+// lib/components/pdf_section_selector.dart) chosen in the export selector.
+// null means "include everything" so existing callers keep the full report.
+Future<void> exportAngiographyPDF(
+  AngiographyRecord docRef, {
+  Set<String>? includeSections,
+}) async {
+  bool inc(String key) =>
+      includeSections == null || includeSections.contains(key);
+
   final pdf = pw.Document();
 
   // -------------------------------------------------------------------------
@@ -104,131 +111,160 @@ Future<void> exportAngiographyPDF(AngiographyRecord docRef) async {
         pw.NewPage(),
 
         // ===================== SYSTEM GENERAL INFO ========================
-        _sectionHeader('System General Information'),
-        _infoTable(rows: [
-          ['Brand', docRef.sysGenBrand],
-          ['Model', docRef.sysGenModal],
-          ['Year of Manufacture', docRef.sysGenYOM],
-          ['Serial Number', docRef.sysGenSN],
-          ['Photos URL', docRef.photosURL],
-        ]),
+        if (inc('system_general')) ...[
+          _sectionHeader('System General Information'),
+          _infoTable(rows: [
+            ['Brand', docRef.sysGenBrand],
+            ['Model', docRef.sysGenModal],
+            ['Year of Manufacture', docRef.sysGenYOM],
+            ['Serial Number', docRef.sysGenSN],
+            ['Photos URL', docRef.photosURL],
+          ]),
+        ],
 
         // ============================ TUBE =================================
-        _sectionHeader('Tube Information'),
-        _infoTable(rows: [
-          ['Model', docRef.tube1Model],
-          ['Year of Manufacture', docRef.tube1YOM],
-        ]),
-        if (tubeGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(tubeGallery),
+        if (inc('tube')) ...[
+          _sectionHeader('Tube Information'),
+          _infoTable(rows: [
+            ['Model', docRef.tube1Model],
+            ['Year of Manufacture', docRef.tube1YOM],
+          ]),
+          if (tubeGallery.isNotEmpty) ...[
+            pw.SizedBox(height: 6),
+            _imageGrid(tubeGallery),
+          ],
         ],
 
         // ========================== DETECTOR ================================
-        _sectionHeader('Detector Information'),
-        _infoTable(rows: [
-          ['Model', docRef.detectorModel],
-          ['Size', docRef.detectorSize],
-          ['Year of Manufacture', docRef.detectorYOM],
-          ['Condition', docRef.detectorCondition],
-        ]),
-        if (detectorGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(detectorGallery),
+        if (inc('detector')) ...[
+          _sectionHeader('Detector Information'),
+          _infoTable(rows: [
+            ['Model', docRef.detectorModel],
+            ['Size', docRef.detectorSize],
+            ['Year of Manufacture', docRef.detectorYOM],
+            ['Condition', docRef.detectorCondition],
+          ]),
+          if (detectorGallery.isNotEmpty) ...[
+            pw.SizedBox(height: 6),
+            _imageGrid(detectorGallery),
+          ],
         ],
 
         // ========================== SOFTWARE ================================
-        _sectionHeader('Software Information'),
-        _infoTable(rows: [
-          ['Serial Number', docRef.softwareSN],
-          ['Version', docRef.softwareVersion],
-          ['Options', docRef.softwareOptionsText],
-        ]),
-        if (softwareOptGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(softwareOptGallery),
+        if (inc('software')) ...[
+          _sectionHeader('Software Information'),
+          _infoTable(rows: [
+            ['Serial Number', docRef.softwareSN],
+            ['Version', docRef.softwareVersion],
+            ['Options', docRef.softwareOptionsText],
+          ]),
+          if (softwareOptGallery.isNotEmpty) ...[
+            pw.SizedBox(height: 6),
+            _imageGrid(softwareOptGallery),
+          ],
         ],
 
         // ================== CONSOLE AND WORKSTATION(S) ======================
-        _sectionHeader('Console and Workstation(s) Information'),
-        _infoTable(rows: [
-          ['Console Options', docRef.cnWConsoleMOptions],
-          ['Console Serial Number', docRef.cnWConsoleMSN],
-          ['Console Software Version', docRef.cnWConsoleMSW],
-          ['Injection Review Station Serial Number', docRef.cnWIRSSN],
-          ['Injection Review Station Software Version', docRef.cnWIRSSW],
-          ['Workstation Options', docRef.cnWWorkSOptions],
-          ['Workstation Serial Number', docRef.cnWWorkSSN],
-          ['Workstation Software Version', docRef.cnWWorkSSW],
-        ]),
-        if (consoleOptGallery.isNotEmpty || workstationOptGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid([...consoleOptGallery, ...workstationOptGallery]),
+        if (inc('console')) ...[
+          _sectionHeader('Console and Workstation(s) Information'),
+          _infoTable(rows: [
+            ['Console Options', docRef.cnWConsoleMOptions],
+            ['Console Serial Number', docRef.cnWConsoleMSN],
+            ['Console Software Version', docRef.cnWConsoleMSW],
+            ['Injection Review Station Serial Number', docRef.cnWIRSSN],
+            ['Injection Review Station Software Version', docRef.cnWIRSSW],
+            ['Workstation Options', docRef.cnWWorkSOptions],
+            ['Workstation Serial Number', docRef.cnWWorkSSN],
+            ['Workstation Software Version', docRef.cnWWorkSSW],
+          ]),
+          if (consoleOptGallery.isNotEmpty ||
+              workstationOptGallery.isNotEmpty) ...[
+            pw.SizedBox(height: 6),
+            _imageGrid([...consoleOptGallery, ...workstationOptGallery]),
+          ],
         ],
 
         // ====================== PATIENT TABLE ================================
-        _sectionHeader('Patient Table Information'),
-        _infoTable(rows: [
-          ['Model', docRef.pTModal],
-          // TODO: add any remaining Patient Table fields from your schema here
-          // (e.g. Serial Number, Year of Manufacture) once confirmed.
-        ]),
-        if (patientTableGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(patientTableGallery),
+        if (inc('patient_table')) ...[
+          _sectionHeader('Patient Table Information'),
+          _infoTable(rows: [
+            ['Model', docRef.pTModal],
+            // TODO: add any remaining Patient Table fields from your schema
+            // here (e.g. Serial Number, Year of Manufacture) once confirmed.
+          ]),
+          if (patientTableGallery.isNotEmpty) ...[
+            pw.SizedBox(height: 6),
+            _imageGrid(patientTableGallery),
+          ],
         ],
 
         // ========================= ACCESSORIES ================================
-        _sectionHeader('Accessories'),
-        _infoTable(rows: [
-          ['CDs', docRef.accessoriesCDs],
-          ['Spare Parts', docRef.accessoriesSpareP],
-        ]),
-        if (accessoriesGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(accessoriesGallery),
+        if (inc('accessories')) ...[
+          _sectionHeader('Accessories'),
+          _infoTable(rows: [
+            ['CDs', docRef.accessoriesCDs],
+            ['Spare Parts', docRef.accessoriesSpareP],
+          ]),
+          if (accessoriesGallery.isNotEmpty) ...[
+            pw.SizedBox(height: 6),
+            _imageGrid(accessoriesGallery),
+          ],
         ],
 
-        pw.NewPage(),
+        // Page break before the second half, but only if any of those
+        // sections are actually included (avoids a trailing blank page).
+        if (inc('phantoms') ||
+            inc('cosmetic') ||
+            inc('delivery') ||
+            inc('other_notes'))
+          pw.NewPage(),
 
         // ========================== PHANTOMS ==================================
-        _sectionHeader('Phantoms'),
-        _phantomsTable(docRef),
+        if (inc('phantoms')) ...[
+          _sectionHeader('Phantoms'),
+          _phantomsTable(docRef),
+        ],
 
         // ====================== COSMETIC CONDITION =============================
-        _sectionHeader('Cosmetic Condition'),
-        _infoTable(rows: [
-          ['Notes', docRef.cosmeticText],
-        ]),
-        if (cosmeticGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(cosmeticGallery),
+        if (inc('cosmetic')) ...[
+          _sectionHeader('Cosmetic Condition'),
+          _infoTable(rows: [
+            ['Notes', docRef.cosmeticText],
+          ]),
+          if (cosmeticGallery.isNotEmpty) ...[
+            pw.SizedBox(height: 6),
+            _imageGrid(cosmeticGallery),
+          ],
         ],
 
         // ================= DELIVERY & SITE ACCESS INFORMATION ==================
-        _sectionHeader('Delivery & Site Access Information'),
-        _infoTable(rows: [
-          ['Address', docRef.dnTAddress],
-          ['Floor', docRef.dnTFloor],
-          ['Door Size', docRef.dnTDoorS],
-          ['Dock Available', docRef.dnTDockAvailable],
-          ['Need of Crane', docRef.dnTNeedOfCrane],
-          ['Tools Required', docRef.dnTTools],
-          ['Special Attention', docRef.dnTSpecialAttention],
-        ]),
-        if (dnTGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(dnTGallery),
+        if (inc('delivery')) ...[
+          _sectionHeader('Delivery & Site Access Information'),
+          _infoTable(rows: [
+            ['Address', docRef.dnTAddress],
+            ['Floor', docRef.dnTFloor],
+            ['Door Size', docRef.dnTDoorS],
+            ['Dock Available', docRef.dnTDockAvailable],
+            ['Need of Crane', docRef.dnTNeedOfCrane],
+            ['Tools Required', docRef.dnTTools],
+            ['Special Attention', docRef.dnTSpecialAttention],
+          ]),
+          if (dnTGallery.isNotEmpty) ...[
+            pw.SizedBox(height: 6),
+            _imageGrid(dnTGallery),
+          ],
         ],
 
         // =========================== OTHER NOTES ================================
-        _sectionHeader('Other Notes'),
-        _infoTable(rows: [
-          ['Notes', docRef.otherNotes],
-        ]),
-        if (otherNotesGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(otherNotesGallery),
+        if (inc('other_notes')) ...[
+          _sectionHeader('Other Notes'),
+          _infoTable(rows: [
+            ['Notes', docRef.otherNotes],
+          ]),
+          if (otherNotesGallery.isNotEmpty) ...[
+            pw.SizedBox(height: 6),
+            _imageGrid(otherNotesGallery),
+          ],
         ],
       ],
     ),
