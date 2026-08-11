@@ -24,7 +24,13 @@ final PdfColor _textMuted = PdfColor.fromInt(0xFF6B7280);
 final PdfColor _borderColor = PdfColor.fromInt(0xFFD1D5DB);
 final PdfColor _zebraColor = PdfColor.fromInt(0xFFF7F9F9);
 
-Future<void> exportMammographyPDF(MammographyRecord docRef) async {
+Future<void> exportMammographyPDF(
+  MammographyRecord docRef, {
+  Set<String>? includeSections,
+}) async {
+  bool inc(String key) =>
+      includeSections == null || includeSections.contains(key);
+
   final pdf = pw.Document();
 
   // -------------------------------------------------------------------------
@@ -88,6 +94,7 @@ Future<void> exportMammographyPDF(MammographyRecord docRef) async {
         pw.NewPage(),
 
         // ===================== SYSTEM GENERAL INFO ========================
+        if (inc('system_general')) ...[
         _sectionHeader('System General Information'),
         _infoTable(rows: [
           ['Brand', docRef.sysGenBrand],
@@ -97,6 +104,8 @@ Future<void> exportMammographyPDF(MammographyRecord docRef) async {
         ]),
 
         // ================== CONSOLE AND WORKSTATION ======================
+        ],
+        if (inc('console')) ...[
         _sectionHeader('Console and Workstation Information'),
         _infoTable(rows: [
           ['Console Serial Number', docRef.cnWConsoleMSN],
@@ -112,6 +121,8 @@ Future<void> exportMammographyPDF(MammographyRecord docRef) async {
         ],
 
         // ========================== DETECTOR ================================
+        ],
+        if (inc('detector')) ...[
         _sectionHeader('Detector Information'),
         _infoTable(rows: [
           ['Model', docRef.detectorModel],
@@ -125,6 +136,8 @@ Future<void> exportMammographyPDF(MammographyRecord docRef) async {
         ],
 
         // ============================ TUBE =================================
+        ],
+        if (inc('tube')) ...[
         _sectionHeader('Tube Information'),
         _infoTable(rows: [
           ['Model', docRef.tube1Model],
@@ -136,6 +149,8 @@ Future<void> exportMammographyPDF(MammographyRecord docRef) async {
         ],
 
         // ========================= ACCESSORIES ================================
+        ],
+        if (inc('accessories')) ...[
         _sectionHeader('Accessories'),
         _infoTable(rows: [
           ['Model', docRef.accessoriesPModal],
@@ -149,9 +164,10 @@ Future<void> exportMammographyPDF(MammographyRecord docRef) async {
           _imageGrid(accessoriesGallery),
         ],
 
-        pw.NewPage(),
 
         // ====================== COSMETIC CONDITION =============================
+        ],
+        if (inc('cosmetic')) ...[
         _sectionHeader('Cosmetic Condition'),
         _infoTable(rows: [
           ['Notes', docRef.cosmeticText],
@@ -162,6 +178,8 @@ Future<void> exportMammographyPDF(MammographyRecord docRef) async {
         ],
 
         // ================= DELIVERY & SITE ACCESS INFORMATION ==================
+        ],
+        if (inc('delivery')) ...[
         _sectionHeader('Delivery & Site Access Information'),
         _infoTable(rows: [
           ['Address', docRef.dnTAddress],
@@ -178,6 +196,8 @@ Future<void> exportMammographyPDF(MammographyRecord docRef) async {
         ],
 
         // =========================== OTHER NOTES ================================
+        ],
+        if (inc('other_notes')) ...[
         _sectionHeader('Other Notes'),
         _infoTable(rows: [
           ['Notes', docRef.otherNotes],
@@ -185,6 +205,7 @@ Future<void> exportMammographyPDF(MammographyRecord docRef) async {
         if (otherNotesGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
           _imageGrid(otherNotesGallery),
+        ],
         ],
       ],
     ),

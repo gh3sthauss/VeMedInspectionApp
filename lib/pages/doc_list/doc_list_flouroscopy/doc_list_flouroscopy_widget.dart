@@ -1,6 +1,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/doc_actions_sheet.dart';
+import '/components/pdf_section_selector.dart';
 import '/components/doc_naming.dart';
 import '/components/logo_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -187,9 +188,14 @@ class _DocListFlouroscopyWidgetState extends State<DocListFlouroscopyWidget> {
                                                   .reference.id,
                                             ),
                                             onDownload: () async {
-                                              await actions
-                                                  .exportFluoroscopyPDF(
+                                              final sections = await showPdfSectionSelector(
+                                                context,
+                                                sections: kFluoroscopyPdfSections,
+                                              );
+                                              if (sections == null) return;
+                                              await actions.exportFluoroscopyPDF(
                                                 listViewFluoroscopyRecord,
+                                                includeSections: sections,
                                               );
                                             },
                                             onDelete: () async {

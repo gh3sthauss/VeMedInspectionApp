@@ -24,7 +24,13 @@ final PdfColor _textMuted = PdfColor.fromInt(0xFF6B7280);
 final PdfColor _borderColor = PdfColor.fromInt(0xFFD1D5DB);
 final PdfColor _zebraColor = PdfColor.fromInt(0xFFF7F9F9);
 
-Future<void> exportFluoroscopyPDF(FluoroscopyRecord docRef) async {
+Future<void> exportFluoroscopyPDF(
+  FluoroscopyRecord docRef, {
+  Set<String>? includeSections,
+}) async {
+  bool inc(String key) =>
+      includeSections == null || includeSections.contains(key);
+
   final pdf = pw.Document();
 
   // -------------------------------------------------------------------------
@@ -90,6 +96,7 @@ Future<void> exportFluoroscopyPDF(FluoroscopyRecord docRef) async {
         pw.NewPage(),
 
         // ===================== SYSTEM GENERAL INFO ========================
+        if (inc('system_general')) ...[
         _sectionHeader('System General Information'),
         _infoTable(rows: [
           ['Brand', docRef.sysGenBrand],
@@ -99,6 +106,8 @@ Future<void> exportFluoroscopyPDF(FluoroscopyRecord docRef) async {
         ]),
 
         // ================== CONSOLE AND WORKSTATION ======================
+        ],
+        if (inc('console')) ...[
         _sectionHeader('Console and Workstation Information'),
         _infoTable(rows: [
           ['Console Serial Number', docRef.cnWConsoleMSN],
@@ -114,6 +123,8 @@ Future<void> exportFluoroscopyPDF(FluoroscopyRecord docRef) async {
         ],
 
         // ========================== DETECTOR ================================
+        ],
+        if (inc('detector')) ...[
         _sectionHeader('Detector Information'),
         _infoTable(rows: [
           ['Model', docRef.detectorModel],
@@ -127,6 +138,8 @@ Future<void> exportFluoroscopyPDF(FluoroscopyRecord docRef) async {
         ],
 
         // ============================ TUBE =================================
+        ],
+        if (inc('tube')) ...[
         _sectionHeader('Tube Information'),
         _infoTable(rows: [
           ['Model', docRef.tube1Model],
@@ -138,6 +151,8 @@ Future<void> exportFluoroscopyPDF(FluoroscopyRecord docRef) async {
         ],
 
         // ====================== PATIENT TABLE ================================
+        ],
+        if (inc('table')) ...[
         _sectionHeader('Table Information'),
         _infoTable(rows: [
           ['Model', docRef.tableModel],
@@ -149,6 +164,8 @@ Future<void> exportFluoroscopyPDF(FluoroscopyRecord docRef) async {
         ],
 
         // ========================= ACCESSORIES ================================
+        ],
+        if (inc('accessories')) ...[
         _sectionHeader('Accessories'),
         _infoTable(rows: [
           ['Model', docRef.accessoriesPModal],
@@ -162,9 +179,10 @@ Future<void> exportFluoroscopyPDF(FluoroscopyRecord docRef) async {
           _imageGrid(accessoriesGallery),
         ],
 
-        pw.NewPage(),
 
         // ====================== COSMETIC CONDITION =============================
+        ],
+        if (inc('cosmetic')) ...[
         _sectionHeader('Cosmetic Condition'),
         _infoTable(rows: [
           ['Notes', docRef.cosmeticText],
@@ -175,6 +193,8 @@ Future<void> exportFluoroscopyPDF(FluoroscopyRecord docRef) async {
         ],
 
         // ================= DELIVERY & SITE ACCESS INFORMATION ==================
+        ],
+        if (inc('delivery')) ...[
         _sectionHeader('Delivery & Site Access Information'),
         _infoTable(rows: [
           ['Address', docRef.dnTAddress],
@@ -191,6 +211,8 @@ Future<void> exportFluoroscopyPDF(FluoroscopyRecord docRef) async {
         ],
 
         // =========================== OTHER NOTES ================================
+        ],
+        if (inc('other_notes')) ...[
         _sectionHeader('Other Notes'),
         _infoTable(rows: [
           ['Notes', docRef.otherNotes],
@@ -198,6 +220,7 @@ Future<void> exportFluoroscopyPDF(FluoroscopyRecord docRef) async {
         if (otherNotesGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
           _imageGrid(otherNotesGallery),
+        ],
         ],
       ],
     ),

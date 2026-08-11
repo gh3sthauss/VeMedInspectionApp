@@ -211,13 +211,9 @@ Future<void> exportAngiographyPDF(
           ],
         ],
 
-        // Page break before the second half, but only if any of those
-        // sections are actually included (avoids a trailing blank page).
-        if (inc('phantoms') ||
-            inc('cosmetic') ||
-            inc('delivery') ||
-            inc('other_notes'))
-          pw.NewPage(),
+        // No hard page break here: sections flow continuously so the pages
+        // stay filled and skipping sections never leaves a half-empty page.
+        // MultiPage paginates on its own when content overflows.
 
         // ========================== PHANTOMS ==================================
         if (inc('phantoms')) ...[

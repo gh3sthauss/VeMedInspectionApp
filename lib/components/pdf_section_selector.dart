@@ -26,6 +26,127 @@ const List<PdfSection> kAngiographyPdfSections = [
   PdfSection('other_notes', 'Other Notes'),
 ];
 
+const List<PdfSection> kCtPdfSections = [
+  PdfSection('system_general', 'System General Information'),
+  PdfSection('gantry', 'Gantry'),
+  PdfSection('cooling_system', 'Cooling System'),
+  PdfSection('patient_table', 'Patient Table Information'),
+  PdfSection('console', 'Console and Workstation Information'),
+  PdfSection('accessories', 'Accessories'),
+  PdfSection('cosmetic', 'Cosmetic Condition'),
+  PdfSection('delivery', 'Delivery & Site Access Information'),
+  PdfSection('other_notes', 'Other Notes'),
+];
+
+const List<PdfSection> kMriPdfSections = [
+  PdfSection('system_general', 'System General Information'),
+  PdfSection('magnet', 'Magnet'),
+  PdfSection('cooler_compressor', 'Cooler / Compressor'),
+  PdfSection('cold_head', 'Cold Head'),
+  PdfSection('imager', 'Imager'),
+  PdfSection('ecg', 'ECG'),
+  PdfSection('power_stages', 'Power Stages'),
+  PdfSection('patient_table', 'Patient Table'),
+  PdfSection('console', 'Console and Workstation Information'),
+  PdfSection('local_service', 'Local Service'),
+  PdfSection('coils', 'Coils'),
+  PdfSection('phantoms', 'Phantoms'),
+  PdfSection('accessories', 'Accessories'),
+  PdfSection('cosmetic', 'Cosmetic Condition'),
+  PdfSection('delivery', 'Delivery & Site Access Information'),
+  PdfSection('other_notes', 'Other Notes'),
+];
+
+const List<PdfSection> kXRayPdfSections = [
+  PdfSection('system_general', 'System General Information'),
+  PdfSection('console', 'Console and Workstation Information'),
+  PdfSection('detector', 'Detector Information'),
+  PdfSection('tube', 'Tube Information'),
+  PdfSection('table', 'Table Information'),
+  PdfSection('accessories', 'Accessories'),
+  PdfSection('cosmetic', 'Cosmetic Condition'),
+  PdfSection('delivery', 'Delivery & Site Access Information'),
+  PdfSection('other_notes', 'Other Notes'),
+];
+
+const List<PdfSection> kFluoroscopyPdfSections = [
+  PdfSection('system_general', 'System General Information'),
+  PdfSection('console', 'Console and Workstation Information'),
+  PdfSection('detector', 'Detector Information'),
+  PdfSection('tube', 'Tube Information'),
+  PdfSection('table', 'Table Information'),
+  PdfSection('accessories', 'Accessories'),
+  PdfSection('cosmetic', 'Cosmetic Condition'),
+  PdfSection('delivery', 'Delivery & Site Access Information'),
+  PdfSection('other_notes', 'Other Notes'),
+];
+
+const List<PdfSection> kCArmPdfSections = [
+  PdfSection('system_general', 'System General Information'),
+  PdfSection('tube', 'Tube Information'),
+  PdfSection('detector', 'Detector Information'),
+  PdfSection('software', 'Software Information'),
+  PdfSection('phantom', 'Phantom'),
+  PdfSection('accessories', 'Accessories'),
+  PdfSection('cosmetic', 'Cosmetic Condition'),
+  PdfSection('delivery', 'Delivery & Site Access Information'),
+  PdfSection('other_notes', 'Other Notes'),
+];
+
+const List<PdfSection> kMammographyPdfSections = [
+  PdfSection('system_general', 'System General Information'),
+  PdfSection('console', 'Console and Workstation Information'),
+  PdfSection('detector', 'Detector Information'),
+  PdfSection('tube', 'Tube Information'),
+  PdfSection('accessories', 'Accessories'),
+  PdfSection('cosmetic', 'Cosmetic Condition'),
+  PdfSection('delivery', 'Delivery & Site Access Information'),
+  PdfSection('other_notes', 'Other Notes'),
+];
+
+const List<PdfSection> kPacsPdfSections = [
+  PdfSection('system_general', 'System General Information'),
+  PdfSection('console', 'Console and Workstation Information'),
+  PdfSection('detector', 'Detector Information'),
+  PdfSection('cassettes', 'Cassettes'),
+  PdfSection('accessories', 'Accessories'),
+  PdfSection('cosmetic', 'Cosmetic Condition'),
+  PdfSection('delivery', 'Delivery & Site Access Information'),
+  PdfSection('other_notes', 'Other Notes'),
+];
+
+const List<PdfSection> kDrPdfSections = [
+  PdfSection('system_general', 'System General Information'),
+  PdfSection('console', 'Console and Workstation Information'),
+  PdfSection('detector', 'Detector Information'),
+  PdfSection('cassettes', 'Cassettes'),
+  PdfSection('accessories', 'Accessories'),
+  PdfSection('cosmetic', 'Cosmetic Condition'),
+  PdfSection('delivery', 'Delivery & Site Access Information'),
+  PdfSection('other_notes', 'Other Notes'),
+];
+
+const List<PdfSection> kCrPdfSections = [
+  PdfSection('system_general', 'System General Information'),
+  PdfSection('console', 'Console and Workstation Information'),
+  PdfSection('detector', 'Detector Information'),
+  PdfSection('cassettes', 'Cassettes'),
+  PdfSection('accessories', 'Accessories'),
+  PdfSection('cosmetic', 'Cosmetic Condition'),
+  PdfSection('delivery', 'Delivery & Site Access Information'),
+  PdfSection('other_notes', 'Other Notes'),
+];
+
+const List<PdfSection> kUltrasoundPdfSections = [
+  PdfSection('system_general', 'System General Information'),
+  PdfSection('probes', 'Probes'),
+  PdfSection('software', 'Software Information'),
+  PdfSection('accessories', 'Accessories'),
+  PdfSection('cosmetic', 'Cosmetic Condition'),
+  PdfSection('delivery', 'Delivery & Site Access Information'),
+  PdfSection('other_notes', 'Other Notes'),
+];
+
 /// Shows the "choose which sections to include" sheet before a PDF export.
 /// Returns the set of selected section keys, or null if the user cancelled.
 /// All sections start checked, matching the full report.

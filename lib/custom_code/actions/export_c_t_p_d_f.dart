@@ -24,7 +24,13 @@ final PdfColor _textMuted = PdfColor.fromInt(0xFF6B7280);
 final PdfColor _borderColor = PdfColor.fromInt(0xFFD1D5DB);
 final PdfColor _zebraColor = PdfColor.fromInt(0xFFF7F9F9);
 
-Future<void> exportCtPDF(CtRecord docRef) async {
+Future<void> exportCtPDF(
+  CtRecord docRef, {
+  Set<String>? includeSections,
+}) async {
+  bool inc(String key) =>
+      includeSections == null || includeSections.contains(key);
+
   final pdf = pw.Document();
 
   // -------------------------------------------------------------------------
@@ -90,6 +96,7 @@ Future<void> exportCtPDF(CtRecord docRef) async {
         pw.NewPage(),
 
         // ===================== SYSTEM GENERAL INFO ========================
+        if (inc('system_general')) ...[
         _sectionHeader('System General Information'),
         _infoTable(rows: [
           ['Brand', docRef.sysGenBrand],
@@ -100,6 +107,8 @@ Future<void> exportCtPDF(CtRecord docRef) async {
         ]),
 
         // ============================ GANTRY =================================
+        ],
+        if (inc('gantry')) ...[
         _sectionHeader('Gantry'),
         _infoTable(rows: [
           ['Model Serial Number', docRef.gantryModelSN],
@@ -117,6 +126,8 @@ Future<void> exportCtPDF(CtRecord docRef) async {
         ],
 
         // ======================== COOLING SYSTEM ==============================
+        ],
+        if (inc('cooling_system')) ...[
         _sectionHeader('Cooling System'),
         _infoTable(rows: [
           ['Water/Air', docRef.cSWaterAir],
@@ -128,6 +139,8 @@ Future<void> exportCtPDF(CtRecord docRef) async {
         ],
 
         // ======================== PATIENT TABLE ================================
+        ],
+        if (inc('patient_table')) ...[
         _sectionHeader('Patient Table Information'),
         _infoTable(rows: [
           ['Model', docRef.pTModal],
@@ -139,9 +152,10 @@ Future<void> exportCtPDF(CtRecord docRef) async {
           _imageGrid(patientTableGallery),
         ],
 
-        pw.NewPage(),
 
         // ================== CONSOLE AND WORKSTATION ======================
+        ],
+        if (inc('console')) ...[
         _sectionHeader('Console and Workstation Information'),
         _infoTable(rows: [
           ['Console Serial Number', docRef.cnWConsoleMSN],
@@ -159,6 +173,8 @@ Future<void> exportCtPDF(CtRecord docRef) async {
         ],
 
         // ========================= ACCESSORIES ================================
+        ],
+        if (inc('accessories')) ...[
         _sectionHeader('Accessories'),
         _infoTable(rows: [
           ['Model', docRef.accessoriesPModal],
@@ -175,6 +191,8 @@ Future<void> exportCtPDF(CtRecord docRef) async {
         ],
 
         // ====================== COSMETIC CONDITION =============================
+        ],
+        if (inc('cosmetic')) ...[
         _sectionHeader('Cosmetic Condition'),
         _infoTable(rows: [
           ['Notes', docRef.cosmeticText],
@@ -185,6 +203,8 @@ Future<void> exportCtPDF(CtRecord docRef) async {
         ],
 
         // ================= DELIVERY & SITE ACCESS INFORMATION ==================
+        ],
+        if (inc('delivery')) ...[
         _sectionHeader('Delivery & Site Access Information'),
         _infoTable(rows: [
           ['Address', docRef.dnTAddress],
@@ -201,6 +221,8 @@ Future<void> exportCtPDF(CtRecord docRef) async {
         ],
 
         // =========================== OTHER NOTES ================================
+        ],
+        if (inc('other_notes')) ...[
         _sectionHeader('Other Notes'),
         _infoTable(rows: [
           ['Notes', docRef.otherNotes],
@@ -208,6 +230,7 @@ Future<void> exportCtPDF(CtRecord docRef) async {
         if (otherNotesGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
           _imageGrid(otherNotesGallery),
+        ],
         ],
       ],
     ),

@@ -26,7 +26,13 @@ final PdfColor _zebraColor = PdfColor.fromInt(0xFFF7F9F9);
 
 // TODO: rename to match your actual generated FlutterFlow class for this
 // collection (e.g. UltrasoundRecord) if it differs.
-Future<void> exportUltrasoundPDF(UltrasoundRecord docRef) async {
+Future<void> exportUltrasoundPDF(
+  UltrasoundRecord docRef, {
+  Set<String>? includeSections,
+}) async {
+  bool inc(String key) =>
+      includeSections == null || includeSections.contains(key);
+
   final pdf = pw.Document();
 
   // -------------------------------------------------------------------------
@@ -93,6 +99,7 @@ Future<void> exportUltrasoundPDF(UltrasoundRecord docRef) async {
         pw.NewPage(),
 
         // ===================== SYSTEM GENERAL INFO ========================
+        if (inc('system_general')) ...[
         _sectionHeader('System General Information'),
         _infoTable(rows: [
           ['Brand', docRef.sysGenBrand],
@@ -103,10 +110,14 @@ Future<void> exportUltrasoundPDF(UltrasoundRecord docRef) async {
         ]),
 
         // ============================ PROBES ================================
+        ],
+        if (inc('probes')) ...[
         _sectionHeader('Probes'),
         _probesTable(docRef),
 
         // ========================== SOFTWARE ================================
+        ],
+        if (inc('software')) ...[
         _sectionHeader('Software Information'),
         _infoTable(rows: [
           ['Serial Number', docRef.softwareSN],
@@ -119,6 +130,8 @@ Future<void> exportUltrasoundPDF(UltrasoundRecord docRef) async {
         ],
 
         // ========================= ACCESSORIES ================================
+        ],
+        if (inc('accessories')) ...[
         _sectionHeader('Accessories'),
         _infoTable(rows: [
           ['CDs', docRef.accessoriesCDs],
@@ -129,9 +142,10 @@ Future<void> exportUltrasoundPDF(UltrasoundRecord docRef) async {
           _imageGrid(accessoriesGallery),
         ],
 
-        pw.NewPage(),
 
         // ====================== COSMETIC CONDITION =============================
+        ],
+        if (inc('cosmetic')) ...[
         _sectionHeader('Cosmetic Condition'),
         _infoTable(rows: [
           ['Notes', docRef.cosmeticText],
@@ -142,6 +156,8 @@ Future<void> exportUltrasoundPDF(UltrasoundRecord docRef) async {
         ],
 
         // ================= DELIVERY & SITE ACCESS INFORMATION ==================
+        ],
+        if (inc('delivery')) ...[
         _sectionHeader('Delivery & Site Access Information'),
         _infoTable(rows: [
           ['Address', docRef.dnTAddress],
@@ -158,6 +174,8 @@ Future<void> exportUltrasoundPDF(UltrasoundRecord docRef) async {
         ],
 
         // =========================== OTHER NOTES ================================
+        ],
+        if (inc('other_notes')) ...[
         _sectionHeader('Other Notes'),
         _infoTable(rows: [
           ['Notes', docRef.otherNotes],
@@ -165,6 +183,7 @@ Future<void> exportUltrasoundPDF(UltrasoundRecord docRef) async {
         if (otherNotesGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
           _imageGrid(otherNotesGallery),
+        ],
         ],
       ],
     ),

@@ -24,7 +24,13 @@ final PdfColor _textMuted = PdfColor.fromInt(0xFF6B7280);
 final PdfColor _borderColor = PdfColor.fromInt(0xFFD1D5DB);
 final PdfColor _zebraColor = PdfColor.fromInt(0xFFF7F9F9);
 
-Future<void> exportCArmPDF(CArmRecord docRef) async {
+Future<void> exportCArmPDF(
+  CArmRecord docRef, {
+  Set<String>? includeSections,
+}) async {
+  bool inc(String key) =>
+      includeSections == null || includeSections.contains(key);
+
   final pdf = pw.Document();
 
   // -------------------------------------------------------------------------
@@ -88,6 +94,7 @@ Future<void> exportCArmPDF(CArmRecord docRef) async {
         pw.NewPage(),
 
         // ===================== SYSTEM GENERAL INFO ========================
+        if (inc('system_general')) ...[
         _sectionHeader('System General Information'),
         _infoTable(rows: [
           ['Brand', docRef.sysGenBrand],
@@ -97,6 +104,8 @@ Future<void> exportCArmPDF(CArmRecord docRef) async {
         ]),
 
         // ============================ TUBE =================================
+        ],
+        if (inc('tube')) ...[
         _sectionHeader('Tube Information'),
         _infoTable(rows: [
           ['Model', docRef.tube1Model],
@@ -108,6 +117,8 @@ Future<void> exportCArmPDF(CArmRecord docRef) async {
         ],
 
         // ========================== DETECTOR ================================
+        ],
+        if (inc('detector')) ...[
         _sectionHeader('Detector Information'),
         _infoTable(rows: [
           ['Model', docRef.detectorModel],
@@ -121,6 +132,8 @@ Future<void> exportCArmPDF(CArmRecord docRef) async {
         ],
 
         // ========================== SOFTWARE ================================
+        ],
+        if (inc('software')) ...[
         _sectionHeader('Software Information'),
         _infoTable(rows: [
           ['Serial Number', docRef.softwareSN],
@@ -133,6 +146,8 @@ Future<void> exportCArmPDF(CArmRecord docRef) async {
         ],
 
         // ========================== PHANTOM ==================================
+        ],
+        if (inc('phantom')) ...[
         _sectionHeader('Phantom'),
         _infoTable(rows: [
           ['Model', docRef.accPhantomModel],
@@ -141,6 +156,8 @@ Future<void> exportCArmPDF(CArmRecord docRef) async {
         ]),
 
         // ========================= ACCESSORIES ================================
+        ],
+        if (inc('accessories')) ...[
         _sectionHeader('Accessories'),
         _infoTable(rows: [
           ['CDs', docRef.accessoriesCDs],
@@ -151,9 +168,10 @@ Future<void> exportCArmPDF(CArmRecord docRef) async {
           _imageGrid(accessoriesGallery),
         ],
 
-        pw.NewPage(),
 
         // ====================== COSMETIC CONDITION =============================
+        ],
+        if (inc('cosmetic')) ...[
         _sectionHeader('Cosmetic Condition'),
         _infoTable(rows: [
           ['Notes', docRef.cosmeticText],
@@ -164,6 +182,8 @@ Future<void> exportCArmPDF(CArmRecord docRef) async {
         ],
 
         // ================= DELIVERY & SITE ACCESS INFORMATION ==================
+        ],
+        if (inc('delivery')) ...[
         _sectionHeader('Delivery & Site Access Information'),
         _infoTable(rows: [
           ['Address', docRef.dnTAddress],
@@ -180,6 +200,8 @@ Future<void> exportCArmPDF(CArmRecord docRef) async {
         ],
 
         // =========================== OTHER NOTES ================================
+        ],
+        if (inc('other_notes')) ...[
         _sectionHeader('Other Notes'),
         _infoTable(rows: [
           ['Notes', docRef.otherNotes],
@@ -187,6 +209,7 @@ Future<void> exportCArmPDF(CArmRecord docRef) async {
         if (otherNotesGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
           _imageGrid(otherNotesGallery),
+        ],
         ],
       ],
     ),
