@@ -24,7 +24,13 @@ final PdfColor _textMuted = PdfColor.fromInt(0xFF6B7280);
 final PdfColor _borderColor = PdfColor.fromInt(0xFFD1D5DB);
 final PdfColor _zebraColor = PdfColor.fromInt(0xFFF7F9F9);
 
-Future<void> exportXRayPDF(XRayRecord docRef) async {
+Future<void> exportXRayPDF(
+  XRayRecord docRef, {
+  Set<String>? includeSections,
+}) async {
+  bool inc(String key) =>
+      includeSections == null || includeSections.contains(key);
+
   final pdf = pw.Document();
 
   // -------------------------------------------------------------------------
@@ -90,6 +96,7 @@ Future<void> exportXRayPDF(XRayRecord docRef) async {
         pw.NewPage(),
 
         // ===================== SYSTEM GENERAL INFO ========================
+        if (inc('system_general')) ...[
         _sectionHeader('System General Information'),
         _infoTable(rows: [
           ['Brand', docRef.sysGenBrand],
@@ -99,6 +106,8 @@ Future<void> exportXRayPDF(XRayRecord docRef) async {
         ]),
 
         // ================== CONSOLE AND WORKSTATION ======================
+        ],
+        if (inc('console')) ...[
         _sectionHeader('Console and Workstation Information'),
         _infoTable(rows: [
           ['Console Serial Number', docRef.cnWConsoleMSN],
@@ -114,6 +123,8 @@ Future<void> exportXRayPDF(XRayRecord docRef) async {
         ],
 
         // ========================== DETECTOR ================================
+        ],
+        if (inc('detector')) ...[
         _sectionHeader('Detector Information'),
         _infoTable(rows: [
           ['Model', docRef.detectorModel],
@@ -127,6 +138,8 @@ Future<void> exportXRayPDF(XRayRecord docRef) async {
         ],
 
         // ============================ TUBE =================================
+        ],
+        if (inc('tube')) ...[
         _sectionHeader('Tube Information'),
         _infoTable(rows: [
           ['Tube 1 Model', docRef.tube1Model],
@@ -140,6 +153,8 @@ Future<void> exportXRayPDF(XRayRecord docRef) async {
         ],
 
         // ====================== PATIENT TABLE ================================
+        ],
+        if (inc('table')) ...[
         _sectionHeader('Table Information'),
         _infoTable(rows: [
           ['Model', docRef.tableModel],
@@ -151,6 +166,8 @@ Future<void> exportXRayPDF(XRayRecord docRef) async {
         ],
 
         // ========================= ACCESSORIES ================================
+        ],
+        if (inc('accessories')) ...[
         _sectionHeader('Accessories'),
         _infoTable(rows: [
           ['Model', docRef.accessoriesPModal],
@@ -164,9 +181,10 @@ Future<void> exportXRayPDF(XRayRecord docRef) async {
           _imageGrid(accessoriesGallery),
         ],
 
-        pw.NewPage(),
 
         // ====================== COSMETIC CONDITION =============================
+        ],
+        if (inc('cosmetic')) ...[
         _sectionHeader('Cosmetic Condition'),
         _infoTable(rows: [
           ['Notes', docRef.cosmeticText],
@@ -177,6 +195,8 @@ Future<void> exportXRayPDF(XRayRecord docRef) async {
         ],
 
         // ================= DELIVERY & SITE ACCESS INFORMATION ==================
+        ],
+        if (inc('delivery')) ...[
         _sectionHeader('Delivery & Site Access Information'),
         _infoTable(rows: [
           ['Address', docRef.dnTAddress],
@@ -193,6 +213,8 @@ Future<void> exportXRayPDF(XRayRecord docRef) async {
         ],
 
         // =========================== OTHER NOTES ================================
+        ],
+        if (inc('other_notes')) ...[
         _sectionHeader('Other Notes'),
         _infoTable(rows: [
           ['Notes', docRef.otherNotes],
@@ -200,6 +222,7 @@ Future<void> exportXRayPDF(XRayRecord docRef) async {
         if (otherNotesGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
           _imageGrid(otherNotesGallery),
+        ],
         ],
       ],
     ),

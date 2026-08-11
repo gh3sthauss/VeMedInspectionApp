@@ -24,7 +24,13 @@ final PdfColor _textMuted = PdfColor.fromInt(0xFF6B7280);
 final PdfColor _borderColor = PdfColor.fromInt(0xFFD1D5DB);
 final PdfColor _zebraColor = PdfColor.fromInt(0xFFF7F9F9);
 
-Future<void> exportCrPDF(CrRecord docRef) async {
+Future<void> exportCrPDF(
+  CrRecord docRef, {
+  Set<String>? includeSections,
+}) async {
+  bool inc(String key) =>
+      includeSections == null || includeSections.contains(key);
+
   final pdf = pw.Document();
 
   // -------------------------------------------------------------------------
@@ -88,6 +94,7 @@ Future<void> exportCrPDF(CrRecord docRef) async {
         pw.NewPage(),
 
         // ===================== SYSTEM GENERAL INFO ========================
+        if (inc('system_general')) ...[
         _sectionHeader('System General Information'),
         _infoTable(rows: [
           ['Brand', docRef.sysGenBrand],
@@ -101,6 +108,8 @@ Future<void> exportCrPDF(CrRecord docRef) async {
         ],
 
         // ================== CONSOLE AND WORKSTATION ======================
+        ],
+        if (inc('console')) ...[
         _sectionHeader('Console and Workstation Information'),
         _infoTable(rows: [
           ['Console Serial Number', docRef.cnWConsoleMSN],
@@ -116,6 +125,8 @@ Future<void> exportCrPDF(CrRecord docRef) async {
         ],
 
         // ========================== DETECTOR ================================
+        ],
+        if (inc('detector')) ...[
         _sectionHeader('Detector Information'),
         _infoTable(rows: [
           ['Model', docRef.detectorModel],
@@ -125,6 +136,8 @@ Future<void> exportCrPDF(CrRecord docRef) async {
         ]),
 
         // ========================== CASSETTES ================================
+        ],
+        if (inc('cassettes')) ...[
         _sectionHeader('Cassettes'),
         _cassettesTable(docRef),
         if (cassettesGallery.isNotEmpty) ...[
@@ -133,6 +146,8 @@ Future<void> exportCrPDF(CrRecord docRef) async {
         ],
 
         // ========================= ACCESSORIES ================================
+        ],
+        if (inc('accessories')) ...[
         _sectionHeader('Accessories'),
         _infoTable(rows: [
           ['Model', docRef.accessoriesPModal],
@@ -146,9 +161,10 @@ Future<void> exportCrPDF(CrRecord docRef) async {
           _imageGrid(accessoriesGallery),
         ],
 
-        pw.NewPage(),
 
         // ====================== COSMETIC CONDITION =============================
+        ],
+        if (inc('cosmetic')) ...[
         _sectionHeader('Cosmetic Condition'),
         _infoTable(rows: [
           ['Notes', docRef.cosmeticText],
@@ -159,6 +175,8 @@ Future<void> exportCrPDF(CrRecord docRef) async {
         ],
 
         // ================= DELIVERY & SITE ACCESS INFORMATION ==================
+        ],
+        if (inc('delivery')) ...[
         _sectionHeader('Delivery & Site Access Information'),
         _infoTable(rows: [
           ['Address', docRef.dnTAddress],
@@ -175,6 +193,8 @@ Future<void> exportCrPDF(CrRecord docRef) async {
         ],
 
         // =========================== OTHER NOTES ================================
+        ],
+        if (inc('other_notes')) ...[
         _sectionHeader('Other Notes'),
         _infoTable(rows: [
           ['Notes', docRef.otherNotes],
@@ -182,6 +202,7 @@ Future<void> exportCrPDF(CrRecord docRef) async {
         if (otherNotesGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
           _imageGrid(otherNotesGallery),
+        ],
         ],
       ],
     ),

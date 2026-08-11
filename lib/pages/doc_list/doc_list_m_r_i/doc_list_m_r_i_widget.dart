@@ -1,6 +1,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/doc_actions_sheet.dart';
+import '/components/pdf_section_selector.dart';
 import '/components/doc_naming.dart';
 import '/components/logo_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -180,8 +181,14 @@ class _DocListMRIWidgetState extends State<DocListMRIWidget> {
                                               listViewMriRecord.reference.id,
                                             ),
                                             onDownload: () async {
+                                              final sections = await showPdfSectionSelector(
+                                                context,
+                                                sections: kMriPdfSections,
+                                              );
+                                              if (sections == null) return;
                                               await actions.exportMriPDF(
                                                 listViewMriRecord,
+                                                includeSections: sections,
                                               );
                                             },
                                             onDelete: () async {

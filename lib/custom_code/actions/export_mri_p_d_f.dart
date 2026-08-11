@@ -24,7 +24,13 @@ final PdfColor _textMuted = PdfColor.fromInt(0xFF6B7280);
 final PdfColor _borderColor = PdfColor.fromInt(0xFFD1D5DB);
 final PdfColor _zebraColor = PdfColor.fromInt(0xFFF7F9F9);
 
-Future<void> exportMriPDF(MriRecord docRef) async {
+Future<void> exportMriPDF(
+  MriRecord docRef, {
+  Set<String>? includeSections,
+}) async {
+  bool inc(String key) =>
+      includeSections == null || includeSections.contains(key);
+
   final pdf = pw.Document();
 
   // -------------------------------------------------------------------------
@@ -102,6 +108,7 @@ Future<void> exportMriPDF(MriRecord docRef) async {
         pw.NewPage(),
 
         // ===================== SYSTEM GENERAL INFO ========================
+        if (inc('system_general')) ...[
         _sectionHeader('System General Information'),
         _infoTable(rows: [
           ['Brand', docRef.sysGenBrand],
@@ -111,6 +118,8 @@ Future<void> exportMriPDF(MriRecord docRef) async {
         ]),
 
         // ============================ MAGNET =================================
+        ],
+        if (inc('magnet')) ...[
         _sectionHeader('Magnet'),
         _infoTable(rows: [
           ['Model', docRef.magnetModel],
@@ -126,6 +135,8 @@ Future<void> exportMriPDF(MriRecord docRef) async {
         ],
 
         // ==================== COOLER / COMPRESSOR ===========================
+        ],
+        if (inc('cooler_compressor')) ...[
         _sectionHeader('Cooler / Compressor'),
         _infoTable(rows: [
           ['Model', docRef.coolerCompModel],
@@ -140,6 +151,8 @@ Future<void> exportMriPDF(MriRecord docRef) async {
         ],
 
         // ========================== COLD HEAD ================================
+        ],
+        if (inc('cold_head')) ...[
         _sectionHeader('Cold Head'),
         _infoTable(rows: [
           ['Model', docRef.coldHeadModel],
@@ -147,6 +160,8 @@ Future<void> exportMriPDF(MriRecord docRef) async {
         ]),
 
         // ============================ IMAGER =================================
+        ],
+        if (inc('imager')) ...[
         _sectionHeader('Imager'),
         _infoTable(rows: [
           ['Model', docRef.imagerModel],
@@ -163,9 +178,10 @@ Future<void> exportMriPDF(MriRecord docRef) async {
           _imageGrid(marsImagerGallery),
         ],
 
-        pw.NewPage(),
 
         // ============================= ECG ===================================
+        ],
+        if (inc('ecg')) ...[
         _sectionHeader('ECG'),
         _infoTable(rows: [
           ['Model', docRef.eCGModel],
@@ -178,6 +194,8 @@ Future<void> exportMriPDF(MriRecord docRef) async {
         ],
 
         // ========================= POWER STAGES ================================
+        ],
+        if (inc('power_stages')) ...[
         _sectionHeader('Power Stages'),
         _infoTable(rows: [
           ['Power Stage 1 Serial Number', docRef.powerStages1SN],
@@ -193,6 +211,8 @@ Future<void> exportMriPDF(MriRecord docRef) async {
         ],
 
         // ====================== PATIENT TABLE ================================
+        ],
+        if (inc('patient_table')) ...[
         _sectionHeader('Patient Table'),
         _infoTable(rows: [
           ['Model', docRef.patientTableModel],
@@ -205,6 +225,8 @@ Future<void> exportMriPDF(MriRecord docRef) async {
         ],
 
         // ================== CONSOLE AND WORKSTATION ======================
+        ],
+        if (inc('console')) ...[
         _sectionHeader('Console and Workstation Information'),
         _infoTable(rows: [
           ['Console Serial Number', docRef.cnWConsoleSN],
@@ -220,9 +242,10 @@ Future<void> exportMriPDF(MriRecord docRef) async {
           _imageGrid([...consoleOptGallery, ...wsOptGallery]),
         ],
 
-        pw.NewPage(),
 
         // ========================= LOCAL SERVICE ================================
+        ],
+        if (inc('local_service')) ...[
         _sectionHeader('Local Service'),
         _infoTable(rows: [
           ['Measurement Settings', docRef.localSMeasSettings],
@@ -241,6 +264,8 @@ Future<void> exportMriPDF(MriRecord docRef) async {
         ],
 
         // ============================ COILS ==================================
+        ],
+        if (inc('coils')) ...[
         _sectionHeader('Coils'),
         _coilsTable(docRef),
         if (coilsGallery.isNotEmpty) ...[
@@ -248,13 +273,16 @@ Future<void> exportMriPDF(MriRecord docRef) async {
           _imageGrid(coilsGallery),
         ],
 
-        pw.NewPage(),
 
         // ========================== PHANTOMS ==================================
+        ],
+        if (inc('phantoms')) ...[
         _sectionHeader('Phantoms'),
         _phantomsTable(docRef),
 
         // ========================= ACCESSORIES ================================
+        ],
+        if (inc('accessories')) ...[
         _sectionHeader('Accessories'),
         _infoTable(rows: [
           ['Injector', docRef.accInjector],
@@ -270,6 +298,8 @@ Future<void> exportMriPDF(MriRecord docRef) async {
         ],
 
         // ====================== COSMETIC CONDITION =============================
+        ],
+        if (inc('cosmetic')) ...[
         _sectionHeader('Cosmetic Condition'),
         _infoTable(rows: [
           ['Condition', docRef.cosmeticCondition],
@@ -281,6 +311,8 @@ Future<void> exportMriPDF(MriRecord docRef) async {
         ],
 
         // ================= DELIVERY & SITE ACCESS INFORMATION ==================
+        ],
+        if (inc('delivery')) ...[
         _sectionHeader('Delivery & Site Access Information'),
         _infoTable(rows: [
           ['Address', docRef.dnTAddress],
@@ -297,6 +329,8 @@ Future<void> exportMriPDF(MriRecord docRef) async {
         ],
 
         // =========================== OTHER NOTES ================================
+        ],
+        if (inc('other_notes')) ...[
         _sectionHeader('Other Notes'),
         _infoTable(rows: [
           ['Notes', docRef.otherNotes],
@@ -304,6 +338,7 @@ Future<void> exportMriPDF(MriRecord docRef) async {
         if (otherNotesGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
           _imageGrid(otherNotesGallery),
+        ],
         ],
       ],
     ),

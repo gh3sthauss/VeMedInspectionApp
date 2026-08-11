@@ -1,6 +1,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/doc_actions_sheet.dart';
+import '/components/pdf_section_selector.dart';
 import '/components/doc_naming.dart';
 import '/components/logo_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -180,8 +181,14 @@ class _DocListCArmWidgetState extends State<DocListCArmWidget> {
                                               listViewCArmRecord.reference.id,
                                             ),
                                             onDownload: () async {
+                                              final sections = await showPdfSectionSelector(
+                                                context,
+                                                sections: kCArmPdfSections,
+                                              );
+                                              if (sections == null) return;
                                               await actions.exportCArmPDF(
                                                 listViewCArmRecord,
+                                                includeSections: sections,
                                               );
                                             },
                                             onDelete: () async {
