@@ -220,62 +220,98 @@ class _ModalityTile extends StatelessWidget {
           onTap: onTap,
           child: Container(
             decoration: modalityCardDecoration(),
-            padding: EdgeInsets.all(8.0),
-            child: Stack(
+            padding: EdgeInsets.all(10.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ModalityIcon(label: label, size: 64.0),
-                    SizedBox(height: 8.0),
-                    Text(
-                      label,
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.readexPro(
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w600,
-                        color: theme.primaryText,
-                      ),
-                    ),
-                  ],
-                ),
-                Align(
-                  alignment: AlignmentDirectional(1.0, -1.0),
-                  child: isLoading
-                      ? SizedBox(
-                          width: 16.0,
-                          height: 16.0,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.0,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              theme.primary,
+                // Icon with a small notification-style count badge pinned to
+                // its top-right corner. The badge is hidden when the count is
+                // zero — the dimmed card already signals "nothing here yet".
+                SizedBox(
+                  width: 64.0,
+                  height: 64.0,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Center(child: ModalityIcon(label: label, size: 64.0)),
+                      if (isLoading)
+                        PositionedDirectional(
+                          top: -2.0,
+                          end: -4.0,
+                          child: SizedBox(
+                            width: 16.0,
+                            height: 16.0,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.0,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                theme.primary,
+                              ),
                             ),
                           ),
                         )
-                      : Container(
-                          constraints: BoxConstraints(minWidth: 22.0),
-                          height: 22.0,
-                          padding: EdgeInsets.symmetric(horizontal: 6.0),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFDEE7F0),
-                            borderRadius: BorderRadius.circular(11.0),
-                          ),
-                          child: Text(
-                            count.toString(),
-                            style: GoogleFonts.readexPro(
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w500,
-                              color: theme.secondaryText,
-                            ),
-                          ),
+                      else if (!isEmpty)
+                        PositionedDirectional(
+                          top: -4.0,
+                          end: -6.0,
+                          child: _CountBadge(count: count!),
                         ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.readexPro(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w600,
+                    color: theme.primaryText,
+                  ),
                 ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A small circular notification badge (like an app icon's unread count):
+/// solid indigo pill with a white ring so it lifts off the icon. Renders a
+/// circle for single digits and a short pill for larger counts.
+class _CountBadge extends StatelessWidget {
+  const _CountBadge({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints(minWidth: 22.0, minHeight: 22.0),
+      padding: EdgeInsets.symmetric(horizontal: 6.0),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Color(0xFF2E54D6),
+        borderRadius: BorderRadius.circular(11.0),
+        border: Border.all(color: Colors.white, width: 2.0),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x332E54D6),
+            blurRadius: 4.0,
+            offset: Offset(0.0, 1.0),
+          ),
+        ],
+      ),
+      child: Text(
+        count.toString(),
+        style: GoogleFonts.readexPro(
+          fontSize: 12.0,
+          fontWeight: FontWeight.w700,
+          color: Colors.white,
+          height: 1.0,
         ),
       ),
     );
