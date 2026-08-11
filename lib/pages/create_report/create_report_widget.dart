@@ -742,7 +742,7 @@ class _CreateReportWidgetState extends State<CreateReportWidget> {
                     crossAxisCount: 3,
                     mainAxisSpacing: 12.0,
                     crossAxisSpacing: 12.0,
-                    childAspectRatio: 0.82,
+                    childAspectRatio: 0.74,
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     children: _modalities
@@ -782,20 +782,17 @@ class _CreateTile extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: BorderRadius.circular(20.0),
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         onTap: onTap,
         child: Container(
-          decoration: BoxDecoration(
-            color: Color(0xFFF0F7FF),
-            borderRadius: BorderRadius.circular(18.0),
-          ),
+          decoration: modalityCardDecoration(),
           padding: EdgeInsets.all(8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ModalityIcon(label: label, size: 46.0),
+              ModalityIcon(label: label, size: 64.0),
               SizedBox(height: 8.0),
               Text(
                 label,

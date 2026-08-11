@@ -18,6 +18,9 @@ const Map<String, String> _modalityIconAssets = {
   'MRI': '$_iconDir/mri.svg',
   'X-Ray': '$_iconDir/xray.svg',
   'Fluoroscopy': '$_iconDir/fluoroscopy.svg',
+  // The Create page uses the app's original spelling "Flouroscopy"; alias it
+  // so it resolves to the same icon instead of falling back to Others.
+  'Flouroscopy': '$_iconDir/fluoroscopy.svg',
   'C-Arm': '$_iconDir/c_arm.svg',
   'Mammography': '$_iconDir/mammography.svg',
   'PACS': '$_iconDir/pacs.svg',
@@ -29,6 +32,30 @@ const Map<String, String> _modalityIconAssets = {
 /// when a modality isn't in the map.
 String modalityIconAsset(String label) =>
     _modalityIconAssets[label] ?? '$_iconDir/others.svg';
+
+/// Soft card gradient that echoes the icons' cyan→indigo ramp in pale tints
+/// and along the same top-left→bottom-right axis. This lets the gradient icon
+/// fuse into the tile rather than sit on a flat block. Shared by the Create
+/// and Documents modality grids so both stay in sync.
+const LinearGradient modalityCardGradient = LinearGradient(
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+  colors: [Color(0xFFF3FBFF), Color(0xFFE6ECFF)],
+);
+
+/// Rounded, gradient-filled decoration for a modality tile, with a faint
+/// indigo drop shadow for a little depth.
+BoxDecoration modalityCardDecoration() => BoxDecoration(
+      gradient: modalityCardGradient,
+      borderRadius: BorderRadius.circular(20.0),
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0x142E54D6),
+          blurRadius: 12.0,
+          offset: Offset(0.0, 4.0),
+        ),
+      ],
+    );
 
 /// A modality icon rendered at [size]. Uses the shared mapping above.
 class ModalityIcon extends StatelessWidget {
