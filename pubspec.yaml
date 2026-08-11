@@ -160,6 +160,7 @@ flutter:
   assets:
     - assets/fonts/
     - assets/images/
+    - assets/images/modality_icons/
     - assets/videos/
     - assets/audios/
     - assets/rive_animations/

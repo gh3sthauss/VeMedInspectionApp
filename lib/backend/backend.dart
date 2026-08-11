@@ -16,7 +16,6 @@ import 'schema/x_ray_record.dart';
 import 'schema/pacs_record.dart';
 import 'schema/dr_record.dart';
 import 'schema/cr_record.dart';
-import 'schema/test_record.dart';
 import 'schema/angiography_record.dart';
 
 export 'dart:async' show StreamSubscription;
@@ -37,7 +36,6 @@ export 'schema/x_ray_record.dart';
 export 'schema/pacs_record.dart';
 export 'schema/dr_record.dart';
 export 'schema/cr_record.dart';
-export 'schema/test_record.dart';
 export 'schema/angiography_record.dart';
 
 /// Functions to query UsersRecords (as a Stream and as a Future).
@@ -442,43 +440,6 @@ Future<List<CrRecord>> queryCrRecordOnce({
     queryCollectionOnce(
       CrRecord.collection,
       CrRecord.fromSnapshot,
-      queryBuilder: queryBuilder,
-      limit: limit,
-      singleRecord: singleRecord,
-    );
-
-/// Functions to query TestRecords (as a Stream and as a Future).
-Future<int> queryTestRecordCount({
-  Query Function(Query)? queryBuilder,
-  int limit = -1,
-}) =>
-    queryCollectionCount(
-      TestRecord.collection,
-      queryBuilder: queryBuilder,
-      limit: limit,
-    );
-
-Stream<List<TestRecord>> queryTestRecord({
-  Query Function(Query)? queryBuilder,
-  int limit = -1,
-  bool singleRecord = false,
-}) =>
-    queryCollection(
-      TestRecord.collection,
-      TestRecord.fromSnapshot,
-      queryBuilder: queryBuilder,
-      limit: limit,
-      singleRecord: singleRecord,
-    );
-
-Future<List<TestRecord>> queryTestRecordOnce({
-  Query Function(Query)? queryBuilder,
-  int limit = -1,
-  bool singleRecord = false,
-}) =>
-    queryCollectionOnce(
-      TestRecord.collection,
-      TestRecord.fromSnapshot,
       queryBuilder: queryBuilder,
       limit: limit,
       singleRecord: singleRecord,

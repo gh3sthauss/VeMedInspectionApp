@@ -190,7 +190,6 @@ export '/pages/doc_list/doc_list_mammography/doc_list_mammography_widget.dart'
     show DocListMammographyWidget;
 export '/pages/doc_list/doc_list_m_r_i/doc_list_m_r_i_widget.dart'
     show DocListMRIWidget;
-export '/pages/modality/test/test_widget.dart' show TestWidget;
 export '/pages/modality/angiography/angiography_widget.dart'
     show AngiographyWidget;
 export '/pages/angiography/ang_system_general/ang_system_general_widget.dart'
