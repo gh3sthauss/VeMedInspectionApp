@@ -1379,13 +1379,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
                   page: DocListMRIWidget(),
                 )),
         FFRoute(
-            name: TestWidget.routeName,
-            path: TestWidget.routePath,
-            builder: (context, params) => NavBarPage(
-                  initialPage: '',
-                  page: TestWidget(),
-                )),
-        FFRoute(
             name: AngiographyWidget.routeName,
             path: AngiographyWidget.routePath,
             builder: (context, params) => NavBarPage(
