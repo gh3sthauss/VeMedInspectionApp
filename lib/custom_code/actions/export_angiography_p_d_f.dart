@@ -17,8 +17,7 @@ import 'package:share_plus/share_plus.dart';
 // BRAND / STYLE CONSTANTS
 // ---------------------------------------------------------------------------
 final PdfColor _accent =
-    PdfColor.fromInt(0x0033A0); // adjust to exact brand hex
-final PdfColor _accentLight = PdfColor.fromInt(0x8F99FB);
+    PdfColor.fromInt(0x002D4B); // VeMed report navy
 const PdfColor _textDark = PdfColor.fromInt(0xFF1F2937);
 final PdfColor _textMuted = PdfColor.fromInt(0xFF6B7280);
 final PdfColor _borderColor = PdfColor.fromInt(0xFFD1D5DB);
@@ -43,18 +42,19 @@ Future<void> exportAngiographyPDF(
   // SVG bytes. The pdf package has a dedicated widget for SVGs (pw.SvgImage)
   // which takes the raw SVG string, not bytes. We branch on file extension
   // so this works whether the bundled asset is an .svg or a raster image.
+  // Original colour brand logo (cover + running header) and the modality
+  // icon shown as the cover hero.
   pw.Widget? logoWidget;
+  pw.Widget? modalityIcon;
   try {
-    if ('assets/images/logo.svg'.toLowerCase().endsWith('.svg')) {
-      final svgString =
-          await rootBundle.loadString('assets/images/vemedLogoDarkBGsvg.svg');
-      logoWidget = pw.SvgImage(svg: svgString);
-    } else {
-      final logoBytes = await rootBundle.load('assets/images/logo.svg');
-      logoWidget = pw.Image(pw.MemoryImage(logoBytes.buffer.asUint8List()));
-    }
+    final logoSvg = await rootBundle.loadString('assets/images/logo.svg');
+    logoWidget = pw.SvgImage(svg: logoSvg);
+    final iconSvg = await rootBundle
+        .loadString('assets/images/modality_icons/angiography.svg');
+    modalityIcon = pw.SvgImage(svg: iconSvg);
   } catch (e) {
     logoWidget = null;
+    modalityIcon = null;
   }
 
   // Hero / device photo (first image only, for the cover page)
@@ -107,7 +107,7 @@ Future<void> exportAngiographyPDF(
       footer: (context) => _buildFooter(context),
       build: (context) => [
         // =========================== COVER PAGE ===========================
-        _buildCoverPage(logoWidget, heroImage, docRef),
+        _buildCoverPage(logoWidget, heroImage, docRef, modalityIcon, 'Angiography'),
         pw.NewPage(),
 
         // ===================== SYSTEM GENERAL INFO ========================
@@ -361,130 +361,80 @@ pw.Widget _valueText(
 pw.Widget _buildCoverPage(
   pw.Widget? logoWidget,
   pw.ImageProvider? heroImage,
-  AngiographyRecord docRef,
+  dynamic docRef,
+  pw.Widget? modalityIcon,
+  String modalityLabel,
 ) {
-  return pw.Column(
-    crossAxisAlignment: pw.CrossAxisAlignment.start,
-    children: [
-      // Top accent band with logo
-      pw.Container(
-        width: double.infinity,
-        padding: const pw.EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-        decoration: pw.BoxDecoration(color: _accent),
-        child: pw.Row(
-          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: pw.CrossAxisAlignment.center,
-          children: [
-            if (logoWidget != null)
-              pw.Container(height: 34, child: logoWidget)
-            else
-              pw.Text(
-                'VeMed GMBH',
-                style: pw.TextStyle(
-                  color: PdfColors.white,
-                  fontSize: 16,
-                  fontWeight: pw.FontWeight.bold,
-                  letterSpacing: 1.2,
-                ),
-              ),
-            pw.Text(
-              'ANGIOGRAPHY SYSTEM REPORT',
-              style: pw.TextStyle(
-                color: PdfColors.white,
-                fontSize: 10,
-                fontWeight: pw.FontWeight.bold,
-                letterSpacing: 0.8,
-              ),
-            ),
-          ],
-        ),
-      ),
-
-      pw.SizedBox(height: 28),
-
-      // Title block
-      pw.Padding(
-        padding: const pw.EdgeInsets.symmetric(horizontal: 4),
-        child: pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-            pw.Text(
-              '${docRef.sysGenBrand} ${docRef.sysGenModal}',
-              style: pw.TextStyle(
-                fontSize: 26,
-                fontWeight: pw.FontWeight.bold,
-                color: _textDark,
-              ),
-            ),
-            pw.SizedBox(height: 4),
-            pw.Text(
-              'System Pre-Delivery Inspection Report',
-              style: pw.TextStyle(fontSize: 12, color: _textMuted),
-            ),
-          ],
-        ),
-      ),
-
-      pw.SizedBox(height: 20),
-
-      // Hero photo — enlarged and centered
-      if (heroImage != null)
-        pw.Center(
-          child: pw.Container(
-            width: double.infinity,
-            height: 380,
-            decoration: pw.BoxDecoration(
-              border: pw.Border.all(color: _borderColor, width: 1),
-              borderRadius: const pw.BorderRadius.all(pw.Radius.circular(6)),
-            ),
-            child: pw.ClipRRect(
-              horizontalRadius: 6,
-              verticalRadius: 6,
-              child: pw.Image(heroImage,
-                  fit: pw.BoxFit.cover, alignment: pw.Alignment.center),
-            ),
-          ),
-        ),
-
-      pw.SizedBox(height: 20),
-
-      // Summary card
-      pw.Container(
-        width: double.infinity,
-        padding: const pw.EdgeInsets.all(14),
-        decoration: pw.BoxDecoration(
-          color: _accentLight,
-          borderRadius: const pw.BorderRadius.all(pw.Radius.circular(4)),
-          border: pw.Border.all(color: _accent, width: 0.75),
-        ),
-        child: pw.Row(
-          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-          children: [
-            _summaryStat('SERIAL NUMBER', docRef.sysGenSN),
-            _summaryStat('YEAR OF MANUFACTURE', docRef.sysGenYOM),
-            _summaryStat('MODAL', docRef.sysGenModal),
-          ],
-        ),
-      ),
-    ],
-  );
-}
-
-pw.Widget _summaryStat(String label, String value) {
-  return pw.Column(
-    crossAxisAlignment: pw.CrossAxisAlignment.start,
-    children: [
-      pw.Text(
-        label,
+  pw.Widget addr(String t, {bool bold = false}) => pw.Text(
+        t,
         style: pw.TextStyle(
-          fontSize: 7.5,
-          color: _textMuted,
-          fontWeight: pw.FontWeight.bold,
-          letterSpacing: 0.6,
+          fontSize: bold ? 12 : 10,
+          color: bold ? _textDark : _textMuted,
+          fontWeight: bold ? pw.FontWeight.bold : pw.FontWeight.normal,
+        ),
+      );
+  return pw.Column(
+    crossAxisAlignment: pw.CrossAxisAlignment.start,
+    children: [
+      pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          if (logoWidget != null)
+            pw.Container(height: 58, child: logoWidget)
+          else
+            pw.Text('VeMed GmbH',
+                style: pw.TextStyle(
+                    color: _accent,
+                    fontSize: 18,
+                    fontWeight: pw.FontWeight.bold)),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.end,
+            children: [
+              addr('VeMed GmbH', bold: true),
+              pw.SizedBox(height: 6),
+              addr('Leichtmetallstr. 24a'),
+              addr('42781 Haan - Germany'),
+              pw.SizedBox(height: 6),
+              addr('+49 2104 141999-0'),
+              addr('info@vemed.de'),
+              addr('www.vemed.de'),
+            ],
+          ),
+        ],
+      ),
+      pw.SizedBox(height: 64),
+      pw.Text('INSPECTION',
+          style: pw.TextStyle(
+              fontSize: 42,
+              fontWeight: pw.FontWeight.bold,
+              color: _accent,
+              height: 1.05)),
+      pw.Text('REPORT',
+          style: pw.TextStyle(
+              fontSize: 42,
+              fontWeight: pw.FontWeight.bold,
+              color: _accent,
+              height: 1.05)),
+      pw.SizedBox(height: 48),
+      pw.Center(
+        child: pw.Stack(
+          alignment: pw.Alignment.center,
+          children: [
+            if (modalityIcon != null)
+              pw.Opacity(
+                opacity: 0.5,
+                child: pw.Container(
+                    height: 300, width: 300, child: modalityIcon),
+              ),
+            pw.Text(modalityLabel,
+                style: pw.TextStyle(
+                    fontSize: 40,
+                    fontWeight: pw.FontWeight.bold,
+                    color: _accent)),
+          ],
         ),
       ),
-      pw.SizedBox(height: 2),
-      _valueText(value, fontSize: 11, fontWeight: pw.FontWeight.bold),
     ],
   );
 }
