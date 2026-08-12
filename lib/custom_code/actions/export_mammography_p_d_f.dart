@@ -339,25 +339,45 @@ pw.Widget _buildCoverPage(
               fontWeight: pw.FontWeight.bold,
               color: _accent,
               height: 1.05)),
-      pw.SizedBox(height: 48),
-      pw.Center(
-        child: pw.Stack(
-          alignment: pw.Alignment.center,
-          children: [
-            if (modalityIcon != null)
-              pw.Opacity(
-                opacity: 0.5,
-                child: pw.Container(
-                    height: 300, width: 300, child: modalityIcon),
-              ),
-            pw.Text(modalityLabel,
-                style: pw.TextStyle(
-                    fontSize: 40,
-                    fontWeight: pw.FontWeight.bold,
-                    color: _accent)),
-          ],
+      pw.SizedBox(height: 40),
+      // Hero: the actual device photo when one was captured, otherwise the
+      // branded modality icon with its label.
+      if (heroImage != null)
+        pw.Center(
+          child: pw.Container(
+            width: double.infinity,
+            height: 360,
+            decoration: pw.BoxDecoration(
+              border: pw.Border.all(color: _borderColor, width: 1),
+              borderRadius: const pw.BorderRadius.all(pw.Radius.circular(6)),
+            ),
+            child: pw.ClipRRect(
+              horizontalRadius: 6,
+              verticalRadius: 6,
+              child: pw.Image(heroImage,
+                  fit: pw.BoxFit.cover, alignment: pw.Alignment.center),
+            ),
+          ),
+        )
+      else
+        pw.Center(
+          child: pw.Stack(
+            alignment: pw.Alignment.center,
+            children: [
+              if (modalityIcon != null)
+                pw.Opacity(
+                  opacity: 0.5,
+                  child: pw.Container(
+                      height: 300, width: 300, child: modalityIcon),
+                ),
+              pw.Text(modalityLabel,
+                  style: pw.TextStyle(
+                      fontSize: 40,
+                      fontWeight: pw.FontWeight.bold,
+                      color: _accent)),
+            ],
+          ),
         ),
-      ),
     ],
   );
 }
