@@ -47,8 +47,9 @@ Future<void> exportAngiographyPDF(
   pw.Widget? logoWidget;
   pw.Widget? modalityIcon;
   try {
-    final logoSvg = await rootBundle.loadString('assets/images/logo.svg');
-    logoWidget = pw.SvgImage(svg: logoSvg);
+    final logoBytes =
+        await rootBundle.load('assets/images/logo_original.png');
+    logoWidget = pw.Image(pw.MemoryImage(logoBytes.buffer.asUint8List()));
     final iconSvg = await rootBundle
         .loadString('assets/images/modality_icons/angiography.svg');
     modalityIcon = pw.SvgImage(svg: iconSvg);
