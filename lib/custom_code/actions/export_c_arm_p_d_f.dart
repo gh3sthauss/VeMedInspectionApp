@@ -1,5 +1,6 @@
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
+import '/custom_code/image_outbox/image_outbox_manager.dart';
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -74,9 +75,28 @@ Future<void> exportCArmPDF(
 
   // Hero image comes from the dedicated deviceImg field; falls back to the
   // first cosmetic photo if deviceImg wasn't populated for this record.
+  // Local fallback for the hero: if the device photo has not uploaded
+  // yet (offline field use), render the pending outbox copy so it
+  // still appears on the cover.
+  pw.ImageProvider? deviceLocal;
+  if (deviceImg.isEmpty) {
+    try {
+      final pendingDevice = await ImageOutboxManager.instance.pendingFor(
+        collectionPath: 'CArm',
+        docId: docRef.reference.id,
+        arrayFieldName: 'DeviceImg',
+      );
+      if (pendingDevice.isNotEmpty) {
+        final bytes = await ImageOutboxManager.instance
+            .readPendingBytes(pendingDevice.first);
+        if (bytes != null) deviceLocal = pw.MemoryImage(bytes);
+      }
+    } catch (_) {}
+  }
   final pw.ImageProvider? heroImage = deviceImg.isNotEmpty
       ? deviceImg.first
-      : (cosmeticGallery.isNotEmpty ? cosmeticGallery.first : null);
+      : (deviceLocal ??
+          (cosmeticGallery.isNotEmpty ? cosmeticGallery.first : null));
 
   // -------------------------------------------------------------------------
   // 2. BUILD DOCUMENT
@@ -242,7 +262,7 @@ Future<void> exportCArmPDF(
 // ---------------------------------------------------------------------------
 Future<pw.ImageProvider?> _loadSingleImage(
   String url, {
-  Duration timeout = const Duration(seconds: 8),
+  Duration timeout = const Duration(seconds: 20),
 }) async {
   final trimmed = url.trim();
   if (trimmed.isEmpty) return null;
@@ -255,7 +275,7 @@ Future<pw.ImageProvider?> _loadSingleImage(
 
 Future<List<pw.ImageProvider>> _loadImages(
   List<String> urls, {
-  Duration timeout = const Duration(seconds: 8),
+  Duration timeout = const Duration(seconds: 20),
 }) async {
   final futures = urls.map((u) => _loadSingleImage(u, timeout: timeout));
   final results = await Future.wait(futures);
