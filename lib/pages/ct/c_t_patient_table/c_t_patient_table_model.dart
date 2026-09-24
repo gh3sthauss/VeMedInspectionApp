@@ -21,6 +21,10 @@ class CTPatientTableModel extends FlutterFlowModel<CTPatientTableWidget> {
   FocusNode? textFocusNode3;
   TextEditingController? textTextController3;
   String? Function(BuildContext, String?)? textTextController3Validator;
+  // State field(s) for the Notes widget.
+  FocusNode? notesFocusNode;
+  TextEditingController? notesTextController;
+  String? Function(BuildContext, String?)? notesTextControllerValidator;
 
   @override
   void initState(BuildContext context) {
@@ -38,5 +42,8 @@ class CTPatientTableModel extends FlutterFlowModel<CTPatientTableWidget> {
 
     textFocusNode3?.dispose();
     textTextController3?.dispose();
+
+    notesFocusNode?.dispose();
+    notesTextController?.dispose();
   }
 }

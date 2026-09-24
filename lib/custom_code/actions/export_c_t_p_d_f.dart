@@ -125,6 +125,8 @@ Future<void> exportCtPDF(
           ['Year of Manufacture', docRef.sysGenYOM],
           ['Serial Number', docRef.sysGenSN],
           ['Number of Slices', docRef.sysGenSlices],
+          if (docRef.sysGenNotes.trim().isNotEmpty)
+            ['Notes', docRef.sysGenNotes],
         ]),
 
         // ============================ GANTRY =================================
@@ -140,6 +142,8 @@ Future<void> exportCtPDF(
           ['Detector Model', docRef.gantryDetModal],
           ['Detector Serial Number', docRef.gantryDetSN],
           ['Detector Duty Cycle', docRef.gantryDetDC],
+          if (docRef.gantryNotes.trim().isNotEmpty)
+            ['Notes', docRef.gantryNotes],
         ]),
         if (gantryGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -153,6 +157,8 @@ Future<void> exportCtPDF(
         _infoTable(rows: [
           ['Water/Air', docRef.cSWaterAir],
           ['Comes With', docRef.cSComesWith],
+          if (docRef.coolingSystemNotes.trim().isNotEmpty)
+            ['Notes', docRef.coolingSystemNotes],
         ]),
         if (coolingSystemGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -167,6 +173,8 @@ Future<void> exportCtPDF(
           ['Model', docRef.pTModal],
           ['Serial Number', docRef.ptsn],
           ['Move Check', docRef.ptmc],
+          if (docRef.patientTableNotes.trim().isNotEmpty)
+            ['Notes', docRef.patientTableNotes],
         ]),
         if (patientTableGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -187,6 +195,8 @@ Future<void> exportCtPDF(
           ['Workstation Options', docRef.cnWWorkSOptions],
           ['Injection Review Station Serial Number', docRef.cnWIRSSN],
           ['Injection Review Station Software Version', docRef.cnWIRSSW],
+          if (docRef.consoleNotes.trim().isNotEmpty)
+            ['Notes', docRef.consoleNotes],
         ]),
         if (consoleOptGallery.isNotEmpty || workstationOptGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -205,6 +215,8 @@ Future<void> exportCtPDF(
           ['CDs', docRef.accessoriesCDs],
           ['Injector', docRef.accessoriesInjector],
           ['Spare Parts', docRef.accessoriesSpareP],
+          if (docRef.accessoriesNotes.trim().isNotEmpty)
+            ['Notes', docRef.accessoriesNotes],
         ]),
         if (accessoriesGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -235,6 +247,8 @@ Future<void> exportCtPDF(
           ['Need of Crane', docRef.dnTNeedOfCrane],
           ['Tools Required', docRef.dnTTools],
           ['Special Attention', docRef.dnTSpecialAttention],
+          if (docRef.dnTNotes.trim().isNotEmpty)
+            ['Notes', docRef.dnTNotes],
         ]),
         if (dnTGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),

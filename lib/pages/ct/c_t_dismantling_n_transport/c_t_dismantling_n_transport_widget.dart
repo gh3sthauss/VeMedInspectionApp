@@ -4,6 +4,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
+import '/components/notes_field.dart';
 import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -1001,6 +1002,14 @@ class _CTDismantlingNTransportWidgetState
                             ),
                           ],
                         ),
+                        NotesField(
+                          controller: _model.notesTextController ??=
+                              TextEditingController(
+                            text: cTDismantlingNTransportCtRecord.dnTNotes,
+                          ),
+                          focusNode: _model.notesFocusNode,
+                          validator: _model.notesTextControllerValidator,
+                        ),
                       ]
                           .divide(SizedBox(height: 16.0))
                           .addToStart(SizedBox(height: 20.0)),
@@ -1018,6 +1027,7 @@ class _CTDismantlingNTransportWidgetState
                           dnTNeedOfCrane: _model.textTextController5.text,
                           dnTTools: _model.textTextController6.text,
                           dnTSpecialAttention: _model.textTextController7.text,
+                          dnTNotes: _model.notesTextController.text,
                         ));
 
                         context.pushNamed(

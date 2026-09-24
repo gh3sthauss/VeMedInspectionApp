@@ -44,6 +44,10 @@ class CTConsoleAndWorkstationsModel
   FocusNode? textInputFocusNode7;
   TextEditingController? textInputTextController7;
   String? Function(BuildContext, String?)? textInputTextController7Validator;
+  // State field(s) for the Notes widget.
+  FocusNode? notesFocusNode;
+  TextEditingController? notesTextController;
+  String? Function(BuildContext, String?)? notesTextControllerValidator;
 
   @override
   void initState(BuildContext context) {
@@ -76,5 +80,8 @@ class CTConsoleAndWorkstationsModel
 
     textInputFocusNode7?.dispose();
     textInputTextController7?.dispose();
+
+    notesFocusNode?.dispose();
+    notesTextController?.dispose();
   }
 }

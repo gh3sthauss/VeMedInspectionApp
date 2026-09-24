@@ -4,6 +4,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
+import '/components/notes_field.dart';
 import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -455,6 +456,14 @@ class _CTPatientTableWidgetState extends State<CTPatientTableWidget> {
                             ),
                           ],
                         ),
+                        NotesField(
+                          controller: _model.notesTextController ??=
+                              TextEditingController(
+                            text: cTPatientTableCtRecord.patientTableNotes,
+                          ),
+                          focusNode: _model.notesFocusNode,
+                          validator: _model.notesTextControllerValidator,
+                        ),
                       ]
                           .divide(SizedBox(height: 16.0))
                           .addToStart(SizedBox(height: 10.0)),
@@ -469,6 +478,7 @@ class _CTPatientTableWidgetState extends State<CTPatientTableWidget> {
                           pTModal: _model.textTextController1.text,
                           ptsn: _model.textTextController2.text,
                           ptmc: _model.textTextController3.text,
+                          patientTableNotes: _model.notesTextController.text,
                         ));
 
                         context.pushNamed(

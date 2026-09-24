@@ -33,6 +33,10 @@ class CTSystemGeneralModel extends FlutterFlowModel<CTSystemGeneralWidget> {
   FocusNode? textFocusNode6;
   TextEditingController? textTextController6;
   String? Function(BuildContext, String?)? textTextController6Validator;
+  // State field(s) for the Notes widget.
+  FocusNode? notesFocusNode;
+  TextEditingController? notesTextController;
+  String? Function(BuildContext, String?)? notesTextControllerValidator;
 
   @override
   void initState(BuildContext context) {
@@ -59,5 +63,8 @@ class CTSystemGeneralModel extends FlutterFlowModel<CTSystemGeneralWidget> {
 
     textFocusNode6?.dispose();
     textTextController6?.dispose();
+
+    notesFocusNode?.dispose();
+    notesTextController?.dispose();
   }
 }

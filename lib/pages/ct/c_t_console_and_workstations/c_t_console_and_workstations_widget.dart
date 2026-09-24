@@ -4,6 +4,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
+import '/components/notes_field.dart';
 import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -1541,6 +1542,15 @@ class _CTConsoleAndWorkstationsWidgetState
                               ),
                             ),
                           ),
+                          NotesField(
+                            controller: _model.notesTextController ??=
+                                TextEditingController(
+                              text: cTConsoleAndWorkstationsCtRecord
+                                  .consoleNotes,
+                            ),
+                            focusNode: _model.notesFocusNode,
+                            validator: _model.notesTextControllerValidator,
+                          ),
                         ]
                             .divide(SizedBox(height: 16.0))
                             .addToStart(SizedBox(height: 20.0)),
@@ -1567,6 +1577,7 @@ class _CTConsoleAndWorkstationsWidgetState
                           cnWWorkSOptions: _model.textInputTextController5.text,
                           cnWIRSSN: _model.textInputTextController6.text,
                           cnWIRSSW: _model.textInputTextController7.text,
+                          consoleNotes: _model.notesTextController.text,
                         ));
 
                         context.pushNamed(

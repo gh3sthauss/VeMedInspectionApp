@@ -41,6 +41,10 @@ class CTGantryModel extends FlutterFlowModel<CTGantryWidget> {
   FocusNode? textInputFocusNode8;
   TextEditingController? textInputTextController8;
   String? Function(BuildContext, String?)? textInputTextController8Validator;
+  // State field(s) for the Notes widget.
+  FocusNode? notesFocusNode;
+  TextEditingController? notesTextController;
+  String? Function(BuildContext, String?)? notesTextControllerValidator;
 
   @override
   void initState(BuildContext context) {
@@ -73,5 +77,8 @@ class CTGantryModel extends FlutterFlowModel<CTGantryWidget> {
 
     textInputFocusNode8?.dispose();
     textInputTextController8?.dispose();
+
+    notesFocusNode?.dispose();
+    notesTextController?.dispose();
   }
 }

@@ -226,6 +226,42 @@ class CtRecord extends FirestoreRecord {
   String get otherNotes => _otherNotes ?? '';
   bool hasOtherNotes() => _otherNotes != null;
 
+  // Per-subpage notes fields.
+  // "SysGenNotes" field.
+  String? _sysGenNotes;
+  String get sysGenNotes => _sysGenNotes ?? '';
+  bool hasSysGenNotes() => _sysGenNotes != null;
+
+  // "GantryNotes" field.
+  String? _gantryNotes;
+  String get gantryNotes => _gantryNotes ?? '';
+  bool hasGantryNotes() => _gantryNotes != null;
+
+  // "CoolingSystemNotes" field.
+  String? _coolingSystemNotes;
+  String get coolingSystemNotes => _coolingSystemNotes ?? '';
+  bool hasCoolingSystemNotes() => _coolingSystemNotes != null;
+
+  // "PatientTableNotes" field.
+  String? _patientTableNotes;
+  String get patientTableNotes => _patientTableNotes ?? '';
+  bool hasPatientTableNotes() => _patientTableNotes != null;
+
+  // "ConsoleNotes" field.
+  String? _consoleNotes;
+  String get consoleNotes => _consoleNotes ?? '';
+  bool hasConsoleNotes() => _consoleNotes != null;
+
+  // "AccessoriesNotes" field.
+  String? _accessoriesNotes;
+  String get accessoriesNotes => _accessoriesNotes ?? '';
+  bool hasAccessoriesNotes() => _accessoriesNotes != null;
+
+  // "DnTNotes" field.
+  String? _dnTNotes;
+  String get dnTNotes => _dnTNotes ?? '';
+  bool hasDnTNotes() => _dnTNotes != null;
+
   // "SysGenDocName" field.
   String? _sysGenDocName;
   String get sysGenDocName => _sysGenDocName ?? '';
@@ -329,6 +365,13 @@ class CtRecord extends FirestoreRecord {
     _dnTTools = snapshotData['DnTTools'] as String?;
     _dnTSpecialAttention = snapshotData['DnTSpecialAttention'] as String?;
     _otherNotes = snapshotData['OtherNotes'] as String?;
+    _sysGenNotes = snapshotData['SysGenNotes'] as String?;
+    _gantryNotes = snapshotData['GantryNotes'] as String?;
+    _coolingSystemNotes = snapshotData['CoolingSystemNotes'] as String?;
+    _patientTableNotes = snapshotData['PatientTableNotes'] as String?;
+    _consoleNotes = snapshotData['ConsoleNotes'] as String?;
+    _accessoriesNotes = snapshotData['AccessoriesNotes'] as String?;
+    _dnTNotes = snapshotData['DnTNotes'] as String?;
     _sysGenDocName = snapshotData['SysGenDocName'] as String?;
     _userID = snapshotData['userID'] as String?;
     _otherNotesPhotosURL = getDataList(snapshotData['OtherNotesPhotosURL']);
@@ -419,6 +462,13 @@ Map<String, dynamic> createCtRecordData({
   String? dnTTools,
   String? dnTSpecialAttention,
   String? otherNotes,
+  String? sysGenNotes,
+  String? gantryNotes,
+  String? coolingSystemNotes,
+  String? patientTableNotes,
+  String? consoleNotes,
+  String? accessoriesNotes,
+  String? dnTNotes,
   String? sysGenDocName,
   String? userID,
 }) {
@@ -466,6 +516,13 @@ Map<String, dynamic> createCtRecordData({
       'DnTTools': dnTTools,
       'DnTSpecialAttention': dnTSpecialAttention,
       'OtherNotes': otherNotes,
+      'SysGenNotes': sysGenNotes,
+      'GantryNotes': gantryNotes,
+      'CoolingSystemNotes': coolingSystemNotes,
+      'PatientTableNotes': patientTableNotes,
+      'ConsoleNotes': consoleNotes,
+      'AccessoriesNotes': accessoriesNotes,
+      'DnTNotes': dnTNotes,
       'SysGenDocName': sysGenDocName,
       'userID': userID,
     }.withoutNulls,
@@ -522,6 +579,13 @@ class CtRecordDocumentEquality implements Equality<CtRecord> {
         e1?.dnTTools == e2?.dnTTools &&
         e1?.dnTSpecialAttention == e2?.dnTSpecialAttention &&
         e1?.otherNotes == e2?.otherNotes &&
+        e1?.sysGenNotes == e2?.sysGenNotes &&
+        e1?.gantryNotes == e2?.gantryNotes &&
+        e1?.coolingSystemNotes == e2?.coolingSystemNotes &&
+        e1?.patientTableNotes == e2?.patientTableNotes &&
+        e1?.consoleNotes == e2?.consoleNotes &&
+        e1?.accessoriesNotes == e2?.accessoriesNotes &&
+        e1?.dnTNotes == e2?.dnTNotes &&
         e1?.sysGenDocName == e2?.sysGenDocName &&
         e1?.userID == e2?.userID &&
         listEquality.equals(e1?.otherNotesPhotosURL, e2?.otherNotesPhotosURL) &&
@@ -582,6 +646,13 @@ class CtRecordDocumentEquality implements Equality<CtRecord> {
         e?.dnTTools,
         e?.dnTSpecialAttention,
         e?.otherNotes,
+        e?.sysGenNotes,
+        e?.gantryNotes,
+        e?.coolingSystemNotes,
+        e?.patientTableNotes,
+        e?.consoleNotes,
+        e?.accessoriesNotes,
+        e?.dnTNotes,
         e?.sysGenDocName,
         e?.userID,
         e?.otherNotesPhotosURL,

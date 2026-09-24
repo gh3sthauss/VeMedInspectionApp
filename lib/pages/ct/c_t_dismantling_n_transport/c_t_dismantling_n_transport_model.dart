@@ -39,6 +39,10 @@ class CTDismantlingNTransportModel
   FocusNode? textFocusNode7;
   TextEditingController? textTextController7;
   String? Function(BuildContext, String?)? textTextController7Validator;
+  // State field(s) for the Notes widget.
+  FocusNode? notesFocusNode;
+  TextEditingController? notesTextController;
+  String? Function(BuildContext, String?)? notesTextControllerValidator;
 
   @override
   void initState(BuildContext context) {
@@ -68,5 +72,8 @@ class CTDismantlingNTransportModel
 
     textFocusNode7?.dispose();
     textTextController7?.dispose();
+
+    notesFocusNode?.dispose();
+    notesTextController?.dispose();
   }
 }
