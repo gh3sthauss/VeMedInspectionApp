@@ -16,6 +16,11 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
+          # Pin to match the local dev SDK. Newer stable Flutter bumps the
+          # intl version pinned by flutter_localizations (0.20.2 -> ^0.20.3),
+          # which conflicts with the intl constraint in pubspec.yaml. Keeping
+          # CI on the same version makes builds reproducible.
+          flutter-version: 3.44.4
           channel: stable
 
       - name: Disable Swift Package Manager
