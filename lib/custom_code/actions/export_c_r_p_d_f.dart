@@ -122,6 +122,8 @@ Future<void> exportCrPDF(
           ['Model', docRef.sysGenModal],
           ['Year of Manufacture', docRef.sysGenYOM],
           ['Serial Number', docRef.sysGenSN],
+          if (docRef.systemGeneralNotes.trim().isNotEmpty)
+            ['Notes', docRef.systemGeneralNotes],
         ]),
         if (detectorGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -139,6 +141,8 @@ Future<void> exportCrPDF(
           ['Workstation Serial Number', docRef.cnWWorkSSN],
           ['Workstation Software Version', docRef.cnWWorkSSW],
           ['Workstation Options', docRef.cnWWorkSOptions],
+          if (docRef.consoleNWorkstationsNotes.trim().isNotEmpty)
+            ['Notes', docRef.consoleNWorkstationsNotes],
         ]),
         if (consoleOptGallery.isNotEmpty || workstationOptGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -154,6 +158,8 @@ Future<void> exportCrPDF(
           ['Size', docRef.detectorSize],
           ['Year of Manufacture', docRef.detectorYOM],
           ['Condition', docRef.detectorCondition],
+          if (docRef.detectorNotes.trim().isNotEmpty)
+            ['Notes', docRef.detectorNotes],
         ]),
 
         // ========================== CASSETTES ================================
@@ -161,6 +167,12 @@ Future<void> exportCrPDF(
         if (inc('cassettes')) ...[
         _sectionHeader('Cassettes'),
         _cassettesTable(docRef),
+        if (docRef.cassettesNotes.trim().isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _infoTable(rows: [
+            ['Notes', docRef.cassettesNotes],
+          ]),
+        ],
         if (cassettesGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
           _imageGrid(cassettesGallery),
@@ -176,6 +188,8 @@ Future<void> exportCrPDF(
           ['Serial Number', docRef.accessoriesPSN],
           ['CDs', docRef.accessoriesCDs],
           ['Spare Parts', docRef.accessoriesSpareP],
+          if (docRef.accessoriesNotes.trim().isNotEmpty)
+            ['Notes', docRef.accessoriesNotes],
         ]),
         if (accessoriesGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -207,6 +221,8 @@ Future<void> exportCrPDF(
           ['Need of Crane', docRef.dnTNeedOfCrane],
           ['Tools Required', docRef.dnTTools],
           ['Special Attention', docRef.dnTSpecialAttention],
+          if (docRef.dnTNotes.trim().isNotEmpty)
+            ['Notes', docRef.dnTNotes],
         ]),
         if (dnTGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),

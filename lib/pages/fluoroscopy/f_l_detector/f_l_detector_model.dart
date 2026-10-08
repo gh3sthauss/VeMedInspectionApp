@@ -26,6 +26,11 @@ class FLDetectorModel extends FlutterFlowModel<FLDetectorWidget> {
   TextEditingController? textTextController4;
   String? Function(BuildContext, String?)? textTextController4Validator;
 
+  // State field(s) for the Notes widget.
+  FocusNode? notesFocusNode;
+  TextEditingController? notesTextController;
+  String? Function(BuildContext, String?)? notesTextControllerValidator;
+
   @override
   void initState(BuildContext context) {
     logoModel = createModel(context, () => LogoModel());
@@ -45,5 +50,8 @@ class FLDetectorModel extends FlutterFlowModel<FLDetectorWidget> {
 
     textFocusNode4?.dispose();
     textTextController4?.dispose();
+
+    notesFocusNode?.dispose();
+    notesTextController?.dispose();
   }
 }

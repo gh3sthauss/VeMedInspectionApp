@@ -16,6 +16,11 @@ class MRITalesLastReplacementModel
   TextEditingController? textTextController;
   String? Function(BuildContext, String?)? textTextControllerValidator;
 
+  // State field(s) for the Notes widget.
+  FocusNode? notesFocusNode;
+  TextEditingController? notesTextController;
+  String? Function(BuildContext, String?)? notesTextControllerValidator;
+
   @override
   void initState(BuildContext context) {
     logoModel = createModel(context, () => LogoModel());
@@ -26,5 +31,8 @@ class MRITalesLastReplacementModel
     logoModel.dispose();
     textFocusNode?.dispose();
     textTextController?.dispose();
+
+    notesFocusNode?.dispose();
+    notesTextController?.dispose();
   }
 }

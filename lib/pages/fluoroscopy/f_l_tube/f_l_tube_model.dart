@@ -18,6 +18,11 @@ class FLTubeModel extends FlutterFlowModel<FLTubeWidget> {
   TextEditingController? textTextController2;
   String? Function(BuildContext, String?)? textTextController2Validator;
 
+  // State field(s) for the Notes widget.
+  FocusNode? notesFocusNode;
+  TextEditingController? notesTextController;
+  String? Function(BuildContext, String?)? notesTextControllerValidator;
+
   @override
   void initState(BuildContext context) {
     logoModel = createModel(context, () => LogoModel());
@@ -31,5 +36,8 @@ class FLTubeModel extends FlutterFlowModel<FLTubeWidget> {
 
     textFocusNode2?.dispose();
     textTextController2?.dispose();
+
+    notesFocusNode?.dispose();
+    notesTextController?.dispose();
   }
 }

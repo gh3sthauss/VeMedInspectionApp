@@ -18,6 +18,11 @@ class PACSAccessoriesModel extends FlutterFlowModel<PACSAccessoriesWidget> {
   TextEditingController? textInputTextController2;
   String? Function(BuildContext, String?)? textInputTextController2Validator;
 
+  // State field(s) for the Notes widget.
+  FocusNode? notesFocusNode;
+  TextEditingController? notesTextController;
+  String? Function(BuildContext, String?)? notesTextControllerValidator;
+
   @override
   void initState(BuildContext context) {
     logoModel = createModel(context, () => LogoModel());
@@ -31,5 +36,8 @@ class PACSAccessoriesModel extends FlutterFlowModel<PACSAccessoriesWidget> {
 
     textInputFocusNode2?.dispose();
     textInputTextController2?.dispose();
+
+    notesFocusNode?.dispose();
+    notesTextController?.dispose();
   }
 }

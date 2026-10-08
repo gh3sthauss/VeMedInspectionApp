@@ -139,6 +139,8 @@ Future<void> exportAngiographyPDF(
             ['Year of Manufacture', docRef.sysGenYOM],
             ['Serial Number', docRef.sysGenSN],
             ['Photos URL', docRef.photosURL],
+            if (docRef.systemGeneralNotes.trim().isNotEmpty)
+              ['Notes', docRef.systemGeneralNotes],
           ]),
         ],
 
@@ -148,6 +150,8 @@ Future<void> exportAngiographyPDF(
           _infoTable(rows: [
             ['Model', docRef.tube1Model],
             ['Year of Manufacture', docRef.tube1YOM],
+            if (docRef.tubeNotes.trim().isNotEmpty)
+              ['Notes', docRef.tubeNotes],
           ]),
           if (tubeGallery.isNotEmpty) ...[
             pw.SizedBox(height: 6),
@@ -163,6 +167,8 @@ Future<void> exportAngiographyPDF(
             ['Size', docRef.detectorSize],
             ['Year of Manufacture', docRef.detectorYOM],
             ['Condition', docRef.detectorCondition],
+            if (docRef.detectorNotes.trim().isNotEmpty)
+              ['Notes', docRef.detectorNotes],
           ]),
           if (detectorGallery.isNotEmpty) ...[
             pw.SizedBox(height: 6),
@@ -177,6 +183,8 @@ Future<void> exportAngiographyPDF(
             ['Serial Number', docRef.softwareSN],
             ['Version', docRef.softwareVersion],
             ['Options', docRef.softwareOptionsText],
+            if (docRef.softwareNotes.trim().isNotEmpty)
+              ['Notes', docRef.softwareNotes],
           ]),
           if (softwareOptGallery.isNotEmpty) ...[
             pw.SizedBox(height: 6),
@@ -196,6 +204,8 @@ Future<void> exportAngiographyPDF(
             ['Workstation Options', docRef.cnWWorkSOptions],
             ['Workstation Serial Number', docRef.cnWWorkSSN],
             ['Workstation Software Version', docRef.cnWWorkSSW],
+            if (docRef.consoleAndWorkstationNotes.trim().isNotEmpty)
+              ['Notes', docRef.consoleAndWorkstationNotes],
           ]),
           if (consoleOptGallery.isNotEmpty ||
               workstationOptGallery.isNotEmpty) ...[
@@ -211,6 +221,8 @@ Future<void> exportAngiographyPDF(
             ['Model', docRef.pTModal],
             // TODO: add any remaining Patient Table fields from your schema
             // here (e.g. Serial Number, Year of Manufacture) once confirmed.
+            if (docRef.patientTableNotes.trim().isNotEmpty)
+              ['Notes', docRef.patientTableNotes],
           ]),
           if (patientTableGallery.isNotEmpty) ...[
             pw.SizedBox(height: 6),
@@ -224,6 +236,8 @@ Future<void> exportAngiographyPDF(
           _infoTable(rows: [
             ['CDs', docRef.accessoriesCDs],
             ['Spare Parts', docRef.accessoriesSpareP],
+            if (docRef.accessoriesNotes.trim().isNotEmpty)
+              ['Notes', docRef.accessoriesNotes],
           ]),
           if (accessoriesGallery.isNotEmpty) ...[
             pw.SizedBox(height: 6),
@@ -264,6 +278,8 @@ Future<void> exportAngiographyPDF(
             ['Need of Crane', docRef.dnTNeedOfCrane],
             ['Tools Required', docRef.dnTTools],
             ['Special Attention', docRef.dnTSpecialAttention],
+            if (docRef.dnTNotes.trim().isNotEmpty)
+              ['Notes', docRef.dnTNotes],
           ]),
           if (dnTGallery.isNotEmpty) ...[
             pw.SizedBox(height: 6),

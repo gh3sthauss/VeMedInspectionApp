@@ -1,5 +1,6 @@
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
+import '/components/notes_field.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -2178,6 +2179,14 @@ class _USProbesWidgetState extends State<USProbesWidget> {
                               ),
                             ),
                           ),
+                          NotesField(
+                            controller: _model.notesTextController ??=
+                                TextEditingController(
+                              text: uSProbesUltrasoundRecord.probesNotes,
+                            ),
+                            focusNode: _model.notesFocusNode,
+                            validator: _model.notesTextControllerValidator,
+                          ),
                         ]
                             .divide(SizedBox(height: 16.0))
                             .addToStart(SizedBox(height: 10.0))
@@ -2191,6 +2200,7 @@ class _USProbesWidgetState extends State<USProbesWidget> {
                       onPressed: () async {
                         widget.docRefProbes!
                             .update(createUltrasoundRecordData(
+                          probesNotes: _model.notesTextController.text,
                           probe1Model: _model.textInputTextController1.text,
                           probe2Model: _model.textInputTextController4.text,
                           probe3Model: _model.textInputTextController7.text,

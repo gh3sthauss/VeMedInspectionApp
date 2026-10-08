@@ -124,6 +124,8 @@ Future<void> exportFluoroscopyPDF(
           ['Model', docRef.sysGenModal],
           ['Year of Manufacture', docRef.sysGenYOM],
           ['Serial Number', docRef.sysGenSN],
+          if (docRef.systemGeneralNotes.trim().isNotEmpty)
+            ['Notes', docRef.systemGeneralNotes],
         ]),
 
         // ================== CONSOLE AND WORKSTATION ======================
@@ -137,6 +139,8 @@ Future<void> exportFluoroscopyPDF(
           ['Workstation Serial Number', docRef.cnWWorkSSN],
           ['Workstation Software Version', docRef.cnWWorkSSW],
           ['Workstation Options', docRef.cnWWorkSOptions],
+          if (docRef.consoleNWorkstationsNotes.trim().isNotEmpty)
+            ['Notes', docRef.consoleNWorkstationsNotes],
         ]),
         if (consoleOptGallery.isNotEmpty || workstationOptGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -152,6 +156,8 @@ Future<void> exportFluoroscopyPDF(
           ['Size', docRef.detectorSize],
           ['Year of Manufacture', docRef.detectorYOM],
           ['Condition', docRef.detectorCondition],
+          if (docRef.detectorNotes.trim().isNotEmpty)
+            ['Notes', docRef.detectorNotes],
         ]),
         if (detectorGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -165,6 +171,8 @@ Future<void> exportFluoroscopyPDF(
         _infoTable(rows: [
           ['Model', docRef.tube1Model],
           ['Year of Manufacture', docRef.tube1YOM],
+          if (docRef.tubeNotes.trim().isNotEmpty)
+            ['Notes', docRef.tubeNotes],
         ]),
         if (tubeGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -178,6 +186,8 @@ Future<void> exportFluoroscopyPDF(
         _infoTable(rows: [
           ['Model', docRef.tableModel],
           ['Year of Manufacture', docRef.tableYOM],
+          if (docRef.tableNotes.trim().isNotEmpty)
+            ['Notes', docRef.tableNotes],
         ]),
         if (tableGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -194,6 +204,8 @@ Future<void> exportFluoroscopyPDF(
           ['Serial Number', docRef.accessoriesPSN],
           ['CDs', docRef.accessoriesCDs],
           ['Spare Parts', docRef.accessoriesSpareP],
+          if (docRef.accessoriesNotes.trim().isNotEmpty)
+            ['Notes', docRef.accessoriesNotes],
         ]),
         if (accessoriesGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -225,6 +237,8 @@ Future<void> exportFluoroscopyPDF(
           ['Need of Crane', docRef.dnTNeedOfCrane],
           ['Tools Required', docRef.dnTTools],
           ['Special Attention', docRef.dnTSpecialAttention],
+          if (docRef.dnTNotes.trim().isNotEmpty)
+            ['Notes', docRef.dnTNotes],
         ]),
         if (dnTGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),

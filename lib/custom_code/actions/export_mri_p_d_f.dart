@@ -136,6 +136,8 @@ Future<void> exportMriPDF(
           ['Model', docRef.sysGenModal],
           ['Year of Manufacture', docRef.sysGenYOM],
           ['Serial Number', docRef.sysGenSN],
+          if (docRef.systemGeneralNotes.trim().isNotEmpty)
+            ['Notes', docRef.systemGeneralNotes],
         ]),
 
         // ============================ MAGNET =================================
@@ -149,6 +151,8 @@ Future<void> exportMriPDF(
           ['Pressure', docRef.magnetPressure],
           ['Shield Temperature', docRef.magnetShieldTemp],
           ['Helium Level', docRef.magnetHELevel],
+          if (docRef.magnetNotes.trim().isNotEmpty)
+            ['Notes', docRef.magnetNotes],
         ]),
         if (magnetGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -165,6 +169,8 @@ Future<void> exportMriPDF(
           ['Hours', docRef.coolerCompHours],
           ['Pressure', docRef.coolerCompPressure],
           ['LAR', docRef.coolerCompLAR],
+          if (docRef.coolingSystemNotes.trim().isNotEmpty)
+            ['Notes', docRef.coolingSystemNotes],
         ]),
         if (coolingSystemGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -193,6 +199,8 @@ Future<void> exportMriPDF(
           ['PCI RX1 Serial Number', docRef.imagerPCIRX1ModelSN],
           ['PCI RX2 Model', docRef.imagerPCIRX2Model],
           ['PCI RX2 Serial Number', docRef.imagerPCIRX2ModelSN],
+          if (docRef.marsImagerNotes.trim().isNotEmpty)
+            ['Notes', docRef.marsImagerNotes],
         ]),
         if (marsImagerGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -208,6 +216,8 @@ Future<void> exportMriPDF(
           ['Model', docRef.eCGModel],
           ['Serial Number', docRef.ecgsn],
           ['Function Checked', docRef.eCGFuncChecked],
+          if (docRef.ecgperuNotes.trim().isNotEmpty)
+            ['Notes', docRef.ecgperuNotes],
         ]),
         if (ecgGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -223,6 +233,10 @@ Future<void> exportMriPDF(
           ['Power Stage 2 Serial Number', docRef.powerStages2SN],
           ['Power Stage 3 Serial Number', docRef.powerStages3SN],
           ['Tales Last Replacement', docRef.talesLastReplacement],
+          if (docRef.powerstagesNotes.trim().isNotEmpty)
+            ['Notes', docRef.powerstagesNotes],
+          if (docRef.talesLastReplacementNotes.trim().isNotEmpty)
+            ['TALES Notes', docRef.talesLastReplacementNotes],
         ]),
         if (powerstagesGallery.isNotEmpty ||
             talesLastReplacementGallery.isNotEmpty) ...[
@@ -239,6 +253,8 @@ Future<void> exportMriPDF(
           ['Model', docRef.patientTableModel],
           ['Serial Number', docRef.patientTableSN],
           ['Move Tests', docRef.patientTableMoveTests],
+          if (docRef.patientTableNotes.trim().isNotEmpty)
+            ['Notes', docRef.patientTableNotes],
         ]),
         if (patientTableGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -257,6 +273,8 @@ Future<void> exportMriPDF(
           ['Workstation Software Version', docRef.cnWWSSW],
           ['Workstation Options', docRef.cnWWSOptionsText],
           ['CD Available', docRef.cnWCDAvailable],
+          if (docRef.consoleNWorkstationsNotes.trim().isNotEmpty)
+            ['Notes', docRef.consoleNWorkstationsNotes],
         ]),
         if (consoleOptGallery.isNotEmpty || wsOptGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -278,6 +296,8 @@ Future<void> exportMriPDF(
           ['QA Spike Test OK', docRef.localSQASpikeTestOK],
           ['General QA Test', docRef.localSGeneralQATest],
           ['ICS Cabinet Active', docRef.iCSCabinetActive],
+          if (docRef.localServiceNotes.trim().isNotEmpty)
+            ['Notes', docRef.localServiceNotes],
         ]),
         if (localServiceGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -289,6 +309,12 @@ Future<void> exportMriPDF(
         if (inc('coils')) ...[
         _sectionHeader('Coils'),
         _coilsTable(docRef),
+        if (docRef.coilsNotes.trim().isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _infoTable(rows: [
+            ['Notes', docRef.coilsNotes],
+          ]),
+        ],
         if (coilsGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
           _imageGrid(coilsGallery),
@@ -312,6 +338,8 @@ Future<void> exportMriPDF(
           ['Squeeze Ball', docRef.accSqueezeBall],
           ['Headphone', docRef.accHeadphone],
           ['Magnet Spare Bag', docRef.accMagnetSpareBag],
+          if (docRef.accessoriesNotes.trim().isNotEmpty)
+            ['Notes', docRef.accessoriesNotes],
         ]),
         if (accessoriesGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -343,6 +371,8 @@ Future<void> exportMriPDF(
           ['Need of Crane', docRef.dntNeedOfCrane],
           ['Tools Required', docRef.dntTools],
           ['Special Attention', docRef.dntSpecialAttention],
+          if (docRef.dnTNotes.trim().isNotEmpty)
+            ['Notes', docRef.dnTNotes],
         ]),
         if (dnTGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),

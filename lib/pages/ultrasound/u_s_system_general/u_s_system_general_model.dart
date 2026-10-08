@@ -34,6 +34,11 @@ class USSystemGeneralModel extends FlutterFlowModel<USSystemGeneralWidget> {
   TextEditingController? textTextController6;
   String? Function(BuildContext, String?)? textTextController6Validator;
 
+  // State field(s) for the Notes widget.
+  FocusNode? notesFocusNode;
+  TextEditingController? notesTextController;
+  String? Function(BuildContext, String?)? notesTextControllerValidator;
+
   @override
   void initState(BuildContext context) {
     logoModel = createModel(context, () => LogoModel());
@@ -59,5 +64,8 @@ class USSystemGeneralModel extends FlutterFlowModel<USSystemGeneralWidget> {
 
     textFocusNode6?.dispose();
     textTextController6?.dispose();
+
+    notesFocusNode?.dispose();
+    notesTextController?.dispose();
   }
 }

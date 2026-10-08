@@ -4,6 +4,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
+import '/components/notes_field.dart';
 import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -991,6 +992,14 @@ class _MRIDnTWidgetState extends State<MRIDnTWidget> {
                           existingPhotoUrls: mRIDnTMriRecord.dnTPicURL.toList(),
                         ),
                       ),
+                      NotesField(
+                        controller: _model.notesTextController ??=
+                            TextEditingController(
+                          text: mRIDnTMriRecord.dnTNotes,
+                        ),
+                        focusNode: _model.notesFocusNode,
+                        validator: _model.notesTextControllerValidator,
+                      ),
                     ],
                   ),
                   Align(
@@ -998,6 +1007,7 @@ class _MRIDnTWidgetState extends State<MRIDnTWidget> {
                     child: FFButtonWidget(
                       onPressed: () async {
                         widget.docDataDT!.update(createMriRecordData(
+                          dnTNotes: _model.notesTextController.text,
                           dnTAddress: _model.textTextController1.text,
                           dntFloor: _model.textTextController2.text,
                           dntDoors: _model.textTextController3.text,

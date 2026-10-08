@@ -4,6 +4,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
+import '/components/notes_field.dart';
 import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -1189,6 +1190,14 @@ class _CRConsoleNWorkstationsWidgetState
                                                   .toList(),
                                         ),
                                       ),
+                                      NotesField(
+                                        controller: _model.notesTextController ??=
+                                            TextEditingController(
+                                          text: cRConsoleNWorkstationsCrRecord.consoleNWorkstationsNotes,
+                                        ),
+                                        focusNode: _model.notesFocusNode,
+                                        validator: _model.notesTextControllerValidator,
+                                      ),
                                     ],
                                   ),
                                 ]
@@ -1214,6 +1223,7 @@ class _CRConsoleNWorkstationsWidgetState
                         // below no longer waits on them or branches on their
                         // outcome.
                         widget.docDataCW!.update(createCrRecordData(
+                          consoleNWorkstationsNotes: _model.notesTextController.text,
                           cnWConsoleMSN:
                               _model.cTConsoleModelSNTextController.text,
                           cnWConsoleMSW: _model.textInputTextController1.text,

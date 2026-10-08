@@ -91,6 +91,38 @@ class CArmRecord extends FirestoreRecord {
   String get otherNotes => _otherNotes ?? '';
   bool hasOtherNotes() => _otherNotes != null;
 
+  // Per-subpage notes fields.
+  // "AccessoriesNotes" field.
+  String? _accessoriesNotes;
+  String get accessoriesNotes => _accessoriesNotes ?? '';
+  bool hasAccessoriesNotes() => _accessoriesNotes != null;
+
+  // "DetectorNotes" field.
+  String? _detectorNotes;
+  String get detectorNotes => _detectorNotes ?? '';
+  bool hasDetectorNotes() => _detectorNotes != null;
+
+  // "DnTNotes" field.
+  String? _dnTNotes;
+  String get dnTNotes => _dnTNotes ?? '';
+  bool hasDnTNotes() => _dnTNotes != null;
+
+  // "SoftwareNotes" field.
+  String? _softwareNotes;
+  String get softwareNotes => _softwareNotes ?? '';
+  bool hasSoftwareNotes() => _softwareNotes != null;
+
+  // "SystemGeneralNotes" field.
+  String? _systemGeneralNotes;
+  String get systemGeneralNotes => _systemGeneralNotes ?? '';
+  bool hasSystemGeneralNotes() => _systemGeneralNotes != null;
+
+  // "TubeNotes" field.
+  String? _tubeNotes;
+  String get tubeNotes => _tubeNotes ?? '';
+  bool hasTubeNotes() => _tubeNotes != null;
+
+
   // "SysGenDocName" field.
   String? _sysGenDocName;
   String get sysGenDocName => _sysGenDocName ?? '';
@@ -217,6 +249,12 @@ class CArmRecord extends FirestoreRecord {
     _dnTTools = snapshotData['DnTTools'] as String?;
     _dnTSpecialAttention = snapshotData['DnTSpecialAttention'] as String?;
     _otherNotes = snapshotData['OtherNotes'] as String?;
+    _accessoriesNotes = snapshotData['AccessoriesNotes'] as String?;
+    _detectorNotes = snapshotData['DetectorNotes'] as String?;
+    _dnTNotes = snapshotData['DnTNotes'] as String?;
+    _softwareNotes = snapshotData['SoftwareNotes'] as String?;
+    _systemGeneralNotes = snapshotData['SystemGeneralNotes'] as String?;
+    _tubeNotes = snapshotData['TubeNotes'] as String?;
     _sysGenDocName = snapshotData['SysGenDocName'] as String?;
     _userID = snapshotData['userID'] as String?;
     _otherNotesPhotosURL = getDataList(snapshotData['OtherNotesPhotosURL']);
@@ -290,6 +328,12 @@ Map<String, dynamic> createCArmRecordData({
   String? dnTTools,
   String? dnTSpecialAttention,
   String? otherNotes,
+  String? accessoriesNotes,
+  String? detectorNotes,
+  String? dnTNotes,
+  String? softwareNotes,
+  String? systemGeneralNotes,
+  String? tubeNotes,
   String? sysGenDocName,
   String? userID,
   String? softwareSN,
@@ -322,6 +366,12 @@ Map<String, dynamic> createCArmRecordData({
       'DnTTools': dnTTools,
       'DnTSpecialAttention': dnTSpecialAttention,
       'OtherNotes': otherNotes,
+      'AccessoriesNotes': accessoriesNotes,
+      'DetectorNotes': detectorNotes,
+      'DnTNotes': dnTNotes,
+      'SoftwareNotes': softwareNotes,
+      'SystemGeneralNotes': systemGeneralNotes,
+      'TubeNotes': tubeNotes,
       'SysGenDocName': sysGenDocName,
       'userID': userID,
       'SoftwareSN': softwareSN,
@@ -363,6 +413,12 @@ class CArmRecordDocumentEquality implements Equality<CArmRecord> {
         e1?.dnTTools == e2?.dnTTools &&
         e1?.dnTSpecialAttention == e2?.dnTSpecialAttention &&
         e1?.otherNotes == e2?.otherNotes &&
+        e1?.accessoriesNotes == e2?.accessoriesNotes &&
+        e1?.detectorNotes == e2?.detectorNotes &&
+        e1?.dnTNotes == e2?.dnTNotes &&
+        e1?.softwareNotes == e2?.softwareNotes &&
+        e1?.systemGeneralNotes == e2?.systemGeneralNotes &&
+        e1?.tubeNotes == e2?.tubeNotes &&
         e1?.sysGenDocName == e2?.sysGenDocName &&
         e1?.userID == e2?.userID &&
         listEquality.equals(e1?.otherNotesPhotosURL, e2?.otherNotesPhotosURL) &&
@@ -404,6 +460,12 @@ class CArmRecordDocumentEquality implements Equality<CArmRecord> {
         e?.dnTTools,
         e?.dnTSpecialAttention,
         e?.otherNotes,
+        e?.accessoriesNotes,
+        e?.detectorNotes,
+        e?.dnTNotes,
+        e?.softwareNotes,
+        e?.systemGeneralNotes,
+        e?.tubeNotes,
         e?.sysGenDocName,
         e?.userID,
         e?.otherNotesPhotosURL,

@@ -47,6 +47,11 @@ class AngConsoleAndWorkstationModel
   TextEditingController? textInputTextController7;
   String? Function(BuildContext, String?)? textInputTextController7Validator;
 
+  // State field(s) for the Notes widget.
+  FocusNode? notesFocusNode;
+  TextEditingController? notesTextController;
+  String? Function(BuildContext, String?)? notesTextControllerValidator;
+
   @override
   void initState(BuildContext context) {
     logoModel = createModel(context, () => LogoModel());
@@ -78,5 +83,8 @@ class AngConsoleAndWorkstationModel
 
     textInputFocusNode7?.dispose();
     textInputTextController7?.dispose();
+
+    notesFocusNode?.dispose();
+    notesTextController?.dispose();
   }
 }

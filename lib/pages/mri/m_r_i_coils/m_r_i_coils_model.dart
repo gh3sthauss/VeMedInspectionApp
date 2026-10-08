@@ -138,6 +138,11 @@ class MRICoilsModel extends FlutterFlowModel<MRICoilsWidget> {
   TextEditingController? textInputTextController32;
   String? Function(BuildContext, String?)? textInputTextController32Validator;
 
+  // State field(s) for the Notes widget.
+  FocusNode? notesFocusNode;
+  TextEditingController? notesTextController;
+  String? Function(BuildContext, String?)? notesTextControllerValidator;
+
   @override
   void initState(BuildContext context) {
     logoModel = createModel(context, () => LogoModel());
@@ -241,5 +246,8 @@ class MRICoilsModel extends FlutterFlowModel<MRICoilsWidget> {
 
     textInputFocusNode32?.dispose();
     textInputTextController32?.dispose();
+
+    notesFocusNode?.dispose();
+    notesTextController?.dispose();
   }
 }

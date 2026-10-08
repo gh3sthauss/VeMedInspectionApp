@@ -4,6 +4,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
+import '/components/notes_field.dart';
 import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -867,6 +868,14 @@ class _MRILocalServiceWidgetState extends State<MRILocalServiceWidget> {
                               .toList(),
                         ),
                       ),
+                      NotesField(
+                        controller: _model.notesTextController ??=
+                            TextEditingController(
+                          text: mRILocalServiceMriRecord.localServiceNotes,
+                        ),
+                        focusNode: _model.notesFocusNode,
+                        validator: _model.notesTextControllerValidator,
+                      ),
                     ],
                   ),
                   Align(
@@ -875,6 +884,7 @@ class _MRILocalServiceWidgetState extends State<MRILocalServiceWidget> {
                       onPressed: () async {
                         mRILocalServiceMriRecord.reference
                             .update(createMriRecordData(
+                          localServiceNotes: _model.notesTextController.text,
                           localSMeasSettings: _model.textTextController1.text,
                           localSTuneUpPage: _model.textTextController2.text,
                           localSQA: _model.textTextController3.text,

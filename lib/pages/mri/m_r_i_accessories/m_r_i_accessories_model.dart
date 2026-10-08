@@ -70,6 +70,11 @@ class MRIAccessoriesModel extends FlutterFlowModel<MRIAccessoriesWidget> {
   TextEditingController? textInputTextController15;
   String? Function(BuildContext, String?)? textInputTextController15Validator;
 
+  // State field(s) for the Notes widget.
+  FocusNode? notesFocusNode;
+  TextEditingController? notesTextController;
+  String? Function(BuildContext, String?)? notesTextControllerValidator;
+
   @override
   void initState(BuildContext context) {
     logoModel = createModel(context, () => LogoModel());
@@ -122,5 +127,8 @@ class MRIAccessoriesModel extends FlutterFlowModel<MRIAccessoriesWidget> {
 
     textInputFocusNode15?.dispose();
     textInputTextController15?.dispose();
+
+    notesFocusNode?.dispose();
+    notesTextController?.dispose();
   }
 }

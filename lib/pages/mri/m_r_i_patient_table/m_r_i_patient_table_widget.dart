@@ -4,6 +4,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
+import '/components/notes_field.dart';
 import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -456,6 +457,14 @@ class _MRIPatientTableWidgetState extends State<MRIPatientTableWidget> {
                               .toList(),
                         ),
                       ),
+                      NotesField(
+                        controller: _model.notesTextController ??=
+                            TextEditingController(
+                          text: mRIPatientTableMriRecord.patientTableNotes,
+                        ),
+                        focusNode: _model.notesFocusNode,
+                        validator: _model.notesTextControllerValidator,
+                      ),
                     ],
                   ),
                   Align(
@@ -464,6 +473,7 @@ class _MRIPatientTableWidgetState extends State<MRIPatientTableWidget> {
                       onPressed: () async {
                         mRIPatientTableMriRecord.reference
                             .update(createMriRecordData(
+                          patientTableNotes: _model.notesTextController.text,
                           patientTableModel: _model.textTextController1.text,
                           patientTableSN: _model.textTextController2.text,
                           patientTableMoveTests:

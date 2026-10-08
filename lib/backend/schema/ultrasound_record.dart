@@ -91,6 +91,33 @@ class UltrasoundRecord extends FirestoreRecord {
   String get otherNotes => _otherNotes ?? '';
   bool hasOtherNotes() => _otherNotes != null;
 
+  // Per-subpage notes fields.
+  // "AccesoriesNotes" field.
+  String? _accesoriesNotes;
+  String get accesoriesNotes => _accesoriesNotes ?? '';
+  bool hasAccesoriesNotes() => _accesoriesNotes != null;
+
+  // "DismantleNTransportNotes" field.
+  String? _dismantleNTransportNotes;
+  String get dismantleNTransportNotes => _dismantleNTransportNotes ?? '';
+  bool hasDismantleNTransportNotes() => _dismantleNTransportNotes != null;
+
+  // "ProbesNotes" field.
+  String? _probesNotes;
+  String get probesNotes => _probesNotes ?? '';
+  bool hasProbesNotes() => _probesNotes != null;
+
+  // "SoftwareNotes" field.
+  String? _softwareNotes;
+  String get softwareNotes => _softwareNotes ?? '';
+  bool hasSoftwareNotes() => _softwareNotes != null;
+
+  // "SystemGeneralNotes" field.
+  String? _systemGeneralNotes;
+  String get systemGeneralNotes => _systemGeneralNotes ?? '';
+  bool hasSystemGeneralNotes() => _systemGeneralNotes != null;
+
+
   // "SysGenDocName" field.
   String? _sysGenDocName;
   String get sysGenDocName => _sysGenDocName ?? '';
@@ -242,6 +269,11 @@ class UltrasoundRecord extends FirestoreRecord {
     _dnTTools = snapshotData['DnTTools'] as String?;
     _dnTSpecialAttention = snapshotData['DnTSpecialAttention'] as String?;
     _otherNotes = snapshotData['OtherNotes'] as String?;
+    _accesoriesNotes = snapshotData['AccesoriesNotes'] as String?;
+    _dismantleNTransportNotes = snapshotData['DismantleNTransportNotes'] as String?;
+    _probesNotes = snapshotData['ProbesNotes'] as String?;
+    _softwareNotes = snapshotData['SoftwareNotes'] as String?;
+    _systemGeneralNotes = snapshotData['SystemGeneralNotes'] as String?;
     _sysGenDocName = snapshotData['SysGenDocName'] as String?;
     _userID = snapshotData['userID'] as String?;
     _otherNotesPhotosURL = getDataList(snapshotData['OtherNotesPhotosURL']);
@@ -321,6 +353,11 @@ Map<String, dynamic> createUltrasoundRecordData({
   String? dnTTools,
   String? dnTSpecialAttention,
   String? otherNotes,
+  String? accesoriesNotes,
+  String? dismantleNTransportNotes,
+  String? probesNotes,
+  String? softwareNotes,
+  String? systemGeneralNotes,
   String? sysGenDocName,
   String? userID,
   String? softwareSN,
@@ -360,6 +397,11 @@ Map<String, dynamic> createUltrasoundRecordData({
       'DnTTools': dnTTools,
       'DnTSpecialAttention': dnTSpecialAttention,
       'OtherNotes': otherNotes,
+      'AccesoriesNotes': accesoriesNotes,
+      'DismantleNTransportNotes': dismantleNTransportNotes,
+      'ProbesNotes': probesNotes,
+      'SoftwareNotes': softwareNotes,
+      'SystemGeneralNotes': systemGeneralNotes,
       'SysGenDocName': sysGenDocName,
       'userID': userID,
       'SoftwareSN': softwareSN,
@@ -408,6 +450,11 @@ class UltrasoundRecordDocumentEquality implements Equality<UltrasoundRecord> {
         e1?.dnTTools == e2?.dnTTools &&
         e1?.dnTSpecialAttention == e2?.dnTSpecialAttention &&
         e1?.otherNotes == e2?.otherNotes &&
+        e1?.accesoriesNotes == e2?.accesoriesNotes &&
+        e1?.dismantleNTransportNotes == e2?.dismantleNTransportNotes &&
+        e1?.probesNotes == e2?.probesNotes &&
+        e1?.softwareNotes == e2?.softwareNotes &&
+        e1?.systemGeneralNotes == e2?.systemGeneralNotes &&
         e1?.sysGenDocName == e2?.sysGenDocName &&
         e1?.userID == e2?.userID &&
         listEquality.equals(e1?.otherNotesPhotosURL, e2?.otherNotesPhotosURL) &&
@@ -454,6 +501,11 @@ class UltrasoundRecordDocumentEquality implements Equality<UltrasoundRecord> {
         e?.dnTTools,
         e?.dnTSpecialAttention,
         e?.otherNotes,
+        e?.accesoriesNotes,
+        e?.dismantleNTransportNotes,
+        e?.probesNotes,
+        e?.softwareNotes,
+        e?.systemGeneralNotes,
         e?.sysGenDocName,
         e?.userID,
         e?.otherNotesPhotosURL,

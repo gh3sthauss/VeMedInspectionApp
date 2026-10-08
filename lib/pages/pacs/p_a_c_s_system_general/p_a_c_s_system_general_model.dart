@@ -30,6 +30,11 @@ class PACSSystemGeneralModel extends FlutterFlowModel<PACSSystemGeneralWidget> {
   TextEditingController? textTextController5;
   String? Function(BuildContext, String?)? textTextController5Validator;
 
+  // State field(s) for the Notes widget.
+  FocusNode? notesFocusNode;
+  TextEditingController? notesTextController;
+  String? Function(BuildContext, String?)? notesTextControllerValidator;
+
   @override
   void initState(BuildContext context) {
     logoModel = createModel(context, () => LogoModel());
@@ -52,5 +57,8 @@ class PACSSystemGeneralModel extends FlutterFlowModel<PACSSystemGeneralWidget> {
 
     textFocusNode5?.dispose();
     textTextController5?.dispose();
+
+    notesFocusNode?.dispose();
+    notesTextController?.dispose();
   }
 }

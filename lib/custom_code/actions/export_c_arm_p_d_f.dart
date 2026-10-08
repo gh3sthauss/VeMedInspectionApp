@@ -122,6 +122,8 @@ Future<void> exportCArmPDF(
           ['Model', docRef.sysGenModal],
           ['Year of Manufacture', docRef.sysGenYOM],
           ['Serial Number', docRef.sysGenSN],
+          if (docRef.systemGeneralNotes.trim().isNotEmpty)
+            ['Notes', docRef.systemGeneralNotes],
         ]),
 
         // ============================ TUBE =================================
@@ -131,6 +133,8 @@ Future<void> exportCArmPDF(
         _infoTable(rows: [
           ['Model', docRef.tube1Model],
           ['Year of Manufacture', docRef.tube1YOM],
+          if (docRef.tubeNotes.trim().isNotEmpty)
+            ['Notes', docRef.tubeNotes],
         ]),
         if (tubeGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -146,6 +150,8 @@ Future<void> exportCArmPDF(
           ['Size', docRef.detectorSize],
           ['Year of Manufacture', docRef.detectorYOM],
           ['Condition', docRef.detectorCondition],
+          if (docRef.detectorNotes.trim().isNotEmpty)
+            ['Notes', docRef.detectorNotes],
         ]),
         if (detectorGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -160,6 +166,8 @@ Future<void> exportCArmPDF(
           ['Serial Number', docRef.softwareSN],
           ['Version', docRef.softwareVersion],
           ['Options', docRef.softwareOptionsText],
+          if (docRef.softwareNotes.trim().isNotEmpty)
+            ['Notes', docRef.softwareNotes],
         ]),
         if (softwareOptGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -183,6 +191,8 @@ Future<void> exportCArmPDF(
         _infoTable(rows: [
           ['CDs', docRef.accessoriesCDs],
           ['Spare Parts', docRef.accessoriesSpareP],
+          if (docRef.accessoriesNotes.trim().isNotEmpty)
+            ['Notes', docRef.accessoriesNotes],
         ]),
         if (accessoriesGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -214,6 +224,8 @@ Future<void> exportCArmPDF(
           ['Need of Crane', docRef.dnTNeedOfCrane],
           ['Tools Required', docRef.dnTTools],
           ['Special Attention', docRef.dnTSpecialAttention],
+          if (docRef.dnTNotes.trim().isNotEmpty)
+            ['Notes', docRef.dnTNotes],
         ]),
         if (dnTGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),

@@ -4,6 +4,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
+import '/components/notes_field.dart';
 import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -348,6 +349,14 @@ class _XRTableWidgetState extends State<XRTableWidget> {
                                     xRTableXRayRecord.tablePicURL.toList(),
                               ),
                             ),
+                            NotesField(
+                              controller: _model.notesTextController ??=
+                                  TextEditingController(
+                                text: xRTableXRayRecord.tableNotes,
+                              ),
+                              focusNode: _model.notesFocusNode,
+                              validator: _model.notesTextControllerValidator,
+                            ),
                           ],
                         ),
                       ]
@@ -360,6 +369,7 @@ class _XRTableWidgetState extends State<XRTableWidget> {
                     child: FFButtonWidget(
                       onPressed: () async {
                         widget.docRefSoft!.update(createXRayRecordData(
+                          tableNotes: _model.notesTextController.text,
                           tableModel: _model.textTextController1.text,
                           tableYOM: _model.textTextController2.text,
                         ));

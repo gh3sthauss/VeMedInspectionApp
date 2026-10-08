@@ -136,6 +136,38 @@ class DrRecord extends FirestoreRecord {
   String get otherNotes => _otherNotes ?? '';
   bool hasOtherNotes() => _otherNotes != null;
 
+  // Per-subpage notes fields.
+  // "AccessoriesNotes" field.
+  String? _accessoriesNotes;
+  String get accessoriesNotes => _accessoriesNotes ?? '';
+  bool hasAccessoriesNotes() => _accessoriesNotes != null;
+
+  // "CassettesNotes" field.
+  String? _cassettesNotes;
+  String get cassettesNotes => _cassettesNotes ?? '';
+  bool hasCassettesNotes() => _cassettesNotes != null;
+
+  // "ConsoleNWorkstationsNotes" field.
+  String? _consoleNWorkstationsNotes;
+  String get consoleNWorkstationsNotes => _consoleNWorkstationsNotes ?? '';
+  bool hasConsoleNWorkstationsNotes() => _consoleNWorkstationsNotes != null;
+
+  // "DetectorNotes" field.
+  String? _detectorNotes;
+  String get detectorNotes => _detectorNotes ?? '';
+  bool hasDetectorNotes() => _detectorNotes != null;
+
+  // "DnTNotes" field.
+  String? _dnTNotes;
+  String get dnTNotes => _dnTNotes ?? '';
+  bool hasDnTNotes() => _dnTNotes != null;
+
+  // "SystemGeneralNotes" field.
+  String? _systemGeneralNotes;
+  String get systemGeneralNotes => _systemGeneralNotes ?? '';
+  bool hasSystemGeneralNotes() => _systemGeneralNotes != null;
+
+
   // "SysGenDocName" field.
   String? _sysGenDocName;
   String get sysGenDocName => _sysGenDocName ?? '';
@@ -356,6 +388,12 @@ class DrRecord extends FirestoreRecord {
     _dnTTools = snapshotData['DnTTools'] as String?;
     _dnTSpecialAttention = snapshotData['DnTSpecialAttention'] as String?;
     _otherNotes = snapshotData['OtherNotes'] as String?;
+    _accessoriesNotes = snapshotData['AccessoriesNotes'] as String?;
+    _cassettesNotes = snapshotData['CassettesNotes'] as String?;
+    _consoleNWorkstationsNotes = snapshotData['ConsoleNWorkstationsNotes'] as String?;
+    _detectorNotes = snapshotData['DetectorNotes'] as String?;
+    _dnTNotes = snapshotData['DnTNotes'] as String?;
+    _systemGeneralNotes = snapshotData['SystemGeneralNotes'] as String?;
     _sysGenDocName = snapshotData['SysGenDocName'] as String?;
     _userID = snapshotData['userID'] as String?;
     _otherNotesPhotosURL = getDataList(snapshotData['OtherNotesPhotosURL']);
@@ -455,6 +493,12 @@ Map<String, dynamic> createDrRecordData({
   String? dnTTools,
   String? dnTSpecialAttention,
   String? otherNotes,
+  String? accessoriesNotes,
+  String? cassettesNotes,
+  String? consoleNWorkstationsNotes,
+  String? detectorNotes,
+  String? dnTNotes,
+  String? systemGeneralNotes,
   String? sysGenDocName,
   String? userID,
   String? detectorModel,
@@ -512,6 +556,12 @@ Map<String, dynamic> createDrRecordData({
       'DnTTools': dnTTools,
       'DnTSpecialAttention': dnTSpecialAttention,
       'OtherNotes': otherNotes,
+      'AccessoriesNotes': accessoriesNotes,
+      'CassettesNotes': cassettesNotes,
+      'ConsoleNWorkstationsNotes': consoleNWorkstationsNotes,
+      'DetectorNotes': detectorNotes,
+      'DnTNotes': dnTNotes,
+      'SystemGeneralNotes': systemGeneralNotes,
       'SysGenDocName': sysGenDocName,
       'userID': userID,
       'DetectorModel': detectorModel,
@@ -578,6 +628,12 @@ class DrRecordDocumentEquality implements Equality<DrRecord> {
         e1?.dnTTools == e2?.dnTTools &&
         e1?.dnTSpecialAttention == e2?.dnTSpecialAttention &&
         e1?.otherNotes == e2?.otherNotes &&
+        e1?.accessoriesNotes == e2?.accessoriesNotes &&
+        e1?.cassettesNotes == e2?.cassettesNotes &&
+        e1?.consoleNWorkstationsNotes == e2?.consoleNWorkstationsNotes &&
+        e1?.detectorNotes == e2?.detectorNotes &&
+        e1?.dnTNotes == e2?.dnTNotes &&
+        e1?.systemGeneralNotes == e2?.systemGeneralNotes &&
         e1?.sysGenDocName == e2?.sysGenDocName &&
         e1?.userID == e2?.userID &&
         listEquality.equals(e1?.otherNotesPhotosURL, e2?.otherNotesPhotosURL) &&
@@ -646,6 +702,12 @@ class DrRecordDocumentEquality implements Equality<DrRecord> {
         e?.dnTTools,
         e?.dnTSpecialAttention,
         e?.otherNotes,
+        e?.accessoriesNotes,
+        e?.cassettesNotes,
+        e?.consoleNWorkstationsNotes,
+        e?.detectorNotes,
+        e?.dnTNotes,
+        e?.systemGeneralNotes,
         e?.sysGenDocName,
         e?.userID,
         e?.otherNotesPhotosURL,

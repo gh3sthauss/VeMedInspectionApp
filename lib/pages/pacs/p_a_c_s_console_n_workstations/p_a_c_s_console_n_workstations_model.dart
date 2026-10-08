@@ -38,6 +38,11 @@ class PACSConsoleNWorkstationsModel
   TextEditingController? textInputTextController5;
   String? Function(BuildContext, String?)? textInputTextController5Validator;
 
+  // State field(s) for the Notes widget.
+  FocusNode? notesFocusNode;
+  TextEditingController? notesTextController;
+  String? Function(BuildContext, String?)? notesTextControllerValidator;
+
   @override
   void initState(BuildContext context) {
     logoModel = createModel(context, () => LogoModel());
@@ -63,5 +68,8 @@ class PACSConsoleNWorkstationsModel
 
     textInputFocusNode5?.dispose();
     textInputTextController5?.dispose();
+
+    notesFocusNode?.dispose();
+    notesTextController?.dispose();
   }
 }

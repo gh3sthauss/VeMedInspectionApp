@@ -39,6 +39,11 @@ class USDismantleNTransportModel
   TextEditingController? textTextController7;
   String? Function(BuildContext, String?)? textTextController7Validator;
 
+  // State field(s) for the Notes widget.
+  FocusNode? notesFocusNode;
+  TextEditingController? notesTextController;
+  String? Function(BuildContext, String?)? notesTextControllerValidator;
+
   @override
   void initState(BuildContext context) {
     logoModel = createModel(context, () => LogoModel());
@@ -67,5 +72,8 @@ class USDismantleNTransportModel
 
     textFocusNode7?.dispose();
     textTextController7?.dispose();
+
+    notesFocusNode?.dispose();
+    notesTextController?.dispose();
   }
 }

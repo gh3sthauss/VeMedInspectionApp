@@ -4,6 +4,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
+import '/components/notes_field.dart';
 import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -574,6 +575,14 @@ class _CADetectorWidgetState extends State<CADetectorWidget> {
                                     .toList(),
                               ),
                             ),
+                            NotesField(
+                              controller: _model.notesTextController ??=
+                                  TextEditingController(
+                                text: cADetectorCArmRecord.detectorNotes,
+                              ),
+                              focusNode: _model.notesFocusNode,
+                              validator: _model.notesTextControllerValidator,
+                            ),
                           ],
                         ),
                       ]
@@ -587,6 +596,7 @@ class _CADetectorWidgetState extends State<CADetectorWidget> {
                       onPressed: () async {
                         widget.docDataDetector!
                             .update(createCArmRecordData(
+                          detectorNotes: _model.notesTextController.text,
                           detectorModel: _model.textTextController1.text,
                           detectorSize: _model.textTextController2.text,
                           detectorYOM: _model.textTextController3.text,

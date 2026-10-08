@@ -128,6 +128,8 @@ Future<void> exportUltrasoundPDF(
           ['Year of Manufacture', docRef.sysGenYOM],
           ['Serial Number', docRef.sysGenSN],
           ['Photos URL', docRef.photosURL],
+          if (docRef.systemGeneralNotes.trim().isNotEmpty)
+            ['Notes', docRef.systemGeneralNotes],
         ]),
 
         // ============================ PROBES ================================
@@ -135,6 +137,12 @@ Future<void> exportUltrasoundPDF(
         if (inc('probes')) ...[
         _sectionHeader('Probes'),
         _probesTable(docRef),
+        if (docRef.probesNotes.trim().isNotEmpty) ...[
+          pw.SizedBox(height: 6),
+          _infoTable(rows: [
+            ['Notes', docRef.probesNotes],
+          ]),
+        ],
 
         // ========================== SOFTWARE ================================
         ],
@@ -144,6 +152,8 @@ Future<void> exportUltrasoundPDF(
           ['Serial Number', docRef.softwareSN],
           ['Version', docRef.softwareVersion],
           ['Options', docRef.softwareOptionsText],
+          if (docRef.softwareNotes.trim().isNotEmpty)
+            ['Notes', docRef.softwareNotes],
         ]),
         if (softwareOptGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -157,6 +167,8 @@ Future<void> exportUltrasoundPDF(
         _infoTable(rows: [
           ['CDs', docRef.accessoriesCDs],
           ['Spare Parts', docRef.accessoriesSpareP],
+          if (docRef.accesoriesNotes.trim().isNotEmpty)
+            ['Notes', docRef.accesoriesNotes],
         ]),
         if (accessoriesGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),
@@ -188,6 +200,8 @@ Future<void> exportUltrasoundPDF(
           ['Need of Crane', docRef.dnTNeedOfCrane],
           ['Tools Required', docRef.dnTTools],
           ['Special Attention', docRef.dnTSpecialAttention],
+          if (docRef.dismantleNTransportNotes.trim().isNotEmpty)
+            ['Notes', docRef.dismantleNTransportNotes],
         ]),
         if (dnTGallery.isNotEmpty) ...[
           pw.SizedBox(height: 6),

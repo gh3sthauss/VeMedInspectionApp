@@ -507,6 +507,73 @@ class MriRecord extends FirestoreRecord {
   String get otherNotes => _otherNotes ?? '';
   bool hasOtherNotes() => _otherNotes != null;
 
+  // Per-subpage notes fields.
+  // "AccessoriesNotes" field.
+  String? _accessoriesNotes;
+  String get accessoriesNotes => _accessoriesNotes ?? '';
+  bool hasAccessoriesNotes() => _accessoriesNotes != null;
+
+  // "CoilsNotes" field.
+  String? _coilsNotes;
+  String get coilsNotes => _coilsNotes ?? '';
+  bool hasCoilsNotes() => _coilsNotes != null;
+
+  // "ConsoleNWorkstationsNotes" field.
+  String? _consoleNWorkstationsNotes;
+  String get consoleNWorkstationsNotes => _consoleNWorkstationsNotes ?? '';
+  bool hasConsoleNWorkstationsNotes() => _consoleNWorkstationsNotes != null;
+
+  // "CoolingSystemNotes" field.
+  String? _coolingSystemNotes;
+  String get coolingSystemNotes => _coolingSystemNotes ?? '';
+  bool hasCoolingSystemNotes() => _coolingSystemNotes != null;
+
+  // "DnTNotes" field.
+  String? _dnTNotes;
+  String get dnTNotes => _dnTNotes ?? '';
+  bool hasDnTNotes() => _dnTNotes != null;
+
+  // "LocalServiceNotes" field.
+  String? _localServiceNotes;
+  String get localServiceNotes => _localServiceNotes ?? '';
+  bool hasLocalServiceNotes() => _localServiceNotes != null;
+
+  // "MagnetNotes" field.
+  String? _magnetNotes;
+  String get magnetNotes => _magnetNotes ?? '';
+  bool hasMagnetNotes() => _magnetNotes != null;
+
+  // "MarsImagerNotes" field.
+  String? _marsImagerNotes;
+  String get marsImagerNotes => _marsImagerNotes ?? '';
+  bool hasMarsImagerNotes() => _marsImagerNotes != null;
+
+  // "PatientTableNotes" field.
+  String? _patientTableNotes;
+  String get patientTableNotes => _patientTableNotes ?? '';
+  bool hasPatientTableNotes() => _patientTableNotes != null;
+
+  // "PowerstagesNotes" field.
+  String? _powerstagesNotes;
+  String get powerstagesNotes => _powerstagesNotes ?? '';
+  bool hasPowerstagesNotes() => _powerstagesNotes != null;
+
+  // "SystemGeneralNotes" field.
+  String? _systemGeneralNotes;
+  String get systemGeneralNotes => _systemGeneralNotes ?? '';
+  bool hasSystemGeneralNotes() => _systemGeneralNotes != null;
+
+  // "TalesLastReplacementNotes" field.
+  String? _talesLastReplacementNotes;
+  String get talesLastReplacementNotes => _talesLastReplacementNotes ?? '';
+  bool hasTalesLastReplacementNotes() => _talesLastReplacementNotes != null;
+
+  // "EcgperuNotes" field.
+  String? _ecgperuNotes;
+  String get ecgperuNotes => _ecgperuNotes ?? '';
+  bool hasEcgperuNotes() => _ecgperuNotes != null;
+
+
   // "ICSCabinetActive" field.
   String? _iCSCabinetActive;
   String get iCSCabinetActive => _iCSCabinetActive ?? '';
@@ -748,6 +815,19 @@ class MriRecord extends FirestoreRecord {
     _dntTools = snapshotData['DntTools'] as String?;
     _dntSpecialAttention = snapshotData['DntSpecialAttention'] as String?;
     _otherNotes = snapshotData['OtherNotes'] as String?;
+    _accessoriesNotes = snapshotData['AccessoriesNotes'] as String?;
+    _coilsNotes = snapshotData['CoilsNotes'] as String?;
+    _consoleNWorkstationsNotes = snapshotData['ConsoleNWorkstationsNotes'] as String?;
+    _coolingSystemNotes = snapshotData['CoolingSystemNotes'] as String?;
+    _dnTNotes = snapshotData['DnTNotes'] as String?;
+    _localServiceNotes = snapshotData['LocalServiceNotes'] as String?;
+    _magnetNotes = snapshotData['MagnetNotes'] as String?;
+    _marsImagerNotes = snapshotData['MarsImagerNotes'] as String?;
+    _patientTableNotes = snapshotData['PatientTableNotes'] as String?;
+    _powerstagesNotes = snapshotData['PowerstagesNotes'] as String?;
+    _systemGeneralNotes = snapshotData['SystemGeneralNotes'] as String?;
+    _talesLastReplacementNotes = snapshotData['TalesLastReplacementNotes'] as String?;
+    _ecgperuNotes = snapshotData['EcgperuNotes'] as String?;
     _iCSCabinetActive = snapshotData['ICSCabinetActive'] as String?;
     _userID = snapshotData['userID'] as String?;
     _sysGenDocName = snapshotData['SysGenDocName'] as String?;
@@ -909,6 +989,19 @@ Map<String, dynamic> createMriRecordData({
   String? dntTools,
   String? dntSpecialAttention,
   String? otherNotes,
+  String? accessoriesNotes,
+  String? coilsNotes,
+  String? consoleNWorkstationsNotes,
+  String? coolingSystemNotes,
+  String? dnTNotes,
+  String? localServiceNotes,
+  String? magnetNotes,
+  String? marsImagerNotes,
+  String? patientTableNotes,
+  String? powerstagesNotes,
+  String? systemGeneralNotes,
+  String? talesLastReplacementNotes,
+  String? ecgperuNotes,
   String? iCSCabinetActive,
   String? userID,
   String? sysGenDocName,
@@ -1022,6 +1115,19 @@ Map<String, dynamic> createMriRecordData({
       'DntTools': dntTools,
       'DntSpecialAttention': dntSpecialAttention,
       'OtherNotes': otherNotes,
+      'AccessoriesNotes': accessoriesNotes,
+      'CoilsNotes': coilsNotes,
+      'ConsoleNWorkstationsNotes': consoleNWorkstationsNotes,
+      'CoolingSystemNotes': coolingSystemNotes,
+      'DnTNotes': dnTNotes,
+      'LocalServiceNotes': localServiceNotes,
+      'MagnetNotes': magnetNotes,
+      'MarsImagerNotes': marsImagerNotes,
+      'PatientTableNotes': patientTableNotes,
+      'PowerstagesNotes': powerstagesNotes,
+      'SystemGeneralNotes': systemGeneralNotes,
+      'TalesLastReplacementNotes': talesLastReplacementNotes,
+      'EcgperuNotes': ecgperuNotes,
       'ICSCabinetActive': iCSCabinetActive,
       'userID': userID,
       'SysGenDocName': sysGenDocName,
@@ -1147,6 +1253,19 @@ class MriRecordDocumentEquality implements Equality<MriRecord> {
         e1?.dntTools == e2?.dntTools &&
         e1?.dntSpecialAttention == e2?.dntSpecialAttention &&
         e1?.otherNotes == e2?.otherNotes &&
+        e1?.accessoriesNotes == e2?.accessoriesNotes &&
+        e1?.coilsNotes == e2?.coilsNotes &&
+        e1?.consoleNWorkstationsNotes == e2?.consoleNWorkstationsNotes &&
+        e1?.coolingSystemNotes == e2?.coolingSystemNotes &&
+        e1?.dnTNotes == e2?.dnTNotes &&
+        e1?.localServiceNotes == e2?.localServiceNotes &&
+        e1?.magnetNotes == e2?.magnetNotes &&
+        e1?.marsImagerNotes == e2?.marsImagerNotes &&
+        e1?.patientTableNotes == e2?.patientTableNotes &&
+        e1?.powerstagesNotes == e2?.powerstagesNotes &&
+        e1?.systemGeneralNotes == e2?.systemGeneralNotes &&
+        e1?.talesLastReplacementNotes == e2?.talesLastReplacementNotes &&
+        e1?.ecgperuNotes == e2?.ecgperuNotes &&
         e1?.iCSCabinetActive == e2?.iCSCabinetActive &&
         e1?.userID == e2?.userID &&
         e1?.sysGenDocName == e2?.sysGenDocName &&
@@ -1279,6 +1398,19 @@ class MriRecordDocumentEquality implements Equality<MriRecord> {
         e?.dntTools,
         e?.dntSpecialAttention,
         e?.otherNotes,
+        e?.accessoriesNotes,
+        e?.coilsNotes,
+        e?.consoleNWorkstationsNotes,
+        e?.coolingSystemNotes,
+        e?.dnTNotes,
+        e?.localServiceNotes,
+        e?.magnetNotes,
+        e?.marsImagerNotes,
+        e?.patientTableNotes,
+        e?.powerstagesNotes,
+        e?.systemGeneralNotes,
+        e?.talesLastReplacementNotes,
+        e?.ecgperuNotes,
         e?.iCSCabinetActive,
         e?.userID,
         e?.sysGenDocName,

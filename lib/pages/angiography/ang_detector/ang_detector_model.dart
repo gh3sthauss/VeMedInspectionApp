@@ -26,6 +26,11 @@ class AngDetectorModel extends FlutterFlowModel<AngDetectorWidget> {
   TextEditingController? textTextController4;
   String? Function(BuildContext, String?)? textTextController4Validator;
 
+  // State field(s) for the Notes widget.
+  FocusNode? notesFocusNode;
+  TextEditingController? notesTextController;
+  String? Function(BuildContext, String?)? notesTextControllerValidator;
+
   @override
   void initState(BuildContext context) {
     logoModel = createModel(context, () => LogoModel());
@@ -45,5 +50,8 @@ class AngDetectorModel extends FlutterFlowModel<AngDetectorWidget> {
 
     textFocusNode4?.dispose();
     textTextController4?.dispose();
+
+    notesFocusNode?.dispose();
+    notesTextController?.dispose();
   }
 }

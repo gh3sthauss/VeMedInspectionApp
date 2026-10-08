@@ -22,6 +22,11 @@ class CASoftwareModel extends FlutterFlowModel<CASoftwareWidget> {
   TextEditingController? textTextController3;
   String? Function(BuildContext, String?)? textTextController3Validator;
 
+  // State field(s) for the Notes widget.
+  FocusNode? notesFocusNode;
+  TextEditingController? notesTextController;
+  String? Function(BuildContext, String?)? notesTextControllerValidator;
+
   @override
   void initState(BuildContext context) {
     logoModel = createModel(context, () => LogoModel());
@@ -38,5 +43,8 @@ class CASoftwareModel extends FlutterFlowModel<CASoftwareWidget> {
 
     textFocusNode3?.dispose();
     textTextController3?.dispose();
+
+    notesFocusNode?.dispose();
+    notesTextController?.dispose();
   }
 }
