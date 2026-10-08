@@ -141,6 +141,18 @@ Future<List<SelectedFile>?> selectMediaWithSourceBottomSheet({
   if (mediaSource == null) {
     return null;
   }
+  // Camera (photo): keep the camera open across shots so the user can take
+  // several photos in one session without reopening the picker and choosing
+  // the source again between each one.
+  if (mediaSource == MediaSource.camera && allowPhoto && !allowVideo) {
+    return _captureCameraPhotoBurst(
+      storageFolderPath: storageFolderPath,
+      maxWidth: maxWidth,
+      maxHeight: maxHeight,
+      imageQuality: imageQuality,
+      includeDimensions: includeDimensions,
+    );
+  }
   return selectMedia(
     storageFolderPath: storageFolderPath,
     maxWidth: maxWidth,
@@ -149,9 +161,49 @@ Future<List<SelectedFile>?> selectMediaWithSourceBottomSheet({
     isVideo: mediaSource == MediaSource.videoGallery ||
         (mediaSource == MediaSource.camera && allowVideo && !allowPhoto),
     mediaSource: mediaSource,
+    // Let the gallery return several photos at once, matching the camera's
+    // multi-capture behaviour.
+    multiImage: mediaSource == MediaSource.photoGallery,
     includeDimensions: includeDimensions,
     includeBlurHash: includeBlurHash,
   );
+}
+
+/// Opens the device camera repeatedly so the user can capture several photos
+/// in a row. After confirming each shot the camera reopens automatically; the
+/// burst ends when the user backs out of the camera without taking a photo.
+/// Returns every captured photo, or null if none were taken.
+Future<List<SelectedFile>?> _captureCameraPhotoBurst({
+  String? storageFolderPath,
+  double? maxWidth,
+  double? maxHeight,
+  int? imageQuality,
+  bool includeDimensions = false,
+}) async {
+  final picker = ImagePicker();
+  final captured = <SelectedFile>[];
+  while (true) {
+    final shot = await picker.pickImage(
+      maxWidth: maxWidth,
+      maxHeight: maxHeight,
+      imageQuality: imageQuality,
+      source: ImageSource.camera,
+    );
+    if (shot == null) break; // backed out of the camera -> end the burst
+    final bytes = await shot.readAsBytes();
+    final path =
+        _getStoragePath(storageFolderPath, shot.name, false, captured.length);
+    final dimensions =
+        includeDimensions ? await _getImageDimensions(bytes) : null;
+    captured.add(SelectedFile(
+      storagePath: path,
+      filePath: shot.path,
+      bytes: bytes,
+      dimensions: dimensions,
+      originalFilename: shot.name,
+    ));
+  }
+  return captured.isEmpty ? null : captured;
 }
 
 Future<List<SelectedFile>?> selectMedia({

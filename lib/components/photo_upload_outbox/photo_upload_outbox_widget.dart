@@ -136,17 +136,20 @@ class _PhotoUploadOutboxWidgetState extends State<PhotoUploadOutboxWidget> {
       storageFolderPath: widget.storagePathPrefix,
       allowPhoto: true,
     );
-    final file = selected?.firstOrNull;
-    if (file == null) return;
+    if (selected == null || selected.isEmpty) return;
 
     setState(() => _isPicking = true);
-    await ImageOutboxManager.instance.enqueue(
-      bytes: file.bytes,
-      storagePath: file.storagePath,
-      collectionPath: widget.collectionPath,
-      docId: widget.docId,
-      arrayFieldName: widget.arrayFieldName,
-    );
+    // A camera burst or a multi-pick gallery selection can return several
+    // photos; queue every one of them for upload.
+    for (final file in selected) {
+      await ImageOutboxManager.instance.enqueue(
+        bytes: file.bytes,
+        storagePath: file.storagePath,
+        collectionPath: widget.collectionPath,
+        docId: widget.docId,
+        arrayFieldName: widget.arrayFieldName,
+      );
+    }
     if (mounted) setState(() => _isPicking = false);
   }
 
