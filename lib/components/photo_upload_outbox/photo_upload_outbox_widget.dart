@@ -135,6 +135,13 @@ class _PhotoUploadOutboxWidgetState extends State<PhotoUploadOutboxWidget> {
       context: context,
       storageFolderPath: widget.storagePathPrefix,
       allowPhoto: true,
+      // Cap stored photos to a generous size. Field inspection shots don't
+      // need full 12MP originals; capping keeps uploads small for offline sync
+      // and, when several are picked at once, keeps iOS from running out of
+      // memory while they're loaded. Only downscales photos larger than this.
+      maxWidth: 3000,
+      maxHeight: 3000,
+      imageQuality: 90,
     );
     if (selected == null || selected.isEmpty) return;
 
