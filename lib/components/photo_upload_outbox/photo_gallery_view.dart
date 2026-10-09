@@ -1,17 +1,18 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart' show Uint8List;
 import 'package:flutter/material.dart';
 
 /// One photo in the gallery: either an uploaded Storage [url] or the local
-/// [bytes] of a photo still queued for upload.
+/// cached-file [path] of a photo still queued for upload.
 class GalleryPhoto {
-  const GalleryPhoto.url(this.url) : bytes = null;
-  const GalleryPhoto.bytes(this.bytes) : url = null;
+  const GalleryPhoto.url(this.url) : path = null;
+  const GalleryPhoto.file(this.path) : url = null;
 
   final String? url;
-  final Uint8List? bytes;
+  final String? path;
 
-  bool get isPending => bytes != null;
+  bool get isPending => path != null;
 }
 
 /// Opens the fullscreen swipeable gallery for [photos], starting at
@@ -90,7 +91,19 @@ class _PhotoGalleryViewState extends State<_PhotoGalleryView> {
                   minScale: 1.0,
                   maxScale: 5.0,
                   child: photo.isPending
-                      ? Image.memory(photo.bytes!, fit: BoxFit.contain)
+                      ? Image.file(
+                          File(photo.path!),
+                          fit: BoxFit.contain,
+                          // Cap the decode so opening a queued photo fullscreen
+                          // doesn't load a huge bitmap; 2048px is plenty to
+                          // pinch-zoom into.
+                          cacheWidth: 2048,
+                          errorBuilder: (_, __, ___) => const Icon(
+                            Icons.broken_image_outlined,
+                            color: Colors.white54,
+                            size: 48.0,
+                          ),
+                        )
                       : CachedNetworkImage(
                           imageUrl: photo.url!,
                           fit: BoxFit.contain,

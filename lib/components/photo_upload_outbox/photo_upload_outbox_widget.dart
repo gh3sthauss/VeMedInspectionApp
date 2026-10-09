@@ -3,10 +3,9 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart' show Uint8List, kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '/custom_code/image_outbox/image_outbox_manager.dart';
@@ -53,11 +52,13 @@ class PhotoUploadOutboxWidget extends StatefulWidget {
       _PhotoUploadOutboxWidgetState();
 }
 
-/// A photo still queued for upload, with its locally-cached bytes for preview.
+/// A photo still queued for upload, referenced by its locally-cached file so
+/// previews can be decoded on demand (and downscaled) rather than holding every
+/// pending photo's full bytes in memory at once.
 class _PendingPhoto {
-  const _PendingPhoto(this.id, this.bytes);
+  const _PendingPhoto(this.id, this.path);
   final int id;
-  final Uint8List bytes;
+  final String path;
 }
 
 class _PhotoUploadOutboxWidgetState extends State<PhotoUploadOutboxWidget> {
@@ -112,11 +113,9 @@ class _PhotoUploadOutboxWidgetState extends State<PhotoUploadOutboxWidget> {
       docId: widget.docId,
       arrayFieldName: widget.arrayFieldName,
     );
-    final loaded = <_PendingPhoto>[];
-    for (final item in items) {
-      final bytes = await ImageOutboxManager.instance.readPendingBytes(item);
-      if (bytes != null) loaded.add(_PendingPhoto(item.id, bytes));
-    }
+    final loaded = [
+      for (final item in items) _PendingPhoto(item.id, item.bytesCachePath),
+    ];
     if (!mounted) return;
     setState(() {
       _pending = loaded;
@@ -162,7 +161,7 @@ class _PhotoUploadOutboxWidgetState extends State<PhotoUploadOutboxWidget> {
 
   List<GalleryPhoto> _galleryPhotos() => [
         ...widget.existingPhotoUrls.map(GalleryPhoto.url),
-        ..._pending.map((p) => GalleryPhoto.bytes(p.bytes)),
+        ..._pending.map((p) => GalleryPhoto.file(p.path)),
       ];
 
   void _toggle({String? url, _PendingPhoto? pending}) {
@@ -253,15 +252,15 @@ class _PhotoUploadOutboxWidgetState extends State<PhotoUploadOutboxWidget> {
 
   Future<void> _shareSelected() async {
     if (_selectedUrls.isEmpty && _selectedPendingIds.isEmpty) return;
-    final tempDir = await getTemporaryDirectory();
     final files = <XFile>[];
 
     for (final id in _selectedPendingIds) {
       final p = _pending.firstWhereOrNull((e) => e.id == id);
       if (p == null) continue;
-      final f = File('${tempDir.path}/photo_$id.jpg');
-      await f.writeAsBytes(p.bytes, flush: true);
-      files.add(XFile(f.path, mimeType: 'image/jpeg'));
+      // Share the queued photo's cached file directly.
+      if (await File(p.path).exists()) {
+        files.add(XFile(p.path, mimeType: 'image/jpeg'));
+      }
     }
     for (final url in _selectedUrls) {
       try {
@@ -396,11 +395,27 @@ class _PhotoUploadOutboxWidgetState extends State<PhotoUploadOutboxWidget> {
               child: SizedBox(
                 width: 80.0,
                 height: 80.0,
+                // Decode thumbnails downscaled to roughly their on-screen size.
+                // Without a cap each tile decodes the full-resolution image into
+                // memory (~tens of MB each), so a grid of 20+ photos blows past
+                // the device's memory limit and crashes the app.
                 child: isPending
-                    ? Image.memory(pending.bytes, fit: BoxFit.cover)
+                    ? Image.file(
+                        File(pending.path),
+                        fit: BoxFit.cover,
+                        cacheWidth: 240,
+                        cacheHeight: 240,
+                        gaplessPlayback: true,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.broken_image_outlined,
+                          color: Colors.grey,
+                        ),
+                      )
                     : CachedNetworkImage(
                         imageUrl: url!,
                         fit: BoxFit.cover,
+                        memCacheWidth: 240,
+                        memCacheHeight: 240,
                         placeholder: (_, __) => Container(
                           color: FlutterFlowTheme.of(context).alternate,
                         ),
