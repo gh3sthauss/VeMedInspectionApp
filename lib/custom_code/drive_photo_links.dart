@@ -54,6 +54,15 @@ Future<DrivePhotoLinks?> syncReportPhotosToDrive({
           s.name, s.urls.where((u) => u.trim().isNotEmpty).toList()))
       .where((s) => s.urls.isNotEmpty)
       .toList();
+  // The function keys its links by the folder-safe name (cleanName in
+  // drive_sync.js); map them back to the names the exporter asked for.
+  String folderName(String name) => name
+      .replaceAll(RegExp(r'[\\/:*?"<>|\r\n\t]+'), ' ')
+      .replaceAll(RegExp(r'\s+'), ' ')
+      .trim();
+  final requestedNames = {
+    for (final s in withPhotos) folderName(s.name): s.name,
+  };
   if (withPhotos.isEmpty) return null;
   try {
     final idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
@@ -85,8 +94,8 @@ Future<DrivePhotoLinks?> syncReportPhotosToDrive({
     final result = (jsonDecode(res.body) as Map)['result'] as Map;
     return DrivePhotoLinks(
       result['reportUrl'] as String,
-      (result['sections'] as Map)
-          .map((k, v) => MapEntry(k as String, v as String)),
+      (result['sections'] as Map).map((k, v) =>
+          MapEntry(requestedNames[k as String] ?? k, v as String)),
     );
   } catch (e) {
     print('Drive photo sync failed: $e');

@@ -1,6 +1,8 @@
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
 import '/custom_code/image_outbox/image_outbox_manager.dart';
+import '/components/doc_naming.dart';
+import '/custom_code/drive_photo_links.dart';
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -52,23 +54,72 @@ Future<void> exportMriPDF(
     modalityIcon = null;
   }
 
+  // Section photos go to Google Drive and the PDF links to them; only when
+  // that fails (e.g. offline) are they embedded in the PDF instead.
+  final drive = await syncReportPhotosToDrive(
+    collection: 'MRI',
+    docId: docRef.reference.id,
+    title: driveReportTitle(
+      smartDocName(docRef.sysGenDocName, 'MRI', docRef.reference.id),
+      [
+        '${docRef.sysGenBrand} ${docRef.sysGenModal}',
+        if (docRef.sysGenSN.trim().isNotEmpty) 'SN ${docRef.sysGenSN.trim()}',
+      ],
+    ),
+    sections: [
+      if (inc('magnet')) DrivePhotoSection('Magnet', docRef.magnetPicURL),
+      if (inc('cooler_compressor'))
+        DrivePhotoSection('Cooler / Compressor', docRef.coolingSystemPicURL),
+      if (inc('imager')) DrivePhotoSection('Imager', docRef.marsImagerPicURL),
+      if (inc('ecg')) DrivePhotoSection('ECG', docRef.ecgPicURL),
+      if (inc('power_stages'))
+        DrivePhotoSection('Power Stages', [
+          ...docRef.powerstagesPicURL,
+          ...docRef.talesLastReplacementPicURL,
+        ]),
+      if (inc('patient_table'))
+        DrivePhotoSection('Patient Table', docRef.patientTablePicURL),
+      if (inc('console'))
+        DrivePhotoSection('Console and Workstation', [
+          ...docRef.cnWConsoleOptionsPicsURL,
+          ...docRef.cnWWSOptionsPicsURL,
+        ]),
+      if (inc('local_service'))
+        DrivePhotoSection('Local Service', docRef.localServicePicURL),
+      if (inc('coils')) DrivePhotoSection('Coils', docRef.coilsPicURL),
+      if (inc('accessories'))
+        DrivePhotoSection('Accessories', docRef.accessoriesPicURL),
+      if (inc('cosmetic'))
+        DrivePhotoSection('Cosmetic Condition', docRef.cosmeticPicURL),
+      if (inc('delivery'))
+        DrivePhotoSection('Delivery & Site Access', docRef.dnTPicURL),
+      if (inc('other_notes'))
+        DrivePhotoSection('Other Notes', docRef.otherNotesPhotosURL),
+    ],
+  );
+  Future<List<pw.ImageProvider>> embedded(List<String> urls) =>
+      drive == null ? _loadImages(urls) : Future.value(const []);
+
   final results = await Future.wait([
-    _loadImages(docRef.cosmeticPicURL),
-    _loadImages(docRef.otherNotesPhotosURL),
-    _loadImages(docRef.cnWConsoleOptionsPicsURL),
-    _loadImages(docRef.cnWWSOptionsPicsURL),
+    // The first cosmetic photo is the cover fallback, so always load that.
+    drive == null
+        ? _loadImages(docRef.cosmeticPicURL)
+        : _loadImages(docRef.cosmeticPicURL.take(1).toList()),
+    embedded(docRef.otherNotesPhotosURL),
+    embedded(docRef.cnWConsoleOptionsPicsURL),
+    embedded(docRef.cnWWSOptionsPicsURL),
     _loadImages(docRef.deviceImg),
-    _loadImages(docRef.accessoriesPicURL),
-    _loadImages(docRef.coilsPicURL),
-    _loadImages(docRef.coolingSystemPicURL),
-    _loadImages(docRef.dnTPicURL),
-    _loadImages(docRef.localServicePicURL),
-    _loadImages(docRef.magnetPicURL),
-    _loadImages(docRef.marsImagerPicURL),
-    _loadImages(docRef.patientTablePicURL),
-    _loadImages(docRef.powerstagesPicURL),
-    _loadImages(docRef.talesLastReplacementPicURL),
-    _loadImages(docRef.ecgPicURL),
+    embedded(docRef.accessoriesPicURL),
+    embedded(docRef.coilsPicURL),
+    embedded(docRef.coolingSystemPicURL),
+    embedded(docRef.dnTPicURL),
+    embedded(docRef.localServicePicURL),
+    embedded(docRef.magnetPicURL),
+    embedded(docRef.marsImagerPicURL),
+    embedded(docRef.patientTablePicURL),
+    embedded(docRef.powerstagesPicURL),
+    embedded(docRef.talesLastReplacementPicURL),
+    embedded(docRef.ecgPicURL),
   ]);
   final cosmeticGallery = results[0];
   final otherNotesGallery = results[1];
@@ -112,6 +163,18 @@ Future<void> exportMriPDF(
       : (deviceLocal ??
           (cosmeticGallery.isNotEmpty ? cosmeticGallery.first : null));
 
+  // Drive link for a section when synced, otherwise its embedded photo grid.
+  List<pw.Widget> sectionPhotos(String name, List<String> urls,
+      List<pw.ImageProvider> gallery) {
+    final link = drive?.sectionUrls[name];
+    if (link != null) {
+      final count = urls.where((u) => u.trim().isNotEmpty).length;
+      return [driveSectionPhotosLink(link, count, accent: _accent)];
+    }
+    if (drive != null || gallery.isEmpty) return const [];
+    return [pw.SizedBox(height: 6), _imageGrid(gallery)];
+  }
+
   // -------------------------------------------------------------------------
   // 2. BUILD DOCUMENT
   // -------------------------------------------------------------------------
@@ -127,6 +190,7 @@ Future<void> exportMriPDF(
         // =========================== COVER PAGE ===========================
         _buildCoverPage(logoWidget, heroImage, docRef, modalityIcon, 'MRI'),
         pw.NewPage(),
+        if (drive != null) drivePhotosBanner(drive.reportUrl, accent: _accent),
 
         // ===================== SYSTEM GENERAL INFO ========================
         if (inc('system_general')) ...[
@@ -154,10 +218,7 @@ Future<void> exportMriPDF(
           if (docRef.magnetNotes.trim().isNotEmpty)
             ['Notes', docRef.magnetNotes],
         ]),
-        if (magnetGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(magnetGallery),
-        ],
+        ...sectionPhotos('Magnet', docRef.magnetPicURL, magnetGallery),
 
         // ==================== COOLER / COMPRESSOR ===========================
         ],
@@ -172,10 +233,8 @@ Future<void> exportMriPDF(
           if (docRef.coolingSystemNotes.trim().isNotEmpty)
             ['Notes', docRef.coolingSystemNotes],
         ]),
-        if (coolingSystemGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(coolingSystemGallery),
-        ],
+        ...sectionPhotos('Cooler / Compressor', docRef.coolingSystemPicURL,
+            coolingSystemGallery),
 
         // ========================== COLD HEAD ================================
         ],
@@ -202,10 +261,7 @@ Future<void> exportMriPDF(
           if (docRef.marsImagerNotes.trim().isNotEmpty)
             ['Notes', docRef.marsImagerNotes],
         ]),
-        if (marsImagerGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(marsImagerGallery),
-        ],
+        ...sectionPhotos('Imager', docRef.marsImagerPicURL, marsImagerGallery),
 
 
         // ============================= ECG ===================================
@@ -219,10 +275,7 @@ Future<void> exportMriPDF(
           if (docRef.ecgperuNotes.trim().isNotEmpty)
             ['Notes', docRef.ecgperuNotes],
         ]),
-        if (ecgGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(ecgGallery),
-        ],
+        ...sectionPhotos('ECG', docRef.ecgPicURL, ecgGallery),
 
         // ========================= POWER STAGES ================================
         ],
@@ -238,12 +291,10 @@ Future<void> exportMriPDF(
           if (docRef.talesLastReplacementNotes.trim().isNotEmpty)
             ['TALES Notes', docRef.talesLastReplacementNotes],
         ]),
-        if (powerstagesGallery.isNotEmpty ||
-            talesLastReplacementGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(
-              [...powerstagesGallery, ...talesLastReplacementGallery]),
-        ],
+        ...sectionPhotos(
+            'Power Stages',
+            [...docRef.powerstagesPicURL, ...docRef.talesLastReplacementPicURL],
+            [...powerstagesGallery, ...talesLastReplacementGallery]),
 
         // ====================== PATIENT TABLE ================================
         ],
@@ -256,10 +307,8 @@ Future<void> exportMriPDF(
           if (docRef.patientTableNotes.trim().isNotEmpty)
             ['Notes', docRef.patientTableNotes],
         ]),
-        if (patientTableGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(patientTableGallery),
-        ],
+        ...sectionPhotos('Patient Table', docRef.patientTablePicURL,
+            patientTableGallery),
 
         // ================== CONSOLE AND WORKSTATION ======================
         ],
@@ -276,10 +325,10 @@ Future<void> exportMriPDF(
           if (docRef.consoleNWorkstationsNotes.trim().isNotEmpty)
             ['Notes', docRef.consoleNWorkstationsNotes],
         ]),
-        if (consoleOptGallery.isNotEmpty || wsOptGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid([...consoleOptGallery, ...wsOptGallery]),
-        ],
+        ...sectionPhotos(
+            'Console and Workstation',
+            [...docRef.cnWConsoleOptionsPicsURL, ...docRef.cnWWSOptionsPicsURL],
+            [...consoleOptGallery, ...wsOptGallery]),
 
 
         // ========================= LOCAL SERVICE ================================
@@ -299,10 +348,8 @@ Future<void> exportMriPDF(
           if (docRef.localServiceNotes.trim().isNotEmpty)
             ['Notes', docRef.localServiceNotes],
         ]),
-        if (localServiceGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(localServiceGallery),
-        ],
+        ...sectionPhotos('Local Service', docRef.localServicePicURL,
+            localServiceGallery),
 
         // ============================ COILS ==================================
         ],
@@ -315,10 +362,7 @@ Future<void> exportMriPDF(
             ['Notes', docRef.coilsNotes],
           ]),
         ],
-        if (coilsGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(coilsGallery),
-        ],
+        ...sectionPhotos('Coils', docRef.coilsPicURL, coilsGallery),
 
 
         // ========================== PHANTOMS ==================================
@@ -341,10 +385,8 @@ Future<void> exportMriPDF(
           if (docRef.accessoriesNotes.trim().isNotEmpty)
             ['Notes', docRef.accessoriesNotes],
         ]),
-        if (accessoriesGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(accessoriesGallery),
-        ],
+        ...sectionPhotos('Accessories', docRef.accessoriesPicURL,
+            accessoriesGallery),
 
         // ====================== COSMETIC CONDITION =============================
         ],
@@ -354,10 +396,8 @@ Future<void> exportMriPDF(
           ['Condition', docRef.cosmeticCondition],
           ['Notes', docRef.cosmeticText],
         ]),
-        if (cosmeticGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(cosmeticGallery),
-        ],
+        ...sectionPhotos('Cosmetic Condition', docRef.cosmeticPicURL,
+            cosmeticGallery),
 
         // ================= DELIVERY & SITE ACCESS INFORMATION ==================
         ],
@@ -374,10 +414,8 @@ Future<void> exportMriPDF(
           if (docRef.dnTNotes.trim().isNotEmpty)
             ['Notes', docRef.dnTNotes],
         ]),
-        if (dnTGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(dnTGallery),
-        ],
+        ...sectionPhotos('Delivery & Site Access', docRef.dnTPicURL,
+            dnTGallery),
 
         // =========================== OTHER NOTES ================================
         ],
@@ -386,10 +424,8 @@ Future<void> exportMriPDF(
         _infoTable(rows: [
           ['Notes', docRef.otherNotes],
         ]),
-        if (otherNotesGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(otherNotesGallery),
-        ],
+        ...sectionPhotos('Other Notes', docRef.otherNotesPhotosURL,
+            otherNotesGallery),
         ],
       ],
     ),

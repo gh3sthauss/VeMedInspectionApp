@@ -1,6 +1,8 @@
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
 import '/custom_code/image_outbox/image_outbox_manager.dart';
+import '/components/doc_naming.dart';
+import '/custom_code/drive_photo_links.dart';
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -63,13 +65,44 @@ Future<void> exportUltrasoundPDF(
   // Full image galleries for sections that support multiple photos.
   // Loaded in parallel (not one-by-one) and each fetch has a timeout, so a
   // single bad/slow URL can't stall the whole export.
+  // Section photos go to Google Drive and the PDF links to them; only when
+  // that fails (e.g. offline) are they embedded in the PDF instead.
+  final drive = await syncReportPhotosToDrive(
+    collection: 'Ultrasound',
+    docId: docRef.reference.id,
+    title: driveReportTitle(
+      smartDocName(docRef.sysGenDocName, 'Ultrasound', docRef.reference.id),
+      [
+        '${docRef.sysGenBrand} ${docRef.sysGenModal}',
+        if (docRef.sysGenSN.trim().isNotEmpty) 'SN ${docRef.sysGenSN.trim()}',
+      ],
+    ),
+    sections: [
+      if (inc('software'))
+        DrivePhotoSection('Software', docRef.softwareOptPicsURL),
+      if (inc('accessories'))
+        DrivePhotoSection('Accessories', docRef.accessoriesPicURL),
+      if (inc('cosmetic'))
+        DrivePhotoSection('Cosmetic Condition', docRef.cosmeticPicURL),
+      if (inc('delivery'))
+        DrivePhotoSection('Delivery & Site Access', docRef.dnTPicURL),
+      if (inc('other_notes'))
+        DrivePhotoSection('Other Notes', docRef.otherNotesPhotosURL),
+    ],
+  );
+  Future<List<pw.ImageProvider>> embedded(List<String> urls) =>
+      drive == null ? _loadImages(urls) : Future.value(const []);
+
   final results = await Future.wait([
-    _loadImages(docRef.cosmeticPicURL),
-    _loadImages(docRef.otherNotesPhotosURL),
-    _loadImages(docRef.softwareOptPicsURL),
+    // The first cosmetic photo is the cover fallback, so always load that.
+    drive == null
+        ? _loadImages(docRef.cosmeticPicURL)
+        : _loadImages(docRef.cosmeticPicURL.take(1).toList()),
+    embedded(docRef.otherNotesPhotosURL),
+    embedded(docRef.softwareOptPicsURL),
     _loadImages(docRef.deviceImg),
-    _loadImages(docRef.accessoriesPicURL),
-    _loadImages(docRef.dnTPicURL),
+    embedded(docRef.accessoriesPicURL),
+    embedded(docRef.dnTPicURL),
   ]);
   final cosmeticGallery = results[0];
   final otherNotesGallery = results[1];
@@ -103,6 +136,18 @@ Future<void> exportUltrasoundPDF(
       : (deviceLocal ??
           (cosmeticGallery.isNotEmpty ? cosmeticGallery.first : null));
 
+  // Drive link for a section when synced, otherwise its embedded photo grid.
+  List<pw.Widget> sectionPhotos(String name, List<String> urls,
+      List<pw.ImageProvider> gallery) {
+    final link = drive?.sectionUrls[name];
+    if (link != null) {
+      final count = urls.where((u) => u.trim().isNotEmpty).length;
+      return [driveSectionPhotosLink(link, count, accent: _accent)];
+    }
+    if (drive != null || gallery.isEmpty) return const [];
+    return [pw.SizedBox(height: 6), _imageGrid(gallery)];
+  }
+
   // -------------------------------------------------------------------------
   // 2. BUILD DOCUMENT
   // -------------------------------------------------------------------------
@@ -118,6 +163,7 @@ Future<void> exportUltrasoundPDF(
         // =========================== COVER PAGE ===========================
         _buildCoverPage(logoWidget, heroImage, docRef, modalityIcon, 'Ultrasound'),
         pw.NewPage(),
+        if (drive != null) drivePhotosBanner(drive.reportUrl, accent: _accent),
 
         // ===================== SYSTEM GENERAL INFO ========================
         if (inc('system_general')) ...[
@@ -155,10 +201,8 @@ Future<void> exportUltrasoundPDF(
           if (docRef.softwareNotes.trim().isNotEmpty)
             ['Notes', docRef.softwareNotes],
         ]),
-        if (softwareOptGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(softwareOptGallery),
-        ],
+        ...sectionPhotos('Software', docRef.softwareOptPicsURL,
+            softwareOptGallery),
 
         // ========================= ACCESSORIES ================================
         ],
@@ -170,10 +214,8 @@ Future<void> exportUltrasoundPDF(
           if (docRef.accesoriesNotes.trim().isNotEmpty)
             ['Notes', docRef.accesoriesNotes],
         ]),
-        if (accessoriesGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(accessoriesGallery),
-        ],
+        ...sectionPhotos('Accessories', docRef.accessoriesPicURL,
+            accessoriesGallery),
 
 
         // ====================== COSMETIC CONDITION =============================
@@ -183,10 +225,8 @@ Future<void> exportUltrasoundPDF(
         _infoTable(rows: [
           ['Notes', docRef.cosmeticText],
         ]),
-        if (cosmeticGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(cosmeticGallery),
-        ],
+        ...sectionPhotos('Cosmetic Condition', docRef.cosmeticPicURL,
+            cosmeticGallery),
 
         // ================= DELIVERY & SITE ACCESS INFORMATION ==================
         ],
@@ -203,10 +243,8 @@ Future<void> exportUltrasoundPDF(
           if (docRef.dismantleNTransportNotes.trim().isNotEmpty)
             ['Notes', docRef.dismantleNTransportNotes],
         ]),
-        if (dnTGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(dnTGallery),
-        ],
+        ...sectionPhotos('Delivery & Site Access', docRef.dnTPicURL,
+            dnTGallery),
 
         // =========================== OTHER NOTES ================================
         ],
@@ -215,10 +253,8 @@ Future<void> exportUltrasoundPDF(
         _infoTable(rows: [
           ['Notes', docRef.otherNotes],
         ]),
-        if (otherNotesGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(otherNotesGallery),
-        ],
+        ...sectionPhotos('Other Notes', docRef.otherNotesPhotosURL,
+            otherNotesGallery),
         ],
       ],
     ),

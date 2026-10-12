@@ -1,6 +1,8 @@
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
 import '/custom_code/image_outbox/image_outbox_manager.dart';
+import '/components/doc_naming.dart';
+import '/custom_code/drive_photo_links.dart';
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -54,15 +56,48 @@ Future<void> exportCArmPDF(
 
   // Full image galleries for sections that support multiple photos, loaded in
   // parallel with a per-URL timeout so one bad/slow URL can't stall export.
+  // Section photos go to Google Drive and the PDF links to them; only when
+  // that fails (e.g. offline) are they embedded in the PDF instead.
+  final drive = await syncReportPhotosToDrive(
+    collection: 'CArm',
+    docId: docRef.reference.id,
+    title: driveReportTitle(
+      smartDocName(docRef.sysGenDocName, 'C-Arm', docRef.reference.id),
+      [
+        '${docRef.sysGenBrand} ${docRef.sysGenModal}',
+        if (docRef.sysGenSN.trim().isNotEmpty) 'SN ${docRef.sysGenSN.trim()}',
+      ],
+    ),
+    sections: [
+      if (inc('tube')) DrivePhotoSection('Tube', docRef.tubePicURL),
+      if (inc('detector')) DrivePhotoSection('Detector', docRef.detectorPicURL),
+      if (inc('software'))
+        DrivePhotoSection('Software', docRef.softwareOptPicsURL),
+      if (inc('accessories'))
+        DrivePhotoSection('Accessories', docRef.accessoriesPicURL),
+      if (inc('cosmetic'))
+        DrivePhotoSection('Cosmetic Condition', docRef.cosmeticPicURL),
+      if (inc('delivery'))
+        DrivePhotoSection('Delivery & Site Access', docRef.dnTPicURL),
+      if (inc('other_notes'))
+        DrivePhotoSection('Other Notes', docRef.otherNotesPhotosURL),
+    ],
+  );
+  Future<List<pw.ImageProvider>> embedded(List<String> urls) =>
+      drive == null ? _loadImages(urls) : Future.value(const []);
+
   final results = await Future.wait([
-    _loadImages(docRef.cosmeticPicURL),
-    _loadImages(docRef.otherNotesPhotosURL),
-    _loadImages(docRef.softwareOptPicsURL),
+    // The first cosmetic photo is the cover fallback, so always load that.
+    drive == null
+        ? _loadImages(docRef.cosmeticPicURL)
+        : _loadImages(docRef.cosmeticPicURL.take(1).toList()),
+    embedded(docRef.otherNotesPhotosURL),
+    embedded(docRef.softwareOptPicsURL),
     _loadImages(docRef.deviceImg),
-    _loadImages(docRef.accessoriesPicURL),
-    _loadImages(docRef.detectorPicURL),
-    _loadImages(docRef.dnTPicURL),
-    _loadImages(docRef.tubePicURL),
+    embedded(docRef.accessoriesPicURL),
+    embedded(docRef.detectorPicURL),
+    embedded(docRef.dnTPicURL),
+    embedded(docRef.tubePicURL),
   ]);
   final cosmeticGallery = results[0];
   final otherNotesGallery = results[1];
@@ -98,6 +133,18 @@ Future<void> exportCArmPDF(
       : (deviceLocal ??
           (cosmeticGallery.isNotEmpty ? cosmeticGallery.first : null));
 
+  // Drive link for a section when synced, otherwise its embedded photo grid.
+  List<pw.Widget> sectionPhotos(String name, List<String> urls,
+      List<pw.ImageProvider> gallery) {
+    final link = drive?.sectionUrls[name];
+    if (link != null) {
+      final count = urls.where((u) => u.trim().isNotEmpty).length;
+      return [driveSectionPhotosLink(link, count, accent: _accent)];
+    }
+    if (drive != null || gallery.isEmpty) return const [];
+    return [pw.SizedBox(height: 6), _imageGrid(gallery)];
+  }
+
   // -------------------------------------------------------------------------
   // 2. BUILD DOCUMENT
   // -------------------------------------------------------------------------
@@ -113,6 +160,7 @@ Future<void> exportCArmPDF(
         // =========================== COVER PAGE ===========================
         _buildCoverPage(logoWidget, heroImage, docRef, modalityIcon, 'C-Arm'),
         pw.NewPage(),
+        if (drive != null) drivePhotosBanner(drive.reportUrl, accent: _accent),
 
         // ===================== SYSTEM GENERAL INFO ========================
         if (inc('system_general')) ...[
@@ -136,10 +184,7 @@ Future<void> exportCArmPDF(
           if (docRef.tubeNotes.trim().isNotEmpty)
             ['Notes', docRef.tubeNotes],
         ]),
-        if (tubeGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(tubeGallery),
-        ],
+        ...sectionPhotos('Tube', docRef.tubePicURL, tubeGallery),
 
         // ========================== DETECTOR ================================
         ],
@@ -153,10 +198,7 @@ Future<void> exportCArmPDF(
           if (docRef.detectorNotes.trim().isNotEmpty)
             ['Notes', docRef.detectorNotes],
         ]),
-        if (detectorGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(detectorGallery),
-        ],
+        ...sectionPhotos('Detector', docRef.detectorPicURL, detectorGallery),
 
         // ========================== SOFTWARE ================================
         ],
@@ -169,10 +211,8 @@ Future<void> exportCArmPDF(
           if (docRef.softwareNotes.trim().isNotEmpty)
             ['Notes', docRef.softwareNotes],
         ]),
-        if (softwareOptGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(softwareOptGallery),
-        ],
+        ...sectionPhotos('Software', docRef.softwareOptPicsURL,
+            softwareOptGallery),
 
         // ========================== PHANTOM ==================================
         ],
@@ -194,10 +234,8 @@ Future<void> exportCArmPDF(
           if (docRef.accessoriesNotes.trim().isNotEmpty)
             ['Notes', docRef.accessoriesNotes],
         ]),
-        if (accessoriesGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(accessoriesGallery),
-        ],
+        ...sectionPhotos('Accessories', docRef.accessoriesPicURL,
+            accessoriesGallery),
 
 
         // ====================== COSMETIC CONDITION =============================
@@ -207,10 +245,8 @@ Future<void> exportCArmPDF(
         _infoTable(rows: [
           ['Notes', docRef.cosmeticText],
         ]),
-        if (cosmeticGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(cosmeticGallery),
-        ],
+        ...sectionPhotos('Cosmetic Condition', docRef.cosmeticPicURL,
+            cosmeticGallery),
 
         // ================= DELIVERY & SITE ACCESS INFORMATION ==================
         ],
@@ -227,10 +263,8 @@ Future<void> exportCArmPDF(
           if (docRef.dnTNotes.trim().isNotEmpty)
             ['Notes', docRef.dnTNotes],
         ]),
-        if (dnTGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(dnTGallery),
-        ],
+        ...sectionPhotos('Delivery & Site Access', docRef.dnTPicURL,
+            dnTGallery),
 
         // =========================== OTHER NOTES ================================
         ],
@@ -239,10 +273,8 @@ Future<void> exportCArmPDF(
         _infoTable(rows: [
           ['Notes', docRef.otherNotes],
         ]),
-        if (otherNotesGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(otherNotesGallery),
-        ],
+        ...sectionPhotos('Other Notes', docRef.otherNotesPhotosURL,
+            otherNotesGallery),
         ],
       ],
     ),
