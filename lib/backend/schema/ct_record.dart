@@ -171,6 +171,46 @@ class CtRecord extends FirestoreRecord {
   String get accessoriesPHolders => _accessoriesPHolders ?? '';
   bool hasAccessoriesPHolders() => _accessoriesPHolders != null;
 
+  // "AccessoriesP2Modal" field.
+  String? _accessoriesP2Modal;
+  String get accessoriesP2Modal => _accessoriesP2Modal ?? '';
+  bool hasAccessoriesP2Modal() => _accessoriesP2Modal != null;
+
+  // "AccessoriesP2ModelNo" field.
+  String? _accessoriesP2ModelNo;
+  String get accessoriesP2ModelNo => _accessoriesP2ModelNo ?? '';
+  bool hasAccessoriesP2ModelNo() => _accessoriesP2ModelNo != null;
+
+  // "AccessoriesP2SN" field.
+  String? _accessoriesP2SN;
+  String get accessoriesP2SN => _accessoriesP2SN ?? '';
+  bool hasAccessoriesP2SN() => _accessoriesP2SN != null;
+
+  // "AccessoriesP2Holders" field.
+  String? _accessoriesP2Holders;
+  String get accessoriesP2Holders => _accessoriesP2Holders ?? '';
+  bool hasAccessoriesP2Holders() => _accessoriesP2Holders != null;
+
+  // "AccessoriesP3Modal" field.
+  String? _accessoriesP3Modal;
+  String get accessoriesP3Modal => _accessoriesP3Modal ?? '';
+  bool hasAccessoriesP3Modal() => _accessoriesP3Modal != null;
+
+  // "AccessoriesP3ModelNo" field.
+  String? _accessoriesP3ModelNo;
+  String get accessoriesP3ModelNo => _accessoriesP3ModelNo ?? '';
+  bool hasAccessoriesP3ModelNo() => _accessoriesP3ModelNo != null;
+
+  // "AccessoriesP3SN" field.
+  String? _accessoriesP3SN;
+  String get accessoriesP3SN => _accessoriesP3SN ?? '';
+  bool hasAccessoriesP3SN() => _accessoriesP3SN != null;
+
+  // "AccessoriesP3Holders" field.
+  String? _accessoriesP3Holders;
+  String get accessoriesP3Holders => _accessoriesP3Holders ?? '';
+  bool hasAccessoriesP3Holders() => _accessoriesP3Holders != null;
+
   // "AccessoriesCDs" field.
   String? _accessoriesCDs;
   String get accessoriesCDs => _accessoriesCDs ?? '';
@@ -354,6 +394,14 @@ class CtRecord extends FirestoreRecord {
     _accessoriesPModelNo = snapshotData['AccessoriesPModelNo'] as String?;
     _accessoriesPSN = snapshotData['AccessoriesPSN'] as String?;
     _accessoriesPHolders = snapshotData['AccessoriesPHolders'] as String?;
+    _accessoriesP2Modal = snapshotData['AccessoriesP2Modal'] as String?;
+    _accessoriesP2ModelNo = snapshotData['AccessoriesP2ModelNo'] as String?;
+    _accessoriesP2SN = snapshotData['AccessoriesP2SN'] as String?;
+    _accessoriesP2Holders = snapshotData['AccessoriesP2Holders'] as String?;
+    _accessoriesP3Modal = snapshotData['AccessoriesP3Modal'] as String?;
+    _accessoriesP3ModelNo = snapshotData['AccessoriesP3ModelNo'] as String?;
+    _accessoriesP3SN = snapshotData['AccessoriesP3SN'] as String?;
+    _accessoriesP3Holders = snapshotData['AccessoriesP3Holders'] as String?;
     _accessoriesCDs = snapshotData['AccessoriesCDs'] as String?;
     _accessoriesInjector = snapshotData['AccessoriesInjector'] as String?;
     _accessoriesSpareP = snapshotData['AccessoriesSpareP'] as String?;
@@ -451,6 +499,14 @@ Map<String, dynamic> createCtRecordData({
   String? accessoriesPModelNo,
   String? accessoriesPSN,
   String? accessoriesPHolders,
+  String? accessoriesP2Modal,
+  String? accessoriesP2ModelNo,
+  String? accessoriesP2SN,
+  String? accessoriesP2Holders,
+  String? accessoriesP3Modal,
+  String? accessoriesP3ModelNo,
+  String? accessoriesP3SN,
+  String? accessoriesP3Holders,
   String? accessoriesCDs,
   String? accessoriesInjector,
   String? accessoriesSpareP,
@@ -505,6 +561,14 @@ Map<String, dynamic> createCtRecordData({
       'AccessoriesPModelNo': accessoriesPModelNo,
       'AccessoriesPSN': accessoriesPSN,
       'AccessoriesPHolders': accessoriesPHolders,
+      'AccessoriesP2Modal': accessoriesP2Modal,
+      'AccessoriesP2ModelNo': accessoriesP2ModelNo,
+      'AccessoriesP2SN': accessoriesP2SN,
+      'AccessoriesP2Holders': accessoriesP2Holders,
+      'AccessoriesP3Modal': accessoriesP3Modal,
+      'AccessoriesP3ModelNo': accessoriesP3ModelNo,
+      'AccessoriesP3SN': accessoriesP3SN,
+      'AccessoriesP3Holders': accessoriesP3Holders,
       'AccessoriesCDs': accessoriesCDs,
       'AccessoriesInjector': accessoriesInjector,
       'AccessoriesSpareP': accessoriesSpareP,
@@ -568,6 +632,14 @@ class CtRecordDocumentEquality implements Equality<CtRecord> {
         e1?.accessoriesPModelNo == e2?.accessoriesPModelNo &&
         e1?.accessoriesPSN == e2?.accessoriesPSN &&
         e1?.accessoriesPHolders == e2?.accessoriesPHolders &&
+        e1?.accessoriesP2Modal == e2?.accessoriesP2Modal &&
+        e1?.accessoriesP2ModelNo == e2?.accessoriesP2ModelNo &&
+        e1?.accessoriesP2SN == e2?.accessoriesP2SN &&
+        e1?.accessoriesP2Holders == e2?.accessoriesP2Holders &&
+        e1?.accessoriesP3Modal == e2?.accessoriesP3Modal &&
+        e1?.accessoriesP3ModelNo == e2?.accessoriesP3ModelNo &&
+        e1?.accessoriesP3SN == e2?.accessoriesP3SN &&
+        e1?.accessoriesP3Holders == e2?.accessoriesP3Holders &&
         e1?.accessoriesCDs == e2?.accessoriesCDs &&
         e1?.accessoriesInjector == e2?.accessoriesInjector &&
         e1?.accessoriesSpareP == e2?.accessoriesSpareP &&
@@ -635,6 +707,14 @@ class CtRecordDocumentEquality implements Equality<CtRecord> {
         e?.accessoriesPModelNo,
         e?.accessoriesPSN,
         e?.accessoriesPHolders,
+        e?.accessoriesP2Modal,
+        e?.accessoriesP2ModelNo,
+        e?.accessoriesP2SN,
+        e?.accessoriesP2Holders,
+        e?.accessoriesP3Modal,
+        e?.accessoriesP3ModelNo,
+        e?.accessoriesP3SN,
+        e?.accessoriesP3Holders,
         e?.accessoriesCDs,
         e?.accessoriesInjector,
         e?.accessoriesSpareP,

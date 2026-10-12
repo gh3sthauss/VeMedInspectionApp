@@ -208,10 +208,26 @@ Future<void> exportCtPDF(
         if (inc('accessories')) ...[
         _sectionHeader('Accessories'),
         _infoTable(rows: [
-          ['Model', docRef.accessoriesPModal],
-          ['Model No.', docRef.accessoriesPModelNo],
-          ['Serial Number', docRef.accessoriesPSN],
-          ['Holders', docRef.accessoriesPHolders],
+          ['Phantom 1 Model', docRef.accessoriesPModal],
+          ['Phantom 1 Model No.', docRef.accessoriesPModelNo],
+          ['Phantom 1 Serial Number', docRef.accessoriesPSN],
+          ['Phantom 1 Holders', docRef.accessoriesPHolders],
+          if (docRef.accessoriesP2Modal.trim().isNotEmpty)
+            ['Phantom 2 Model', docRef.accessoriesP2Modal],
+          if (docRef.accessoriesP2ModelNo.trim().isNotEmpty)
+            ['Phantom 2 Model No.', docRef.accessoriesP2ModelNo],
+          if (docRef.accessoriesP2SN.trim().isNotEmpty)
+            ['Phantom 2 Serial Number', docRef.accessoriesP2SN],
+          if (docRef.accessoriesP2Holders.trim().isNotEmpty)
+            ['Phantom 2 Holders', docRef.accessoriesP2Holders],
+          if (docRef.accessoriesP3Modal.trim().isNotEmpty)
+            ['Phantom 3 Model', docRef.accessoriesP3Modal],
+          if (docRef.accessoriesP3ModelNo.trim().isNotEmpty)
+            ['Phantom 3 Model No.', docRef.accessoriesP3ModelNo],
+          if (docRef.accessoriesP3SN.trim().isNotEmpty)
+            ['Phantom 3 Serial Number', docRef.accessoriesP3SN],
+          if (docRef.accessoriesP3Holders.trim().isNotEmpty)
+            ['Phantom 3 Holders', docRef.accessoriesP3Holders],
           ['CDs', docRef.accessoriesCDs],
           ['Injector', docRef.accessoriesInjector],
           ['Spare Parts', docRef.accessoriesSpareP],

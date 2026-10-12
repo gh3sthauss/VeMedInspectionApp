@@ -37,6 +37,35 @@ class CTAccessoriesModel extends FlutterFlowModel<CTAccessoriesWidget> {
   FocusNode? textInputFocusNode7;
   TextEditingController? textInputTextController7;
   String? Function(BuildContext, String?)? textInputTextController7Validator;
+  // Phantom 2 fields (Model / Model Number / Serial Number / Holders).
+  FocusNode? textInputFocusNode8;
+  TextEditingController? textInputTextController8;
+  String? Function(BuildContext, String?)? textInputTextController8Validator;
+  FocusNode? textInputFocusNode9;
+  TextEditingController? textInputTextController9;
+  String? Function(BuildContext, String?)? textInputTextController9Validator;
+  FocusNode? textInputFocusNode10;
+  TextEditingController? textInputTextController10;
+  String? Function(BuildContext, String?)? textInputTextController10Validator;
+  FocusNode? textInputFocusNode11;
+  TextEditingController? textInputTextController11;
+  String? Function(BuildContext, String?)? textInputTextController11Validator;
+  // Phantom 3 fields (Model / Model Number / Serial Number / Holders).
+  FocusNode? textInputFocusNode12;
+  TextEditingController? textInputTextController12;
+  String? Function(BuildContext, String?)? textInputTextController12Validator;
+  FocusNode? textInputFocusNode13;
+  TextEditingController? textInputTextController13;
+  String? Function(BuildContext, String?)? textInputTextController13Validator;
+  FocusNode? textInputFocusNode14;
+  TextEditingController? textInputTextController14;
+  String? Function(BuildContext, String?)? textInputTextController14Validator;
+  FocusNode? textInputFocusNode15;
+  TextEditingController? textInputTextController15;
+  String? Function(BuildContext, String?)? textInputTextController15Validator;
+  // Whether the optional extra phantom sections have been revealed.
+  bool showPhantom2 = false;
+  bool showPhantom3 = false;
   // State field(s) for the Notes widget.
   FocusNode? notesFocusNode;
   TextEditingController? notesTextController;
@@ -70,6 +99,23 @@ class CTAccessoriesModel extends FlutterFlowModel<CTAccessoriesWidget> {
 
     textInputFocusNode7?.dispose();
     textInputTextController7?.dispose();
+
+    textInputFocusNode8?.dispose();
+    textInputTextController8?.dispose();
+    textInputFocusNode9?.dispose();
+    textInputTextController9?.dispose();
+    textInputFocusNode10?.dispose();
+    textInputTextController10?.dispose();
+    textInputFocusNode11?.dispose();
+    textInputTextController11?.dispose();
+    textInputFocusNode12?.dispose();
+    textInputTextController12?.dispose();
+    textInputFocusNode13?.dispose();
+    textInputTextController13?.dispose();
+    textInputFocusNode14?.dispose();
+    textInputTextController14?.dispose();
+    textInputFocusNode15?.dispose();
+    textInputTextController15?.dispose();
 
     notesFocusNode?.dispose();
     notesTextController?.dispose();
