@@ -160,135 +160,164 @@ async function mapLimit(items, limit, fn) {
 }
 
 // ---------------------------------------------------------------------------
-// Callable: syncReportPhotos
-// data: {
+// drivePhotoSync (POST, header X-Firebase-Auth: <Firebase ID token>)
+// body: {data: {
 //   reportKey: "CT_<docId>",
 //   title: "CT - Siemens Somatom - SN 123",
 //   sections: [{name: "Gantry", urls: ["https://firebasestorage..."]}, ...]
-// }
-// returns: {reportUrl, sections: {"Gantry": url, ...}}
+// }}
+// returns: {result: {reportUrl, sections: {"Gantry": url, ...}}}
 // ---------------------------------------------------------------------------
 
-exports.syncReportPhotos = functions
+class HttpError extends Error {
+  constructor(status, message) {
+    super(message);
+    this.status = status;
+  }
+}
+
+async function syncReport(data, uid) {
+  const reportKey = cleanName(data && data.reportKey, 200);
+  if (!/^[A-Za-z]+_[A-Za-z0-9]+$/.test(reportKey)) {
+    throw new HttpError(400, "Bad reportKey.");
+  }
+  const title = cleanName(data.title) || reportKey;
+  const sections = (Array.isArray(data.sections) ? data.sections : [])
+      .slice(0, 40)
+      .map((s) => ({
+        name: cleanName(s && s.name, 80),
+        urls: (Array.isArray(s && s.urls) ? s.urls : []).slice(0, 500),
+      }))
+      .filter((s) => s.name);
+
+  const db = admin.firestore();
+  const bucket = admin.storage().bucket();
+  const drive = driveClient(await getAccessToken());
+
+  // Shared root folder, created once.
+  const configRef = db.doc("driveSync/_config");
+  const config = (await configRef.get()).data() || {};
+  let rootId = await drive.alive(config.rootFolderId);
+  if (!rootId) {
+    rootId = await drive.createFolder(ROOT_FOLDER_NAME);
+    await configRef.set({rootFolderId: rootId}, {merge: true});
+  }
+
+  const stateRef = db.doc(`driveSync/${reportKey}`);
+  const state = (await stateRef.get()).data() || {};
+  const saved = state.sections || {};
+
+  // Report folder (renamed if the brand/model/SN changed since last time).
+  let reportId = await drive.alive(state.folderId);
+  let shared = !!state.shared && reportId === state.folderId;
+  if (!reportId) {
+    reportId = await drive.createFolder(title, rootId);
+    shared = false;
+  } else if (state.title !== title) {
+    await drive.rename(reportId, title);
+  }
+  if (!shared) {
+    await drive.shareWithLink(reportId);
+    shared = true;
+  }
+
+  const nextSections = {};
+  const links = {};
+  for (let i = 0; i < sections.length; i++) {
+    const {name, urls} = sections[i];
+    const folderName = `${String(i + 1).padStart(2, "0")} ${name}`;
+    const prev = saved[name] || {};
+    let folderId = prev.folderId;
+    // A section folder left over from a deleted report folder is gone too.
+    folderId = folderId && reportId === state.folderId ?
+      await drive.alive(folderId) : null;
+    const files = folderId ? {...(prev.files || {})} : {};
+    if (!folderId) {
+      folderId = await drive.createFolder(folderName, reportId);
+    } else if (prev.folderName !== folderName) {
+      await drive.rename(folderId, folderName);
+    }
+
+    // Upload photos we have not copied yet.
+    const wanted = new Map();
+    for (const url of urls) {
+      const file = storageFileFor(url, bucket);
+      if (file) wanted.set(urlKey(url), file);
+    }
+    const toUpload = [...wanted.entries()].filter(([k]) => !files[k]);
+    let counter = prev.counter || 0;
+    await mapLimit(toUpload, UPLOAD_CONCURRENCY, async ([key, file]) => {
+      try {
+        const [bytes] = await file.download();
+        const [meta] = await file.getMetadata();
+        const contentType = meta.contentType || "image/jpeg";
+        const ext = contentType.includes("png") ? "png" : "jpg";
+        const n = ++counter;
+        const fileName = `${name} ${String(n).padStart(2, "0")}.${ext}`;
+        files[key] = await drive.upload(fileName, folderId, contentType, bytes);
+      } catch (e) {
+        // Missing/deleted storage object: skip it, retry on next export.
+        functions.logger.warn(`Skipping photo in ${reportKey}/${name}`, e);
+      }
+    });
+
+    // Trash photos that were removed from the record.
+    for (const key of Object.keys(files)) {
+      if (wanted.has(key)) continue;
+      try {
+        await drive.trash(files[key]);
+      } catch (e) {
+        functions.logger.warn(`Could not trash ${files[key]}`, e);
+      }
+      delete files[key];
+    }
+
+    nextSections[name] = {folderId, folderName, files, counter};
+    links[name] = folderUrl(folderId);
+  }
+
+  // Sections no longer exported keep their folders; just carry them over.
+  for (const [name, s] of Object.entries(saved)) {
+    if (!nextSections[name] && reportId === state.folderId) {
+      nextSections[name] = s;
+    }
+  }
+
+  await stateRef.set({
+    folderId: reportId,
+    title,
+    shared,
+    sections: nextSections,
+    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    updatedBy: uid,
+  });
+
+  return {reportUrl: folderUrl(reportId), sections: links};
+}
+
+// Plain HTTPS endpoint rather than onCall: Google's front end rejects a
+// Firebase ID token in the Authorization header, so the app sends it in
+// X-Firebase-Auth and we verify it here. Request/response bodies use the
+// callable shape ({data} in, {result} out).
+exports.drivePhotoSync = functions
     .runWith({secrets: SECRETS, timeoutSeconds: 300, memory: "1GB"})
-    .https.onCall(async (data, context) => {
-      if (!context.auth) {
-        throw new functions.https.HttpsError("unauthenticated", "Sign in first.");
+    .https.onRequest(async (req, res) => {
+      if (req.method !== "POST") {
+        res.status(405).json({error: "POST only."});
+        return;
       }
-      const reportKey = cleanName(data && data.reportKey, 200);
-      if (!/^[A-Za-z]+_[A-Za-z0-9]+$/.test(reportKey)) {
-        throw new functions.https.HttpsError("invalid-argument", "Bad reportKey.");
-      }
-      const title = cleanName(data.title) || reportKey;
-      const sections = (Array.isArray(data.sections) ? data.sections : [])
-          .slice(0, 40)
-          .map((s) => ({
-            name: cleanName(s && s.name, 80),
-            urls: (Array.isArray(s && s.urls) ? s.urls : []).slice(0, 500),
-          }))
-          .filter((s) => s.name);
-
-      const db = admin.firestore();
-      const bucket = admin.storage().bucket();
-      const drive = driveClient(await getAccessToken());
-
-      // Shared root folder, created once.
-      const configRef = db.doc("driveSync/_config");
-      const config = (await configRef.get()).data() || {};
-      let rootId = await drive.alive(config.rootFolderId);
-      if (!rootId) {
-        rootId = await drive.createFolder(ROOT_FOLDER_NAME);
-        await configRef.set({rootFolderId: rootId}, {merge: true});
-      }
-
-      const stateRef = db.doc(`driveSync/${reportKey}`);
-      const state = (await stateRef.get()).data() || {};
-      const saved = state.sections || {};
-
-      // Report folder (renamed if the brand/model/SN changed since last time).
-      let reportId = await drive.alive(state.folderId);
-      let shared = !!state.shared && reportId === state.folderId;
-      if (!reportId) {
-        reportId = await drive.createFolder(title, rootId);
-        shared = false;
-      } else if (state.title !== title) {
-        await drive.rename(reportId, title);
-      }
-      if (!shared) {
-        await drive.shareWithLink(reportId);
-        shared = true;
-      }
-
-      const nextSections = {};
-      const links = {};
-      for (let i = 0; i < sections.length; i++) {
-        const {name, urls} = sections[i];
-        const folderName = `${String(i + 1).padStart(2, "0")} ${name}`;
-        const prev = saved[name] || {};
-        let folderId = prev.folderId;
-        // A section folder left over from a deleted report folder is gone too.
-        folderId = folderId && reportId === state.folderId ?
-          await drive.alive(folderId) : null;
-        const files = folderId ? {...(prev.files || {})} : {};
-        if (!folderId) {
-          folderId = await drive.createFolder(folderName, reportId);
-        } else if (prev.folderName !== folderName) {
-          await drive.rename(folderId, folderName);
+      try {
+        const idToken = String(req.get("X-Firebase-Auth") || "");
+        let uid;
+        try {
+          uid = (await admin.auth().verifyIdToken(idToken)).uid;
+        } catch (_) {
+          throw new HttpError(401, "Sign in first.");
         }
-
-        // Upload photos we have not copied yet.
-        const wanted = new Map();
-        for (const url of urls) {
-          const file = storageFileFor(url, bucket);
-          if (file) wanted.set(urlKey(url), file);
-        }
-        const toUpload = [...wanted.entries()].filter(([k]) => !files[k]);
-        let counter = prev.counter || 0;
-        await mapLimit(toUpload, UPLOAD_CONCURRENCY, async ([key, file]) => {
-          try {
-            const [bytes] = await file.download();
-            const [meta] = await file.getMetadata();
-            const contentType = meta.contentType || "image/jpeg";
-            const ext = contentType.includes("png") ? "png" : "jpg";
-            const n = ++counter;
-            const fileName = `${name} ${String(n).padStart(2, "0")}.${ext}`;
-            files[key] = await drive.upload(fileName, folderId, contentType, bytes);
-          } catch (e) {
-            // Missing/deleted storage object: skip it, retry on next export.
-            functions.logger.warn(`Skipping photo in ${reportKey}/${name}`, e);
-          }
-        });
-
-        // Trash photos that were removed from the record.
-        for (const key of Object.keys(files)) {
-          if (wanted.has(key)) continue;
-          try {
-            await drive.trash(files[key]);
-          } catch (e) {
-            functions.logger.warn(`Could not trash ${files[key]}`, e);
-          }
-          delete files[key];
-        }
-
-        nextSections[name] = {folderId, folderName, files, counter};
-        links[name] = folderUrl(folderId);
+        const result = await syncReport((req.body && req.body.data) || {}, uid);
+        res.json({result});
+      } catch (e) {
+        if (!(e instanceof HttpError)) functions.logger.error("drivePhotoSync", e);
+        res.status(e.status || 500).json({error: e.status ? e.message : "Sync failed."});
       }
-
-      // Sections no longer exported keep their folders; just carry them over.
-      for (const [name, s] of Object.entries(saved)) {
-        if (!nextSections[name] && reportId === state.folderId) {
-          nextSections[name] = s;
-        }
-      }
-
-      await stateRef.set({
-        folderId: reportId,
-        title,
-        shared,
-        sections: nextSections,
-        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-        updatedBy: context.auth.uid,
-      });
-
-      return {reportUrl: folderUrl(reportId), sections: links};
     });

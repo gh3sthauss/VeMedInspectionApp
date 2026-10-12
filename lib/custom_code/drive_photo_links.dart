@@ -1,6 +1,6 @@
 // Google Drive photo links for the report PDFs.
 //
-// On export, the report's photo URLs are sent to the `syncReportPhotos` Cloud
+// On export, the report's photo URLs are sent to the `drivePhotoSync` Cloud
 // Function (firebase/functions/drive_sync.js), which copies them into a shared
 // Drive folder per report with a sub-folder per section and returns the view
 // links. The PDF then shows those links instead of embedding every photo.
@@ -15,7 +15,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 const _syncUrl =
-    'https://us-central1-ve-med-on7ngs.cloudfunctions.net/syncReportPhotos';
+    'https://us-central1-ve-med-on7ngs.cloudfunctions.net/drivePhotoSync';
 
 class DrivePhotoLinks {
   const DrivePhotoLinks(this.reportUrl, this.sectionUrls);
@@ -33,6 +33,13 @@ class DrivePhotoSection {
   final String name;
   final List<String> urls;
 }
+
+/// Drive folder name for a report: the name shown in the app's report list,
+/// plus whichever identifying details (brand/model, serial number) are filled.
+String driveReportTitle(String docName, List<String> details) => [
+      docName,
+      ...details.map((d) => d.trim()).where((d) => d.isNotEmpty),
+    ].join(' - ');
 
 /// Copies the uploaded photos to Drive and returns the links, or null when
 /// Drive isn't reachable (caller then embeds the photos instead).
@@ -55,7 +62,9 @@ Future<DrivePhotoLinks?> syncReportPhotosToDrive({
         .post(
           Uri.parse(_syncUrl),
           headers: {
-            'Authorization': 'Bearer $idToken',
+            // Not "Authorization": Google's front end rejects Firebase ID
+            // tokens there before the request reaches the function.
+            'X-Firebase-Auth': idToken,
             'Content-Type': 'application/json',
           },
           body: jsonEncode({
@@ -93,7 +102,10 @@ pw.Widget drivePhotosBanner(String url, {required PdfColor accent}) {
       margin: const pw.EdgeInsets.only(bottom: 4),
       padding: const pw.EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: pw.BoxDecoration(
-        color: PdfColor(accent.red, accent.green, accent.blue, 0.06),
+        // Light tint of the accent, blended by hand (the pdf package
+        // ignores colour alpha on fills).
+        color: PdfColor(1 - 0.06 * (1 - accent.red),
+            1 - 0.06 * (1 - accent.green), 1 - 0.06 * (1 - accent.blue)),
         border: pw.Border.all(color: accent, width: 0.75),
         borderRadius: const pw.BorderRadius.all(pw.Radius.circular(4)),
       ),

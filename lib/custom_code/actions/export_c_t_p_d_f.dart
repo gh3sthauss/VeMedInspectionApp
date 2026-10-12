@@ -1,6 +1,7 @@
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
 import '/custom_code/image_outbox/image_outbox_manager.dart';
+import '/components/doc_naming.dart';
 import '/custom_code/drive_photo_links.dart';
 import 'package:flutter/material.dart';
 // Begin custom action code
@@ -62,8 +63,13 @@ Future<void> exportCtPDF(
   final drive = await syncReportPhotosToDrive(
     collection: 'CT',
     docId: docRef.reference.id,
-    title: 'CT - ${docRef.sysGenBrand} ${docRef.sysGenModal}'
-        ' - SN ${docRef.sysGenSN}',
+    title: driveReportTitle(
+      smartDocName(docRef.sysGenDocName, 'CT', docRef.reference.id),
+      [
+        '${docRef.sysGenBrand} ${docRef.sysGenModal}',
+        if (docRef.sysGenSN.trim().isNotEmpty) 'SN ${docRef.sysGenSN.trim()}',
+      ],
+    ),
     sections: [
       if (inc('gantry')) DrivePhotoSection('Gantry', docRef.gantryPicURL),
       if (inc('cooling_system'))

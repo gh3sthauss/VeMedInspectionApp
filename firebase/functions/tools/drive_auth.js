@@ -1,4 +1,4 @@
-// One-time setup: authorise the syncReportPhotos Cloud Function to put report
+// One-time setup: authorise the drivePhotoSync Cloud Function to put report
 // photos into a Google Drive account, and store the credentials as Firebase
 // secrets (GDRIVE_CLIENT_ID / GDRIVE_CLIENT_SECRET / GDRIVE_REFRESH_TOKEN).
 //
