@@ -7,6 +7,10 @@ import 'package:flutter/material.dart';
 class MRIAccessoriesModel extends FlutterFlowModel<MRIAccessoriesWidget> {
   ///  State fields for stateful widgets in this page.
 
+  // Whether the optional extra phantom sections have been revealed.
+  bool showPhantom2 = false;
+  bool showPhantom3 = false;
+
   // Model for logo component.
   late LogoModel logoModel;
   // State field(s) for textInput widget.

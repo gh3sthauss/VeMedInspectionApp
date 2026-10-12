@@ -63,6 +63,179 @@ class _AngAccessoriesWidgetState extends State<AngAccessoriesWidget> {
     super.dispose();
   }
 
+  /// One "Phantom N" card: a titled section with Model / Model Number / Serial
+  /// Number fields, styled to match the always-present Phantom 1 section.
+  Widget _phantomSection({
+    required String title,
+    required TextEditingController modelController,
+    required FocusNode? modelFocusNode,
+    required String? Function(BuildContext, String?)? modelValidator,
+    required TextEditingController modelNoController,
+    required FocusNode? modelNoFocusNode,
+    required String? Function(BuildContext, String?)? modelNoValidator,
+    required TextEditingController snController,
+    required FocusNode? snFocusNode,
+    required String? Function(BuildContext, String?)? snValidator,
+  }) {
+    return Align(
+      alignment: AlignmentDirectional(0.0, 0.0),
+      child: Container(
+        width: 100.0,
+        height: 266.0,
+        constraints: BoxConstraints(minWidth: 330.0),
+        decoration: BoxDecoration(
+          color: Color(0x91F0F7FF),
+          borderRadius: BorderRadius.circular(24.0),
+        ),
+        alignment: AlignmentDirectional(0.0, 0.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 0.0, 20.0),
+              child: Text(
+                title,
+                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                      font: GoogleFonts.readexPro(),
+                      fontSize: 18.0,
+                      letterSpacing: 0.0,
+                    ),
+              ),
+            ),
+            _phantomField(
+              controller: modelController,
+              focusNode: modelFocusNode,
+              validator: modelValidator,
+              label: 'Model',
+            ),
+            _phantomField(
+              controller: modelNoController,
+              focusNode: modelNoFocusNode,
+              validator: modelNoValidator,
+              label: 'Model Number',
+            ),
+            _phantomField(
+              controller: snController,
+              focusNode: snFocusNode,
+              validator: snValidator,
+              label: 'Serial Number',
+            ),
+          ].divide(SizedBox(height: 16.0)).addToStart(SizedBox(height: 10.0)).addToEnd(SizedBox(height: 10.0)),
+        ),
+      ),
+    );
+  }
+
+  Widget _phantomField({
+    required TextEditingController controller,
+    required FocusNode? focusNode,
+    required String? Function(BuildContext, String?)? validator,
+    required String label,
+  }) {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 2.0, 0.0),
+      child: Container(
+        width: 320.0,
+        child: TextFormField(
+          controller: controller,
+          focusNode: focusNode,
+          onChanged: (_) => safeSetState(() {}),
+          textCapitalization: TextCapitalization.words,
+          obscureText: false,
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: FlutterFlowTheme.of(context).bodyMedium.override(
+                  font: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.normal),
+                  color: Color(0xFF14181B),
+                  fontSize: 16.0,
+                  letterSpacing: 0.0,
+                  fontWeight: FontWeight.normal,
+                ),
+            alignLabelWithHint: false,
+            hintText: ' ',
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFE0E3E7), width: 1.0),
+              borderRadius: BorderRadius.circular(50.0),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFF4B39EF), width: 1.0),
+              borderRadius: BorderRadius.circular(50.0),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFFF5963), width: 1.0),
+              borderRadius: BorderRadius.circular(50.0),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFFF5963), width: 1.0),
+              borderRadius: BorderRadius.circular(50.0),
+            ),
+            filled: true,
+            fillColor: Color(0xFFF0F7FF),
+            contentPadding:
+                EdgeInsetsDirectional.fromSTEB(20.0, 10.0, 0.0, 10.0),
+            suffixIcon: controller.text.isNotEmpty
+                ? InkWell(
+                    onTap: () async {
+                      controller.clear();
+                      safeSetState(() {});
+                    },
+                    child: Icon(Icons.clear, color: Color(0xFF757575), size: 22.0),
+                  )
+                : null,
+          ),
+          style: FlutterFlowTheme.of(context).bodyMedium.override(
+                font: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.normal),
+                color: Color(0xFF14181B),
+                fontSize: 16.0,
+                letterSpacing: 0.0,
+                fontWeight: FontWeight.normal,
+              ),
+          validator: validator?.asValidator(context),
+          inputFormatters: [
+            if (!isAndroid && !isiOS)
+              TextInputFormatter.withFunction((oldValue, newValue) {
+                return TextEditingValue(
+                  selection: newValue.selection,
+                  text: newValue.text
+                      .toCapitalization(TextCapitalization.words),
+                );
+              }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// The "+ Add phantom" button shown under the last visible phantom section.
+  Widget _addPhantomButton(VoidCallback onPressed) {
+    return FFButtonWidget(
+      onPressed: onPressed,
+      text: 'Add phantom',
+      icon: Icon(Icons.add, size: 20.0),
+      options: FFButtonOptions(
+        width: 320.0,
+        height: 44.0,
+        padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+        iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+        color: FlutterFlowTheme.of(context).secondaryBackground,
+        textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+              font: GoogleFonts.readexPro(),
+              color: FlutterFlowTheme.of(context).primary,
+              fontSize: 16.0,
+              letterSpacing: 0.0,
+            ),
+        iconColor: FlutterFlowTheme.of(context).primary,
+        elevation: 0.0,
+        borderSide: BorderSide(
+          color: FlutterFlowTheme.of(context).primary,
+          width: 1.5,
+        ),
+        borderRadius: BorderRadius.circular(24.0),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<AngiographyRecord>(
@@ -87,6 +260,18 @@ class _AngAccessoriesWidgetState extends State<AngAccessoriesWidget> {
         }
 
         final angAccessoriesAngiographyRecord = snapshot.data!;
+
+        // Show an extra phantom section once the user taps "Add phantom", and
+        // always show one that already holds saved data.
+        final rec = angAccessoriesAngiographyRecord;
+        final showPhantom2 = _model.showPhantom2 ||
+            rec.accPhantom2Model.isNotEmpty ||
+            rec.accPhantom2ModelNo.isNotEmpty ||
+            rec.accPhantom2ModelSN.isNotEmpty;
+        final showPhantom3 = _model.showPhantom3 ||
+            rec.accPhantom3Model.isNotEmpty ||
+            rec.accPhantom3ModelNo.isNotEmpty ||
+            rec.accPhantom3ModelSN.isNotEmpty;
 
         return GestureDetector(
           onTap: () {
@@ -817,6 +1002,70 @@ class _AngAccessoriesWidgetState extends State<AngAccessoriesWidget> {
                             ),
                           ),
                         ),
+                        if (showPhantom2)
+                          _phantomSection(
+                            title: 'Phantom 2',
+                            modelController:
+                                _model.textInputTextController6 ??=
+                                    TextEditingController(
+                                        text: rec.accPhantom2Model),
+                            modelFocusNode: _model.textInputFocusNode6 ??=
+                                FocusNode(),
+                            modelValidator:
+                                _model.textInputTextController6Validator,
+                            modelNoController:
+                                _model.textInputTextController7 ??=
+                                    TextEditingController(
+                                        text: rec.accPhantom2ModelNo),
+                            modelNoFocusNode: _model.textInputFocusNode7 ??=
+                                FocusNode(),
+                            modelNoValidator:
+                                _model.textInputTextController7Validator,
+                            snController: _model.textInputTextController8 ??=
+                                TextEditingController(
+                                    text: rec.accPhantom2ModelSN),
+                            snFocusNode: _model.textInputFocusNode8 ??=
+                                FocusNode(),
+                            snValidator:
+                                _model.textInputTextController8Validator,
+                          ),
+                        if (showPhantom3)
+                          _phantomSection(
+                            title: 'Phantom 3',
+                            modelController:
+                                _model.textInputTextController9 ??=
+                                    TextEditingController(
+                                        text: rec.accPhantom3Model),
+                            modelFocusNode: _model.textInputFocusNode9 ??=
+                                FocusNode(),
+                            modelValidator:
+                                _model.textInputTextController9Validator,
+                            modelNoController:
+                                _model.textInputTextController10 ??=
+                                    TextEditingController(
+                                        text: rec.accPhantom3ModelNo),
+                            modelNoFocusNode: _model.textInputFocusNode10 ??=
+                                FocusNode(),
+                            modelNoValidator:
+                                _model.textInputTextController10Validator,
+                            snController: _model.textInputTextController11 ??=
+                                TextEditingController(
+                                    text: rec.accPhantom3ModelSN),
+                            snFocusNode: _model.textInputFocusNode11 ??=
+                                FocusNode(),
+                            snValidator:
+                                _model.textInputTextController11Validator,
+                          ),
+                        if (!(showPhantom2 && showPhantom3))
+                          _addPhantomButton(() {
+                            safeSetState(() {
+                              if (!showPhantom2) {
+                                _model.showPhantom2 = true;
+                              } else {
+                                _model.showPhantom3 = true;
+                              }
+                            });
+                          }),
                       ]
                           .divide(SizedBox(height: 16.0))
                           .addToStart(SizedBox(height: 20.0)),
@@ -894,6 +1143,30 @@ class _AngAccessoriesWidgetState extends State<AngAccessoriesWidget> {
                               _model.textInputTextController4.text,
                           accPhantom1ModelSN:
                               _model.textInputTextController5.text,
+                          // Only written once the section has been opened; an
+                          // unopened phantom keeps its existing stored value.
+                          accPhantom2Model: _model.textInputTextController6
+                                  ?.text ??
+                              angAccessoriesAngiographyRecord.accPhantom2Model,
+                          accPhantom2ModelNo: _model.textInputTextController7
+                                  ?.text ??
+                              angAccessoriesAngiographyRecord
+                                  .accPhantom2ModelNo,
+                          accPhantom2ModelSN: _model.textInputTextController8
+                                  ?.text ??
+                              angAccessoriesAngiographyRecord
+                                  .accPhantom2ModelSN,
+                          accPhantom3Model: _model.textInputTextController9
+                                  ?.text ??
+                              angAccessoriesAngiographyRecord.accPhantom3Model,
+                          accPhantom3ModelNo: _model.textInputTextController10
+                                  ?.text ??
+                              angAccessoriesAngiographyRecord
+                                  .accPhantom3ModelNo,
+                          accPhantom3ModelSN: _model.textInputTextController11
+                                  ?.text ??
+                              angAccessoriesAngiographyRecord
+                                  .accPhantom3ModelSN,
                         ));
 
                         context.pushNamed(

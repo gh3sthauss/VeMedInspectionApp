@@ -83,6 +83,35 @@ class _MRIAccessoriesWidgetState extends State<MRIAccessoriesWidget> {
     super.dispose();
   }
 
+  /// The "+ Add phantom" button shown under the last visible phantom section.
+  Widget _addPhantomButton(VoidCallback onPressed) {
+    return FFButtonWidget(
+      onPressed: onPressed,
+      text: 'Add phantom',
+      icon: Icon(Icons.add, size: 20.0),
+      options: FFButtonOptions(
+        width: 320.0,
+        height: 44.0,
+        padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+        iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+        color: FlutterFlowTheme.of(context).secondaryBackground,
+        textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+              font: GoogleFonts.readexPro(),
+              color: FlutterFlowTheme.of(context).primary,
+              fontSize: 16.0,
+              letterSpacing: 0.0,
+            ),
+        iconColor: FlutterFlowTheme.of(context).primary,
+        elevation: 0.0,
+        borderSide: BorderSide(
+          color: FlutterFlowTheme.of(context).primary,
+          width: 1.5,
+        ),
+        borderRadius: BorderRadius.circular(24.0),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<MriRecord>(
@@ -107,6 +136,18 @@ class _MRIAccessoriesWidgetState extends State<MRIAccessoriesWidget> {
         }
 
         final mRIAccessoriesMriRecord = snapshot.data!;
+
+        // Show an extra phantom section once the user taps "Add phantom", and
+        // always show one that already holds saved data.
+        final rec = mRIAccessoriesMriRecord;
+        final showPhantom2 = _model.showPhantom2 ||
+            rec.accPhantom2Model.isNotEmpty ||
+            rec.accPhantom2ModelNo.isNotEmpty ||
+            rec.accPhantom2ModelSN.isNotEmpty;
+        final showPhantom3 = _model.showPhantom3 ||
+            rec.accPhantom3Model.isNotEmpty ||
+            rec.accPhantom3ModelNo.isNotEmpty ||
+            rec.accPhantom3ModelSN.isNotEmpty;
 
         return GestureDetector(
           onTap: () {
@@ -608,7 +649,8 @@ class _MRIAccessoriesWidgetState extends State<MRIAccessoriesWidget> {
                               ),
                             ),
                           ),
-                          Align(
+                          if (showPhantom2)
+                            Align(
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
@@ -1089,7 +1131,8 @@ class _MRIAccessoriesWidgetState extends State<MRIAccessoriesWidget> {
                               ),
                             ),
                           ),
-                          Align(
+                          if (showPhantom3)
+                            Align(
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
@@ -1570,6 +1613,16 @@ class _MRIAccessoriesWidgetState extends State<MRIAccessoriesWidget> {
                               ),
                             ),
                           ),
+                          if (!(showPhantom2 && showPhantom3))
+                            _addPhantomButton(() {
+                              safeSetState(() {
+                                if (!showPhantom2) {
+                                  _model.showPhantom2 = true;
+                                } else {
+                                  _model.showPhantom3 = true;
+                                }
+                              });
+                            }),
                           Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 0.0, 2.0, 0.0),
@@ -2380,22 +2433,30 @@ class _MRIAccessoriesWidgetState extends State<MRIAccessoriesWidget> {
                           accessoriesNotes: _model.notesTextController.text,
                           accPhantom1Model:
                               _model.textInputTextController1.text,
+                          // Phantom 2 & 3 are only written once opened; an
+                          // unopened one keeps its existing stored value.
                           accPhantom2Model:
-                              _model.textInputTextController4.text,
+                              _model.textInputTextController4?.text ??
+                                  mRIAccessoriesMriRecord.accPhantom2Model,
                           accPhantom3Model:
-                              _model.textInputTextController7.text,
+                              _model.textInputTextController7?.text ??
+                                  mRIAccessoriesMriRecord.accPhantom3Model,
                           accPhantom1ModelNo:
                               _model.textInputTextController2.text,
                           accPhantom2ModelNo:
-                              _model.textInputTextController5.text,
+                              _model.textInputTextController5?.text ??
+                                  mRIAccessoriesMriRecord.accPhantom2ModelNo,
                           accPhantom3ModelNo:
-                              _model.textInputTextController8.text,
+                              _model.textInputTextController8?.text ??
+                                  mRIAccessoriesMriRecord.accPhantom3ModelNo,
                           accPhantom1ModelSN:
                               _model.textInputTextController3.text,
                           accPhantom2ModelSN:
-                              _model.textInputTextController6.text,
+                              _model.textInputTextController6?.text ??
+                                  mRIAccessoriesMriRecord.accPhantom2ModelSN,
                           accPhantom3ModelSN:
-                              _model.textInputTextController9.text,
+                              _model.textInputTextController9?.text ??
+                                  mRIAccessoriesMriRecord.accPhantom3ModelSN,
                           accInjector: _model.textInputTextController10.text,
                           accSpareParts: _model.textInputTextController11.text,
                           accSmokeDet: _model.textInputTextController12.text,
