@@ -15,12 +15,30 @@ const {execSync, spawnSync} = require("child_process");
 const PROJECT = "ve-med-on7ngs";
 const SCOPE = "https://www.googleapis.com/auth/drive.file";
 
-function ask(question) {
+function ask(question, {hidden = false} = {}) {
   const rl = readline.createInterface({input: process.stdin, output: process.stdout});
+  if (hidden) {
+    // Don't echo what's typed/pasted (the client secret).
+    rl._writeToOutput = (s) => {
+      if (s.startsWith(question)) rl.output.write(question);
+    };
+  }
   return new Promise((resolve) => rl.question(question, (a) => {
     rl.close();
+    if (hidden) process.stdout.write("\n");
     resolve(a.trim());
   }));
+}
+
+function checkFirebaseLogin() {
+  const r = spawnSync("firebase", ["projects:list", "--json"],
+      {stdio: ["ignore", "pipe", "pipe"], shell: true});
+  const out = String(r.stdout || "");
+  if (r.status !== 0 || !out.includes(PROJECT)) {
+    throw new Error(
+        "The Firebase CLI isn't logged in to an account with access to " +
+        PROJECT + ".\nRun  firebase login  first, then run this script again.");
+  }
 }
 
 function waitForCode(server) {
@@ -48,8 +66,9 @@ function setSecret(name, value) {
 }
 
 (async () => {
+  checkFirebaseLogin();
   const clientId = await ask("OAuth client ID: ");
-  const clientSecret = await ask("OAuth client secret: ");
+  const clientSecret = await ask("OAuth client secret (hidden): ", {hidden: true});
   if (!clientId || !clientSecret) throw new Error("Client ID and secret are required.");
 
   const server = http.createServer();
