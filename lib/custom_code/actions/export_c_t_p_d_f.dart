@@ -1,6 +1,7 @@
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
 import '/custom_code/image_outbox/image_outbox_manager.dart';
+import '/custom_code/drive_photo_links.dart';
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -52,17 +53,52 @@ Future<void> exportCtPDF(
     modalityIcon = null;
   }
 
+  // Section photos go to Google Drive and the PDF links to them; only when
+  // that fails (e.g. offline) are they embedded in the PDF instead.
+  final consolePhotos = [
+    ...docRef.cnWCMOptPURL,
+    ...docRef.cnWWorkstationOptPURL,
+  ];
+  final drive = await syncReportPhotosToDrive(
+    collection: 'CT',
+    docId: docRef.reference.id,
+    title: 'CT - ${docRef.sysGenBrand} ${docRef.sysGenModal}'
+        ' - SN ${docRef.sysGenSN}',
+    sections: [
+      if (inc('gantry')) DrivePhotoSection('Gantry', docRef.gantryPicURL),
+      if (inc('cooling_system'))
+        DrivePhotoSection('Cooling System', docRef.coolingSystemPicURL),
+      if (inc('patient_table'))
+        DrivePhotoSection('Patient Table', docRef.patientTablePicURL),
+      if (inc('console'))
+        DrivePhotoSection('Console and Workstation', consolePhotos),
+      if (inc('accessories'))
+        DrivePhotoSection('Accessories', docRef.accessoriesPicURL),
+      if (inc('cosmetic'))
+        DrivePhotoSection('Cosmetic Condition', docRef.cosmeticPicURL),
+      if (inc('delivery'))
+        DrivePhotoSection('Delivery & Site Access', docRef.dnTPicURL),
+      if (inc('other_notes'))
+        DrivePhotoSection('Other Notes', docRef.otherNotesPhotosURL),
+    ],
+  );
+  Future<List<pw.ImageProvider>> embedded(List<String> urls) =>
+      drive == null ? _loadImages(urls) : Future.value(const []);
+
   final results = await Future.wait([
-    _loadImages(docRef.cosmeticPicURL),
-    _loadImages(docRef.otherNotesPhotosURL),
-    _loadImages(docRef.cnWWorkstationOptPURL),
-    _loadImages(docRef.cnWCMOptPURL),
+    // The first cosmetic photo is the cover fallback, so always load that.
+    drive == null
+        ? _loadImages(docRef.cosmeticPicURL)
+        : _loadImages(docRef.cosmeticPicURL.take(1).toList()),
+    embedded(docRef.otherNotesPhotosURL),
+    embedded(docRef.cnWWorkstationOptPURL),
+    embedded(docRef.cnWCMOptPURL),
     _loadImages(docRef.deviceImg),
-    _loadImages(docRef.accessoriesPicURL),
-    _loadImages(docRef.gantryPicURL),
-    _loadImages(docRef.coolingSystemPicURL),
-    _loadImages(docRef.patientTablePicURL),
-    _loadImages(docRef.dnTPicURL),
+    embedded(docRef.accessoriesPicURL),
+    embedded(docRef.gantryPicURL),
+    embedded(docRef.coolingSystemPicURL),
+    embedded(docRef.patientTablePicURL),
+    embedded(docRef.dnTPicURL),
   ]);
   final cosmeticGallery = results[0];
   final otherNotesGallery = results[1];
@@ -100,6 +136,18 @@ Future<void> exportCtPDF(
       : (deviceLocal ??
           (cosmeticGallery.isNotEmpty ? cosmeticGallery.first : null));
 
+  // Drive link for a section when synced, otherwise its embedded photo grid.
+  List<pw.Widget> sectionPhotos(String name, List<String> urls,
+      List<pw.ImageProvider> gallery) {
+    final link = drive?.sectionUrls[name];
+    if (link != null) {
+      final count = urls.where((u) => u.trim().isNotEmpty).length;
+      return [driveSectionPhotosLink(link, count, accent: _accent)];
+    }
+    if (drive != null || gallery.isEmpty) return const [];
+    return [pw.SizedBox(height: 6), _imageGrid(gallery)];
+  }
+
   // -------------------------------------------------------------------------
   // 2. BUILD DOCUMENT
   // -------------------------------------------------------------------------
@@ -115,6 +163,7 @@ Future<void> exportCtPDF(
         // =========================== COVER PAGE ===========================
         _buildCoverPage(logoWidget, heroImage, docRef, modalityIcon, 'CT'),
         pw.NewPage(),
+        if (drive != null) drivePhotosBanner(drive.reportUrl, accent: _accent),
 
         // ===================== SYSTEM GENERAL INFO ========================
         if (inc('system_general')) ...[
@@ -145,10 +194,7 @@ Future<void> exportCtPDF(
           if (docRef.gantryNotes.trim().isNotEmpty)
             ['Notes', docRef.gantryNotes],
         ]),
-        if (gantryGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(gantryGallery),
-        ],
+        ...sectionPhotos('Gantry', docRef.gantryPicURL, gantryGallery),
 
         // ======================== COOLING SYSTEM ==============================
         ],
@@ -160,10 +206,8 @@ Future<void> exportCtPDF(
           if (docRef.coolingSystemNotes.trim().isNotEmpty)
             ['Notes', docRef.coolingSystemNotes],
         ]),
-        if (coolingSystemGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(coolingSystemGallery),
-        ],
+        ...sectionPhotos('Cooling System', docRef.coolingSystemPicURL,
+            coolingSystemGallery),
 
         // ======================== PATIENT TABLE ================================
         ],
@@ -176,10 +220,8 @@ Future<void> exportCtPDF(
           if (docRef.patientTableNotes.trim().isNotEmpty)
             ['Notes', docRef.patientTableNotes],
         ]),
-        if (patientTableGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(patientTableGallery),
-        ],
+        ...sectionPhotos('Patient Table', docRef.patientTablePicURL,
+            patientTableGallery),
 
 
         // ================== CONSOLE AND WORKSTATION ======================
@@ -198,10 +240,8 @@ Future<void> exportCtPDF(
           if (docRef.consoleNotes.trim().isNotEmpty)
             ['Notes', docRef.consoleNotes],
         ]),
-        if (consoleOptGallery.isNotEmpty || workstationOptGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid([...consoleOptGallery, ...workstationOptGallery]),
-        ],
+        ...sectionPhotos('Console and Workstation', consolePhotos,
+            [...consoleOptGallery, ...workstationOptGallery]),
 
         // ========================= ACCESSORIES ================================
         ],
@@ -234,10 +274,8 @@ Future<void> exportCtPDF(
           if (docRef.accessoriesNotes.trim().isNotEmpty)
             ['Notes', docRef.accessoriesNotes],
         ]),
-        if (accessoriesGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(accessoriesGallery),
-        ],
+        ...sectionPhotos('Accessories', docRef.accessoriesPicURL,
+            accessoriesGallery),
 
         // ====================== COSMETIC CONDITION =============================
         ],
@@ -246,10 +284,8 @@ Future<void> exportCtPDF(
         _infoTable(rows: [
           ['Notes', docRef.cosmeticText],
         ]),
-        if (cosmeticGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(cosmeticGallery),
-        ],
+        ...sectionPhotos('Cosmetic Condition', docRef.cosmeticPicURL,
+            cosmeticGallery),
 
         // ================= DELIVERY & SITE ACCESS INFORMATION ==================
         ],
@@ -266,10 +302,7 @@ Future<void> exportCtPDF(
           if (docRef.dnTNotes.trim().isNotEmpty)
             ['Notes', docRef.dnTNotes],
         ]),
-        if (dnTGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(dnTGallery),
-        ],
+        ...sectionPhotos('Delivery & Site Access', docRef.dnTPicURL, dnTGallery),
 
         // =========================== OTHER NOTES ================================
         ],
@@ -278,10 +311,8 @@ Future<void> exportCtPDF(
         _infoTable(rows: [
           ['Notes', docRef.otherNotes],
         ]),
-        if (otherNotesGallery.isNotEmpty) ...[
-          pw.SizedBox(height: 6),
-          _imageGrid(otherNotesGallery),
-        ],
+        ...sectionPhotos('Other Notes', docRef.otherNotesPhotosURL,
+            otherNotesGallery),
         ],
       ],
     ),
