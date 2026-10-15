@@ -3,6 +3,8 @@ import '/backend/backend.dart';
 import '/custom_code/image_outbox/image_outbox_manager.dart';
 import '/components/doc_naming.dart';
 import '/custom_code/drive_photo_links.dart';
+import '/custom_code/pdf_phantoms.dart';
+import '/custom_code/phantoms.dart';
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -69,6 +71,9 @@ Future<void> exportAngiographyPDF(
   // Loaded in parallel (not one-by-one) and each fetch has a timeout, so a
   // single bad/slow URL can't stall the whole export — which is what was
   // causing the iOS preview to open and hang indefinitely.
+  final phantomSchema = PhantomSchema.accPhantom;
+  final phantomData = docRef.snapshotData;
+
   // Section photos go to Google Drive and the PDF links to them; only when
   // that fails (e.g. offline) are they embedded in the PDF instead.
   final drive = await syncReportPhotosToDrive(
@@ -95,6 +100,8 @@ Future<void> exportAngiographyPDF(
         DrivePhotoSection('Patient Table', docRef.patientTablePicURL),
       if (inc('accessories'))
         DrivePhotoSection('Accessories', docRef.accessoriesPicURL),
+      if (inc('phantoms'))
+        ...phantomPhotoSections(phantomSchema, phantomData),
       if (inc('cosmetic'))
         DrivePhotoSection('Cosmetic Condition', docRef.cosmeticPicURL),
       if (inc('delivery'))
@@ -130,6 +137,14 @@ Future<void> exportAngiographyPDF(
   final patientTableGallery = results[8];
   final tubeGallery = results[9];
   final workstationOptGallery = results[10];
+
+  // Phantom photos are embedded only when Drive isn't available.
+  final phantomGalleries = <int, List<pw.ImageProvider>>{
+    if (drive == null && inc('phantoms'))
+      for (final n in filledPhantomSlots(phantomSchema, phantomData))
+        if (phantomSchema.photos(phantomData, n).isNotEmpty)
+          n: await _loadImages(phantomSchema.photos(phantomData, n)),
+  };
 
   // Hero image comes from the dedicated deviceImg field.
   // Local fallback for the hero: if the device photo has not uploaded
@@ -291,7 +306,30 @@ Future<void> exportAngiographyPDF(
         // ========================== PHANTOMS ==================================
         if (inc('phantoms')) ...[
           _sectionHeader('Phantoms'),
-          _phantomsTable(docRef),
+          phantomsPdfTable(
+            schema: phantomSchema,
+            data: phantomData,
+            drive: drive,
+            accent: _accent,
+            borderColor: _borderColor,
+            mutedColor: _textMuted,
+            valueText: _valueText,
+            legacyRow: [
+              docRef.accPhantomModel,
+              docRef.accPhantomModelNo,
+              docRef.accPhantomSN,
+            ],
+          ),
+          for (final e in phantomGalleries.entries) ...[
+            pw.SizedBox(height: 8),
+            pw.Text('Phantom ${e.key} photos',
+                style: pw.TextStyle(
+                    fontSize: 9,
+                    fontWeight: pw.FontWeight.bold,
+                    color: _textDark)),
+            pw.SizedBox(height: 4),
+            _imageGrid(e.value),
+          ],
         ],
 
         // ====================== COSMETIC CONDITION =============================
@@ -655,96 +693,6 @@ pw.Widget _infoTable({required List<List<String>> rows}) {
         ],
       );
     }),
-  );
-}
-
-// ---------------------------------------------------------------------------
-// PHANTOMS TABLE — main phantom + up to 3 additional, skips empty rows
-// ---------------------------------------------------------------------------
-pw.Widget _phantomsTable(AngiographyRecord docRef) {
-  final entries = <List<String>>[
-    [
-      '1',
-      docRef.accPhantomModel,
-      docRef.accPhantomModelNo,
-      docRef.accPhantomSN
-    ],
-    [
-      '2',
-      docRef.accPhantom1Model,
-      docRef.accPhantom1ModelNo,
-      docRef.accPhantom1ModelSN
-    ],
-    [
-      '3',
-      docRef.accPhantom2Model,
-      docRef.accPhantom2ModelNo,
-      docRef.accPhantom2ModelSN
-    ],
-    [
-      '4',
-      docRef.accPhantom3Model,
-      docRef.accPhantom3ModelNo,
-      docRef.accPhantom3ModelSN
-    ],
-  ]
-      .where(
-          (row) => row[1].isNotEmpty || row[2].isNotEmpty || row[3].isNotEmpty)
-      .toList();
-
-  if (entries.isEmpty) {
-    return pw.Text('No phantoms recorded.',
-        style: pw.TextStyle(fontSize: 9, color: _textMuted));
-  }
-
-  pw.Widget headerCell(String text) => pw.Container(
-        padding: const pw.EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-        decoration: pw.BoxDecoration(color: _accent),
-        child: pw.Text(
-          text,
-          style: pw.TextStyle(
-              fontSize: 8.5,
-              fontWeight: pw.FontWeight.bold,
-              color: PdfColors.white),
-        ),
-      );
-
-  pw.Widget bodyCell(String text, {bool isEven = false}) => pw.Padding(
-        padding: const pw.EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-        child: _valueText(text),
-      );
-
-  return pw.Table(
-    columnWidths: {
-      0: const pw.FractionColumnWidth(0.1),
-      1: const pw.FractionColumnWidth(0.35),
-      2: const pw.FractionColumnWidth(0.275),
-      3: const pw.FractionColumnWidth(0.275),
-    },
-    border: pw.TableBorder.symmetric(
-        inside: pw.BorderSide(width: 0.5, color: _borderColor)),
-    children: [
-      pw.TableRow(children: [
-        headerCell('#'),
-        headerCell('Model'),
-        headerCell('Model No.'),
-        headerCell('Serial No.'),
-      ]),
-      ...List.generate(entries.length, (i) {
-        final row = entries[i];
-        final isEven = i % 2 == 0;
-        return pw.TableRow(
-          decoration:
-              pw.BoxDecoration(color: isEven ? _zebraColor : PdfColors.white),
-          children: [
-            bodyCell(row[0]),
-            bodyCell(row[1]),
-            bodyCell(row[2]),
-            bodyCell(row[3]),
-          ],
-        );
-      }),
-    ],
   );
 }
 

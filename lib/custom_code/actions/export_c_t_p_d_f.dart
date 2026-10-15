@@ -3,6 +3,8 @@ import '/backend/backend.dart';
 import '/custom_code/image_outbox/image_outbox_manager.dart';
 import '/components/doc_naming.dart';
 import '/custom_code/drive_photo_links.dart';
+import '/custom_code/pdf_phantoms.dart';
+import '/custom_code/phantoms.dart';
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -54,6 +56,9 @@ Future<void> exportCtPDF(
     modalityIcon = null;
   }
 
+  final phantomSchema = PhantomSchema.ct;
+  final phantomData = docRef.snapshotData;
+
   // Section photos go to Google Drive and the PDF links to them; only when
   // that fails (e.g. offline) are they embedded in the PDF instead.
   final consolePhotos = [
@@ -80,6 +85,8 @@ Future<void> exportCtPDF(
         DrivePhotoSection('Console and Workstation', consolePhotos),
       if (inc('accessories'))
         DrivePhotoSection('Accessories', docRef.accessoriesPicURL),
+      if (inc('accessories'))
+        ...phantomPhotoSections(phantomSchema, phantomData),
       if (inc('cosmetic'))
         DrivePhotoSection('Cosmetic Condition', docRef.cosmeticPicURL),
       if (inc('delivery'))
@@ -116,6 +123,14 @@ Future<void> exportCtPDF(
   final coolingSystemGallery = results[7];
   final patientTableGallery = results[8];
   final dnTGallery = results[9];
+
+  // Phantom photos are embedded only when Drive isn't available.
+  final phantomGalleries = <int, List<pw.ImageProvider>>{
+    if (drive == null && inc('accessories'))
+      for (final n in filledPhantomSlots(phantomSchema, phantomData))
+        if (phantomSchema.photos(phantomData, n).isNotEmpty)
+          n: await _loadImages(phantomSchema.photos(phantomData, n)),
+  };
 
   // Hero image comes from the dedicated deviceImg field; falls back to the
   // first cosmetic photo if deviceImg wasn't populated for this record.
@@ -254,26 +269,6 @@ Future<void> exportCtPDF(
         if (inc('accessories')) ...[
         _sectionHeader('Accessories'),
         _infoTable(rows: [
-          ['Phantom 1 Model', docRef.accessoriesPModal],
-          ['Phantom 1 Model No.', docRef.accessoriesPModelNo],
-          ['Phantom 1 Serial Number', docRef.accessoriesPSN],
-          ['Phantom 1 Holders', docRef.accessoriesPHolders],
-          if (docRef.accessoriesP2Modal.trim().isNotEmpty)
-            ['Phantom 2 Model', docRef.accessoriesP2Modal],
-          if (docRef.accessoriesP2ModelNo.trim().isNotEmpty)
-            ['Phantom 2 Model No.', docRef.accessoriesP2ModelNo],
-          if (docRef.accessoriesP2SN.trim().isNotEmpty)
-            ['Phantom 2 Serial Number', docRef.accessoriesP2SN],
-          if (docRef.accessoriesP2Holders.trim().isNotEmpty)
-            ['Phantom 2 Holders', docRef.accessoriesP2Holders],
-          if (docRef.accessoriesP3Modal.trim().isNotEmpty)
-            ['Phantom 3 Model', docRef.accessoriesP3Modal],
-          if (docRef.accessoriesP3ModelNo.trim().isNotEmpty)
-            ['Phantom 3 Model No.', docRef.accessoriesP3ModelNo],
-          if (docRef.accessoriesP3SN.trim().isNotEmpty)
-            ['Phantom 3 Serial Number', docRef.accessoriesP3SN],
-          if (docRef.accessoriesP3Holders.trim().isNotEmpty)
-            ['Phantom 3 Holders', docRef.accessoriesP3Holders],
           ['CDs', docRef.accessoriesCDs],
           ['Injector', docRef.accessoriesInjector],
           ['Spare Parts', docRef.accessoriesSpareP],
@@ -282,6 +277,32 @@ Future<void> exportCtPDF(
         ]),
         ...sectionPhotos('Accessories', docRef.accessoriesPicURL,
             accessoriesGallery),
+        pw.SizedBox(height: 10),
+        pw.Text('Phantoms',
+            style: pw.TextStyle(
+                fontSize: 10,
+                fontWeight: pw.FontWeight.bold,
+                color: _textDark)),
+        pw.SizedBox(height: 4),
+        phantomsPdfTable(
+          schema: phantomSchema,
+          data: phantomData,
+          drive: drive,
+          accent: _accent,
+          borderColor: _borderColor,
+          mutedColor: _textMuted,
+          valueText: _valueText,
+        ),
+        for (final e in phantomGalleries.entries) ...[
+          pw.SizedBox(height: 8),
+          pw.Text('Phantom ${e.key} photos',
+              style: pw.TextStyle(
+                  fontSize: 9,
+                  fontWeight: pw.FontWeight.bold,
+                  color: _textDark)),
+          pw.SizedBox(height: 4),
+          _imageGrid(e.value),
+        ],
 
         // ====================== COSMETIC CONDITION =============================
         ],

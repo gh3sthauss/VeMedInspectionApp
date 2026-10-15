@@ -1,4 +1,5 @@
 import '/components/logo_widget.dart';
+import '/components/phantoms_editor.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'ang_accessories_widget.dart' show AngAccessoriesWidget;
@@ -17,42 +18,8 @@ class AngAccessoriesModel extends FlutterFlowModel<AngAccessoriesWidget> {
   FocusNode? textInputFocusNode2;
   TextEditingController? textInputTextController2;
   String? Function(BuildContext, String?)? textInputTextController2Validator;
-  // State field(s) for textInput widget.
-  FocusNode? textInputFocusNode3;
-  TextEditingController? textInputTextController3;
-  String? Function(BuildContext, String?)? textInputTextController3Validator;
-  // State field(s) for textInput widget.
-  FocusNode? textInputFocusNode4;
-  TextEditingController? textInputTextController4;
-  String? Function(BuildContext, String?)? textInputTextController4Validator;
-  // State field(s) for textInput widget.
-  FocusNode? textInputFocusNode5;
-  TextEditingController? textInputTextController5;
-  String? Function(BuildContext, String?)? textInputTextController5Validator;
-
-  // Phantom 2 fields (Model / Model Number / Serial Number).
-  FocusNode? textInputFocusNode6;
-  TextEditingController? textInputTextController6;
-  String? Function(BuildContext, String?)? textInputTextController6Validator;
-  FocusNode? textInputFocusNode7;
-  TextEditingController? textInputTextController7;
-  String? Function(BuildContext, String?)? textInputTextController7Validator;
-  FocusNode? textInputFocusNode8;
-  TextEditingController? textInputTextController8;
-  String? Function(BuildContext, String?)? textInputTextController8Validator;
-  // Phantom 3 fields (Model / Model Number / Serial Number).
-  FocusNode? textInputFocusNode9;
-  TextEditingController? textInputTextController9;
-  String? Function(BuildContext, String?)? textInputTextController9Validator;
-  FocusNode? textInputFocusNode10;
-  TextEditingController? textInputTextController10;
-  String? Function(BuildContext, String?)? textInputTextController10Validator;
-  FocusNode? textInputFocusNode11;
-  TextEditingController? textInputTextController11;
-  String? Function(BuildContext, String?)? textInputTextController11Validator;
-  // Whether the optional extra phantom sections have been revealed.
-  bool showPhantom2 = false;
-  bool showPhantom3 = false;
+  // Phantom 1-10 text fields (see PhantomsEditor).
+  final phantoms = PhantomsController();
 
   // State field(s) for the Notes widget.
   FocusNode? notesFocusNode;
@@ -73,27 +40,7 @@ class AngAccessoriesModel extends FlutterFlowModel<AngAccessoriesWidget> {
     textInputFocusNode2?.dispose();
     textInputTextController2?.dispose();
 
-    textInputFocusNode3?.dispose();
-    textInputTextController3?.dispose();
-
-    textInputFocusNode4?.dispose();
-    textInputTextController4?.dispose();
-
-    textInputFocusNode5?.dispose();
-    textInputTextController5?.dispose();
-
-    textInputFocusNode6?.dispose();
-    textInputTextController6?.dispose();
-    textInputFocusNode7?.dispose();
-    textInputTextController7?.dispose();
-    textInputFocusNode8?.dispose();
-    textInputTextController8?.dispose();
-    textInputFocusNode9?.dispose();
-    textInputTextController9?.dispose();
-    textInputFocusNode10?.dispose();
-    textInputTextController10?.dispose();
-    textInputFocusNode11?.dispose();
-    textInputTextController11?.dispose();
+    phantoms.dispose();
 
     notesFocusNode?.dispose();
     notesTextController?.dispose();

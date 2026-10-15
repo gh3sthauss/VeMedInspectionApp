@@ -3,6 +3,8 @@ import '/backend/backend.dart';
 import '/custom_code/image_outbox/image_outbox_manager.dart';
 import '/components/doc_naming.dart';
 import '/custom_code/drive_photo_links.dart';
+import '/custom_code/pdf_phantoms.dart';
+import '/custom_code/phantoms.dart';
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -54,6 +56,9 @@ Future<void> exportMriPDF(
     modalityIcon = null;
   }
 
+  final phantomSchema = PhantomSchema.accPhantom;
+  final phantomData = docRef.snapshotData;
+
   // Section photos go to Google Drive and the PDF links to them; only when
   // that fails (e.g. offline) are they embedded in the PDF instead.
   final drive = await syncReportPhotosToDrive(
@@ -87,6 +92,8 @@ Future<void> exportMriPDF(
       if (inc('local_service'))
         DrivePhotoSection('Local Service', docRef.localServicePicURL),
       if (inc('coils')) DrivePhotoSection('Coils', docRef.coilsPicURL),
+      if (inc('phantoms'))
+        ...phantomPhotoSections(phantomSchema, phantomData),
       if (inc('accessories'))
         DrivePhotoSection('Accessories', docRef.accessoriesPicURL),
       if (inc('cosmetic'))
@@ -137,6 +144,14 @@ Future<void> exportMriPDF(
   final powerstagesGallery = results[13];
   final talesLastReplacementGallery = results[14];
   final ecgGallery = results[15];
+
+  // Phantom photos are embedded only when Drive isn't available.
+  final phantomGalleries = <int, List<pw.ImageProvider>>{
+    if (drive == null && inc('phantoms'))
+      for (final n in filledPhantomSlots(phantomSchema, phantomData))
+        if (phantomSchema.photos(phantomData, n).isNotEmpty)
+          n: await _loadImages(phantomSchema.photos(phantomData, n)),
+  };
 
   // Hero image comes from the dedicated deviceImg field; falls back to the
   // first cosmetic photo if deviceImg wasn't populated for this record.
@@ -369,7 +384,25 @@ Future<void> exportMriPDF(
         ],
         if (inc('phantoms')) ...[
         _sectionHeader('Phantoms'),
-        _phantomsTable(docRef),
+        phantomsPdfTable(
+          schema: phantomSchema,
+          data: phantomData,
+          drive: drive,
+          accent: _accent,
+          borderColor: _borderColor,
+          mutedColor: _textMuted,
+          valueText: _valueText,
+        ),
+        for (final e in phantomGalleries.entries) ...[
+          pw.SizedBox(height: 8),
+          pw.Text('Phantom ${e.key} photos',
+              style: pw.TextStyle(
+                  fontSize: 9,
+                  fontWeight: pw.FontWeight.bold,
+                  color: _textDark)),
+          pw.SizedBox(height: 4),
+          _imageGrid(e.value),
+        ],
 
         // ========================= ACCESSORIES ================================
         ],
@@ -804,90 +837,6 @@ pw.Widget _coilsTable(MriRecord docRef) {
             bodyCell(row[2]),
             bodyCell(row[3]),
             bodyCell(row[4]),
-          ],
-        );
-      }),
-    ],
-  );
-}
-
-// ---------------------------------------------------------------------------
-// PHANTOMS TABLE — main phantom 1..3, skips empty rows
-// ---------------------------------------------------------------------------
-pw.Widget _phantomsTable(MriRecord docRef) {
-  final entries = <List<String>>[
-    [
-      '1',
-      docRef.accPhantom1Model,
-      docRef.accPhantom1ModelNo,
-      docRef.accPhantom1ModelSN
-    ],
-    [
-      '2',
-      docRef.accPhantom2Model,
-      docRef.accPhantom2ModelNo,
-      docRef.accPhantom2ModelSN
-    ],
-    [
-      '3',
-      docRef.accPhantom3Model,
-      docRef.accPhantom3ModelNo,
-      docRef.accPhantom3ModelSN
-    ],
-  ]
-      .where(
-          (row) => row[1].isNotEmpty || row[2].isNotEmpty || row[3].isNotEmpty)
-      .toList();
-
-  if (entries.isEmpty) {
-    return pw.Text('No phantoms recorded.',
-        style: pw.TextStyle(fontSize: 9, color: _textMuted));
-  }
-
-  pw.Widget headerCell(String text) => pw.Container(
-        padding: const pw.EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-        decoration: pw.BoxDecoration(color: _accent),
-        child: pw.Text(
-          text,
-          style: pw.TextStyle(
-              fontSize: 8.5,
-              fontWeight: pw.FontWeight.bold,
-              color: PdfColors.white),
-        ),
-      );
-
-  pw.Widget bodyCell(String text) => pw.Padding(
-        padding: const pw.EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-        child: _valueText(text),
-      );
-
-  return pw.Table(
-    columnWidths: {
-      0: const pw.FractionColumnWidth(0.1),
-      1: const pw.FractionColumnWidth(0.35),
-      2: const pw.FractionColumnWidth(0.275),
-      3: const pw.FractionColumnWidth(0.275),
-    },
-    border: pw.TableBorder.symmetric(
-        inside: pw.BorderSide(width: 0.5, color: _borderColor)),
-    children: [
-      pw.TableRow(children: [
-        headerCell('#'),
-        headerCell('Model'),
-        headerCell('Model No.'),
-        headerCell('Serial No.'),
-      ]),
-      ...List.generate(entries.length, (i) {
-        final row = entries[i];
-        final isEven = i % 2 == 0;
-        return pw.TableRow(
-          decoration:
-              pw.BoxDecoration(color: isEven ? _zebraColor : PdfColors.white),
-          children: [
-            bodyCell(row[0]),
-            bodyCell(row[1]),
-            bodyCell(row[2]),
-            bodyCell(row[3]),
           ],
         );
       }),
