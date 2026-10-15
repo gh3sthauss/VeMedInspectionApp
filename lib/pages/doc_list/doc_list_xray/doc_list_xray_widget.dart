@@ -1,3 +1,4 @@
+import '/components/pdf_progress.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/doc_actions_sheet.dart';
@@ -186,9 +187,12 @@ class _DocListXrayWidgetState extends State<DocListXrayWidget> {
                                                 sections: kXRayPdfSections,
                                               );
                                               if (sections == null) return;
-                                              await actions.exportXRayPDF(
-                                                listViewXRayRecord,
-                                                includeSections: sections,
+                                              await withPdfProgress(
+                                                context,
+                                                () => actions.exportXRayPDF(
+                                                  listViewXRayRecord,
+                                                  includeSections: sections,
+                                                ),
                                               );
                                             },
                                             onDelete: () async {

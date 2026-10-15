@@ -53,23 +53,17 @@ List<pw.Widget> subsectionPhotosPdf({
     final links = <pw.Widget>[
       for (final f in withPhotos)
         if (drive.sectionUrls[f.label] != null)
-          pw.UrlLink(
-            destination: drive.sectionUrls[f.label]!,
-            child: pw.Text(
-              '${shortLabel(f.label)} photos '
-              '(${subsectionPhotos(data, f.key).length}) >',
-              style: pw.TextStyle(
-                  fontSize: 9,
-                  fontWeight: pw.FontWeight.bold,
-                  color: accent,
-                  decoration: pw.TextDecoration.underline),
-            ),
+          drivePhotoButton(
+            '${shortLabel(f.label)} photos '
+                '(${subsectionPhotos(data, f.key).length})',
+            drive.sectionUrls[f.label]!,
+            accent: accent,
           ),
     ];
     if (links.isEmpty) return const [];
     return [
       pw.SizedBox(height: 6),
-      pw.Wrap(spacing: 16, runSpacing: 4, children: links),
+      pw.Wrap(spacing: 8, runSpacing: 6, children: links),
     ];
   }
 

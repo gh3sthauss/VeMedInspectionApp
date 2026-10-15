@@ -1,3 +1,4 @@
+import '/components/pdf_progress.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/doc_actions_sheet.dart';
@@ -195,10 +196,12 @@ class _DocListAngiographyWidgetState extends State<DocListAngiographyWidget> {
                                                     kAngiographyPdfSections,
                                               );
                                               if (sections == null) return;
-                                              await actions
-                                                  .exportAngiographyPDF(
-                                                listViewAngiographyRecord,
-                                                includeSections: sections,
+                                              await withPdfProgress(
+                                                context,
+                                                () => actions.exportAngiographyPDF(
+                                                  listViewAngiographyRecord,
+                                                  includeSections: sections,
+                                                ),
                                               );
                                             },
                                             onDelete: () async {

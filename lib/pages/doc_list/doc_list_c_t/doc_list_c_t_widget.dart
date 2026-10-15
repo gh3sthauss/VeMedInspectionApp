@@ -1,3 +1,4 @@
+import '/components/pdf_progress.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/doc_actions_sheet.dart';
@@ -186,9 +187,12 @@ class _DocListCTWidgetState extends State<DocListCTWidget> {
                                                 sections: kCtPdfSections,
                                               );
                                               if (sections == null) return;
-                                              await actions.exportCtPDF(
-                                                listViewCtRecord,
-                                                includeSections: sections,
+                                              await withPdfProgress(
+                                                context,
+                                                () => actions.exportCtPDF(
+                                                  listViewCtRecord,
+                                                  includeSections: sections,
+                                                ),
                                               );
                                             },
                                             onDelete: () async {

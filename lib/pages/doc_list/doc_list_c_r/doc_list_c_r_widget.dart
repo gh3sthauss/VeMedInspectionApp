@@ -1,3 +1,4 @@
+import '/components/pdf_progress.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/doc_actions_sheet.dart';
@@ -186,9 +187,12 @@ class _DocListCRWidgetState extends State<DocListCRWidget> {
                                                 sections: kCrPdfSections,
                                               );
                                               if (sections == null) return;
-                                              await actions.exportCrPDF(
-                                                listViewCrRecord,
-                                                includeSections: sections,
+                                              await withPdfProgress(
+                                                context,
+                                                () => actions.exportCrPDF(
+                                                  listViewCrRecord,
+                                                  includeSections: sections,
+                                                ),
                                               );
                                             },
                                             onDelete: () async {

@@ -1,3 +1,4 @@
+import '/components/pdf_progress.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/doc_actions_sheet.dart';
@@ -186,9 +187,12 @@ class _DocListPACSWidgetState extends State<DocListPACSWidget> {
                                                 sections: kPacsPdfSections,
                                               );
                                               if (sections == null) return;
-                                              await actions.exportPacsPDF(
-                                                listViewPacsRecord,
-                                                includeSections: sections,
+                                              await withPdfProgress(
+                                                context,
+                                                () => actions.exportPacsPDF(
+                                                  listViewPacsRecord,
+                                                  includeSections: sections,
+                                                ),
                                               );
                                             },
                                             onDelete: () async {

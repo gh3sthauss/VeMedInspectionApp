@@ -1,3 +1,4 @@
+import '/components/pdf_progress.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/doc_actions_sheet.dart';
@@ -193,9 +194,12 @@ class _DocListMammographyWidgetState extends State<DocListMammographyWidget> {
                                                 sections: kMammographyPdfSections,
                                               );
                                               if (sections == null) return;
-                                              await actions.exportMammographyPDF(
-                                                listViewMammographyRecord,
-                                                includeSections: sections,
+                                              await withPdfProgress(
+                                                context,
+                                                () => actions.exportMammographyPDF(
+                                                  listViewMammographyRecord,
+                                                  includeSections: sections,
+                                                ),
                                               );
                                             },
                                             onDelete: () async {

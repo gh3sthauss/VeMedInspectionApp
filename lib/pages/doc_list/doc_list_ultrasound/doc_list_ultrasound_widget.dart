@@ -1,3 +1,4 @@
+import '/components/pdf_progress.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/doc_actions_sheet.dart';
@@ -192,9 +193,12 @@ class _DocListUltrasoundWidgetState extends State<DocListUltrasoundWidget> {
                                                 sections: kUltrasoundPdfSections,
                                               );
                                               if (sections == null) return;
-                                              await actions.exportUltrasoundPDF(
-                                                listViewUltrasoundRecord,
-                                                includeSections: sections,
+                                              await withPdfProgress(
+                                                context,
+                                                () => actions.exportUltrasoundPDF(
+                                                  listViewUltrasoundRecord,
+                                                  includeSections: sections,
+                                                ),
                                               );
                                             },
                                             onDelete: () async {

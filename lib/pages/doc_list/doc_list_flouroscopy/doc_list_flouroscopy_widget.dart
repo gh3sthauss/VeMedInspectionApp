@@ -1,3 +1,4 @@
+import '/components/pdf_progress.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/doc_actions_sheet.dart';
@@ -193,9 +194,12 @@ class _DocListFlouroscopyWidgetState extends State<DocListFlouroscopyWidget> {
                                                 sections: kFluoroscopyPdfSections,
                                               );
                                               if (sections == null) return;
-                                              await actions.exportFluoroscopyPDF(
-                                                listViewFluoroscopyRecord,
-                                                includeSections: sections,
+                                              await withPdfProgress(
+                                                context,
+                                                () => actions.exportFluoroscopyPDF(
+                                                  listViewFluoroscopyRecord,
+                                                  includeSections: sections,
+                                                ),
                                               );
                                             },
                                             onDelete: () async {

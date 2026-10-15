@@ -1,3 +1,4 @@
+import '/components/pdf_progress.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/doc_actions_sheet.dart';
@@ -186,9 +187,12 @@ class _DocListMRIWidgetState extends State<DocListMRIWidget> {
                                                 sections: kMriPdfSections,
                                               );
                                               if (sections == null) return;
-                                              await actions.exportMriPDF(
-                                                listViewMriRecord,
-                                                includeSections: sections,
+                                              await withPdfProgress(
+                                                context,
+                                                () => actions.exportMriPDF(
+                                                  listViewMriRecord,
+                                                  includeSections: sections,
+                                                ),
                                               );
                                             },
                                             onDelete: () async {

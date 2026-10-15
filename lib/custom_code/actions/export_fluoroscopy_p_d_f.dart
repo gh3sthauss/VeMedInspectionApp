@@ -2,6 +2,7 @@
 import '/backend/backend.dart';
 import '/custom_code/image_outbox/image_outbox_manager.dart';
 import '/components/doc_naming.dart';
+import '/components/pdf_progress.dart';
 import '/custom_code/drive_photo_links.dart';
 import 'package:flutter/material.dart';
 // Begin custom action code
@@ -305,6 +306,8 @@ Future<void> exportFluoroscopyPDF(
     final file = File('${tempDir.path}/$fileName');
     await file.writeAsBytes(pdfBytes);
 
+    // The file is ready: drop the "Preparing PDF" overlay for the share sheet.
+    closePdfProgress();
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(file.path, mimeType: 'application/pdf', name: fileName)],

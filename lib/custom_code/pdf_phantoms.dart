@@ -71,17 +71,9 @@ pw.Widget phantomsPdfTable({
     if (count == 0) return muted('-');
     final link = drive?.sectionUrls[phantomPhotoSectionName(slot)];
     if (link == null) return muted('See below');
-    return pw.UrlLink(
-      destination: link,
-      child: pw.Text(
-        'View $count >',
-        style: pw.TextStyle(
-            fontSize: 9,
-            fontWeight: pw.FontWeight.bold,
-            color: accent,
-            decoration: pw.TextDecoration.underline),
-      ),
-    );
+    return pw.Row(children: [
+      drivePhotoButton('View $count', link, accent: accent, fontSize: 8.5),
+    ]);
   }
 
   final fieldCount = schema.fields.length;

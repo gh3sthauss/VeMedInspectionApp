@@ -129,6 +129,43 @@ void _tellPhotosEmbedded() {
   );
 }
 
+/// The accent mixed into white ([amount] 0..1), blended by hand because the
+/// pdf package ignores colour alpha on fills.
+PdfColor _tint(PdfColor accent, double amount) => PdfColor(
+    1 - amount * (1 - accent.red),
+    1 - amount * (1 - accent.green),
+    1 - amount * (1 - accent.blue));
+
+/// A small rounded "button" linking to a Drive photo folder, so photo links
+/// stand out from the report text. [filled] is the solid, stronger variant.
+pw.Widget drivePhotoButton(
+  String label,
+  String url, {
+  required PdfColor accent,
+  double fontSize = 9,
+  bool filled = false,
+}) {
+  return pw.UrlLink(
+    destination: url,
+    child: pw.Container(
+      padding: const pw.EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+      decoration: pw.BoxDecoration(
+        color: filled ? accent : _tint(accent, 0.10),
+        border: pw.Border.all(color: accent, width: 0.8),
+        borderRadius: const pw.BorderRadius.all(pw.Radius.circular(10)),
+      ),
+      child: pw.Text(
+        '$label  >',
+        style: pw.TextStyle(
+          fontSize: fontSize,
+          fontWeight: pw.FontWeight.bold,
+          color: filled ? PdfColors.white : accent,
+        ),
+      ),
+    ),
+  );
+}
+
 /// Banner for the start of the report: one link to the whole photo folder.
 pw.Widget drivePhotosBanner(String url, {required PdfColor accent}) {
   return pw.UrlLink(
@@ -137,10 +174,7 @@ pw.Widget drivePhotosBanner(String url, {required PdfColor accent}) {
       margin: const pw.EdgeInsets.only(bottom: 4),
       padding: const pw.EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: pw.BoxDecoration(
-        // Light tint of the accent, blended by hand (the pdf package
-        // ignores colour alpha on fills).
-        color: PdfColor(1 - 0.06 * (1 - accent.red),
-            1 - 0.06 * (1 - accent.green), 1 - 0.06 * (1 - accent.blue)),
+        color: _tint(accent, 0.06),
         border: pw.Border.all(color: accent, width: 0.75),
         borderRadius: const pw.BorderRadius.all(pw.Radius.circular(4)),
       ),
@@ -167,12 +201,8 @@ pw.Widget drivePhotosBanner(String url, {required PdfColor accent}) {
             ),
           ),
           pw.SizedBox(width: 12),
-          pw.Text('Open photo folder  >',
-              style: pw.TextStyle(
-                  fontSize: 9.5,
-                  fontWeight: pw.FontWeight.bold,
-                  color: accent,
-                  decoration: pw.TextDecoration.underline)),
+          drivePhotoButton('Open photo folder', url,
+              accent: accent, fontSize: 9.5, filled: true),
         ],
       ),
     ),
@@ -184,16 +214,11 @@ pw.Widget driveSectionPhotosLink(String url, int count,
     {required PdfColor accent}) {
   return pw.Padding(
     padding: const pw.EdgeInsets.only(top: 6),
-    child: pw.UrlLink(
-      destination: url,
-      child: pw.Text(
-        'View ${count == 1 ? '1 photo' : '$count photos'} of this section  >',
-        style: pw.TextStyle(
-            fontSize: 9,
-            fontWeight: pw.FontWeight.bold,
-            color: accent,
-            decoration: pw.TextDecoration.underline),
-      ),
-    ),
+    child: pw.Row(children: [
+      drivePhotoButton(
+          'View ${count == 1 ? '1 photo' : '$count photos'} of this section',
+          url,
+          accent: accent),
+    ]),
   );
 }
