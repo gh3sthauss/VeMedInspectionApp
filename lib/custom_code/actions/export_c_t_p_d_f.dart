@@ -3,6 +3,8 @@ import '/backend/backend.dart';
 import '/custom_code/image_outbox/image_outbox_manager.dart';
 import '/components/doc_naming.dart';
 import '/custom_code/drive_photo_links.dart';
+import '/custom_code/pdf_subsection_photos.dart';
+import '/custom_code/subsection_photos.dart';
 import '/custom_code/pdf_phantoms.dart';
 import '/custom_code/phantoms.dart';
 import 'package:flutter/material.dart';
@@ -77,12 +79,16 @@ Future<void> exportCtPDF(
     ),
     sections: [
       if (inc('gantry')) DrivePhotoSection('Gantry', docRef.gantryPicURL),
+      if (inc('gantry'))
+        ...subsectionDriveSections(kCtGantryPhotos, docRef.snapshotData),
       if (inc('cooling_system'))
         DrivePhotoSection('Cooling System', docRef.coolingSystemPicURL),
       if (inc('patient_table'))
         DrivePhotoSection('Patient Table', docRef.patientTablePicURL),
       if (inc('console'))
         DrivePhotoSection('Console and Workstation', consolePhotos),
+      if (inc('console'))
+        ...subsectionDriveSections(kIrsPhotos, docRef.snapshotData),
       if (inc('accessories'))
         DrivePhotoSection('Accessories', docRef.accessoriesPicURL),
       if (inc('accessories'))
@@ -123,6 +129,16 @@ Future<void> exportCtPDF(
   final coolingSystemGallery = results[7];
   final patientTableGallery = results[8];
   final dnTGallery = results[9];
+
+  // Sub-section photos are embedded only when Drive isn't available.
+  final subFields = [
+    if (inc('gantry')) ...kCtGantryPhotos,
+    if (inc('console')) ...kIrsPhotos,
+  ];
+  final subGalleries = drive == null
+      ? await loadSubsectionGalleries(
+          subFields, docRef.snapshotData, _loadImages)
+      : <String, List<pw.ImageProvider>>{};
 
   // Phantom photos are embedded only when Drive isn't available.
   final phantomGalleries = <int, List<pw.ImageProvider>>{
@@ -216,6 +232,15 @@ Future<void> exportCtPDF(
             ['Notes', docRef.gantryNotes],
         ]),
         ...sectionPhotos('Gantry', docRef.gantryPicURL, gantryGallery),
+        ...subsectionPhotosPdf(
+          fields: kCtGantryPhotos,
+          data: docRef.snapshotData,
+          drive: drive,
+          galleries: subGalleries,
+          accent: _accent,
+          textColor: _textDark,
+          grid: _imageGrid,
+        ),
 
         // ======================== COOLING SYSTEM ==============================
         ],
@@ -263,6 +288,15 @@ Future<void> exportCtPDF(
         ]),
         ...sectionPhotos('Console and Workstation', consolePhotos,
             [...consoleOptGallery, ...workstationOptGallery]),
+        ...subsectionPhotosPdf(
+          fields: kIrsPhotos,
+          data: docRef.snapshotData,
+          drive: drive,
+          galleries: subGalleries,
+          accent: _accent,
+          textColor: _textDark,
+          grid: _imageGrid,
+        ),
 
         // ========================= ACCESSORIES ================================
         ],

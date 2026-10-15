@@ -1,6 +1,8 @@
 // MANUALLY MIGRATED for offline photo upload (outbox pattern) — see
 // lib/components/photo_upload_outbox/. If this page is re-synced from
 // FlutterFlow, this migration must be reapplied.
+import '/components/subsection_photos_field.dart';
+import '/custom_code/subsection_photos.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
@@ -115,7 +117,6 @@ class _MRIMarsImagerWidgetState extends State<MRIMarsImagerWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 194.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -397,6 +398,14 @@ class _MRIMarsImagerWidgetState extends State<MRIMarsImagerWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kMriImagerPhotos[0],
+                                    data: mRIMarsImagerMriRecord.snapshotData,
+                                    collectionPath: 'MRI',
+                                    docId: widget.docRefImager!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/mri/imager',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -408,7 +417,6 @@ class _MRIMarsImagerWidgetState extends State<MRIMarsImagerWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 194.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -690,6 +698,14 @@ class _MRIMarsImagerWidgetState extends State<MRIMarsImagerWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kMriImagerPhotos[1],
+                                    data: mRIMarsImagerMriRecord.snapshotData,
+                                    collectionPath: 'MRI',
+                                    docId: widget.docRefImager!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/mri/imager',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -701,7 +717,6 @@ class _MRIMarsImagerWidgetState extends State<MRIMarsImagerWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 194.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -983,6 +998,14 @@ class _MRIMarsImagerWidgetState extends State<MRIMarsImagerWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kMriImagerPhotos[2],
+                                    data: mRIMarsImagerMriRecord.snapshotData,
+                                    collectionPath: 'MRI',
+                                    docId: widget.docRefImager!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/mri/imager',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -994,7 +1017,6 @@ class _MRIMarsImagerWidgetState extends State<MRIMarsImagerWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 194.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -1276,6 +1298,14 @@ class _MRIMarsImagerWidgetState extends State<MRIMarsImagerWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kMriImagerPhotos[3],
+                                    data: mRIMarsImagerMriRecord.snapshotData,
+                                    collectionPath: 'MRI',
+                                    docId: widget.docRefImager!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/mri/imager',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -1299,7 +1329,7 @@ class _MRIMarsImagerWidgetState extends State<MRIMarsImagerWidget> {
                           child: Align(
                             alignment: AlignmentDirectional(-1.0, 0.0),
                             child: Text(
-                              'Pictures',
+                              'General pictures',
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(

@@ -1,6 +1,8 @@
 // MANUALLY MIGRATED for offline photo upload (outbox pattern) — see
 // lib/components/photo_upload_outbox/. If this page is re-synced from
 // FlutterFlow, this migration must be reapplied.
+import '/components/subsection_photos_field.dart';
+import '/custom_code/subsection_photos.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
@@ -148,7 +150,6 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 269.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -547,6 +548,14 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kCassettePhotos[0],
+                                    data: dRCassettesDrRecord.snapshotData,
+                                    collectionPath: 'DR',
+                                    docId: widget.docRefProbes!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/dr/cassettes',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -558,7 +567,6 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 269.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -957,6 +965,14 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kCassettePhotos[1],
+                                    data: dRCassettesDrRecord.snapshotData,
+                                    collectionPath: 'DR',
+                                    docId: widget.docRefProbes!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/dr/cassettes',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -968,7 +984,6 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 269.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -1367,6 +1382,14 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kCassettePhotos[2],
+                                    data: dRCassettesDrRecord.snapshotData,
+                                    collectionPath: 'DR',
+                                    docId: widget.docRefProbes!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/dr/cassettes',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -1378,7 +1401,6 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 269.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -1777,6 +1799,14 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kCassettePhotos[3],
+                                    data: dRCassettesDrRecord.snapshotData,
+                                    collectionPath: 'DR',
+                                    docId: widget.docRefProbes!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/dr/cassettes',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -1788,7 +1818,6 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 269.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -2187,6 +2216,14 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kCassettePhotos[4],
+                                    data: dRCassettesDrRecord.snapshotData,
+                                    collectionPath: 'DR',
+                                    docId: widget.docRefProbes!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/dr/cassettes',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -2198,7 +2235,6 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 269.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -2597,6 +2633,14 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kCassettePhotos[5],
+                                    data: dRCassettesDrRecord.snapshotData,
+                                    collectionPath: 'DR',
+                                    docId: widget.docRefProbes!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/dr/cassettes',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -2608,7 +2652,6 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 269.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -3007,6 +3050,14 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kCassettePhotos[6],
+                                    data: dRCassettesDrRecord.snapshotData,
+                                    collectionPath: 'DR',
+                                    docId: widget.docRefProbes!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/dr/cassettes',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -3018,7 +3069,6 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 269.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -3417,6 +3467,14 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kCassettePhotos[7],
+                                    data: dRCassettesDrRecord.snapshotData,
+                                    collectionPath: 'DR',
+                                    docId: widget.docRefProbes!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/dr/cassettes',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -3440,7 +3498,7 @@ class _DRCassettesWidgetState extends State<DRCassettesWidget> {
                           child: Align(
                             alignment: AlignmentDirectional(-1.0, 0.0),
                             child: Text(
-                              'Pictures',
+                              'General pictures',
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(

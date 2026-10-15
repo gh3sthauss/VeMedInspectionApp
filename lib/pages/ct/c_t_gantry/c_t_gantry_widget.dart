@@ -1,6 +1,8 @@
 // MANUALLY MIGRATED for offline photo upload (outbox pattern) — see
 // lib/components/photo_upload_outbox/. If this page is re-synced from
 // FlutterFlow, this migration must be reapplied.
+import '/components/subsection_photos_field.dart';
+import '/custom_code/subsection_photos.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
@@ -116,7 +118,6 @@ class _CTGantryWidgetState extends State<CTGantryWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 125.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -278,6 +279,15 @@ class _CTGantryWidgetState extends State<CTGantryWidget> {
                                       ),
                                     ),
                                   ),
+                                  SizedBox(height: 16.0),
+                                  SubsectionPhotosField(
+                                    field: kCtGantryPhotos[0],
+                                    data: cTGantryCtRecord.snapshotData,
+                                    collectionPath: 'CT',
+                                    docId: widget.docDataGantry!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/ct/gantry',
+                                  ),
                                 ]
                                     .addToStart(SizedBox(height: 10.0))
                                     .addToEnd(SizedBox(height: 10.0)),
@@ -288,7 +298,6 @@ class _CTGantryWidgetState extends State<CTGantryWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 330.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -807,6 +816,14 @@ class _CTGantryWidgetState extends State<CTGantryWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kCtGantryPhotos[1],
+                                    data: cTGantryCtRecord.snapshotData,
+                                    collectionPath: 'CT',
+                                    docId: widget.docDataGantry!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/ct/gantry',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -818,7 +835,6 @@ class _CTGantryWidgetState extends State<CTGantryWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 271.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -1216,6 +1232,14 @@ class _CTGantryWidgetState extends State<CTGantryWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kCtGantryPhotos[2],
+                                    data: cTGantryCtRecord.snapshotData,
+                                    collectionPath: 'CT',
+                                    docId: widget.docDataGantry!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/ct/gantry',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -1232,7 +1256,7 @@ class _CTGantryWidgetState extends State<CTGantryWidget> {
                                   child: Align(
                                     alignment: AlignmentDirectional(-1.0, 0.0),
                                     child: Text(
-                                      'Pictures',
+                                      'General pictures',
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(

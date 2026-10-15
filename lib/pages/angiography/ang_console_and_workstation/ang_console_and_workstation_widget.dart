@@ -1,6 +1,8 @@
 // MANUALLY MIGRATED for offline photo upload (outbox pattern) — see
 // lib/components/photo_upload_outbox/. If this page is re-synced from
 // FlutterFlow, this migration must be reapplied.
+import '/components/subsection_photos_field.dart';
+import '/custom_code/subsection_photos.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
@@ -1220,7 +1222,6 @@ class _AngConsoleAndWorkstationWidgetState
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 205.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -1549,6 +1550,14 @@ class _AngConsoleAndWorkstationWidgetState
                                         ],
                                       ),
                                     ),
+                                  ),
+                                  SubsectionPhotosField(
+                                    field: kIrsPhotos[0],
+                                    data: angConsoleAndWorkstationAngiographyRecord.snapshotData,
+                                    collectionPath: 'Angiography',
+                                    docId: widget.docDataCW!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/angiography/irs',
                                   ),
                                 ]
                                     .divide(SizedBox(height: 16.0))

@@ -3,6 +3,8 @@ import '/backend/backend.dart';
 import '/custom_code/image_outbox/image_outbox_manager.dart';
 import '/components/doc_naming.dart';
 import '/custom_code/drive_photo_links.dart';
+import '/custom_code/pdf_subsection_photos.dart';
+import '/custom_code/subsection_photos.dart';
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -78,6 +80,8 @@ Future<void> exportUltrasoundPDF(
       ],
     ),
     sections: [
+      if (inc('probes'))
+        ...subsectionDriveSections(kProbePhotos, docRef.snapshotData),
       if (inc('software'))
         DrivePhotoSection('Software', docRef.softwareOptPicsURL),
       if (inc('accessories'))
@@ -110,6 +114,15 @@ Future<void> exportUltrasoundPDF(
   final deviceImg = results[3];
   final accessoriesGallery = results[4];
   final dnTGallery = results[5];
+
+  // Sub-section photos are embedded only when Drive isn't available.
+  final subFields = [
+    if (inc('probes')) ...kProbePhotos,
+  ];
+  final subGalleries = drive == null
+      ? await loadSubsectionGalleries(
+          subFields, docRef.snapshotData, _loadImages)
+      : <String, List<pw.ImageProvider>>{};
 
   // Hero image comes from the dedicated deviceImg field; falls back to the
   // first cosmetic photo if deviceImg wasn't populated for this record.
@@ -183,6 +196,15 @@ Future<void> exportUltrasoundPDF(
         if (inc('probes')) ...[
         _sectionHeader('Probes'),
         _probesTable(docRef),
+        ...subsectionPhotosPdf(
+          fields: kProbePhotos,
+          data: docRef.snapshotData,
+          drive: drive,
+          galleries: subGalleries,
+          accent: _accent,
+          textColor: _textDark,
+          grid: _imageGrid,
+        ),
         if (docRef.probesNotes.trim().isNotEmpty) ...[
           pw.SizedBox(height: 6),
           _infoTable(rows: [

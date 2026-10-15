@@ -3,6 +3,8 @@ import '/backend/backend.dart';
 import '/custom_code/image_outbox/image_outbox_manager.dart';
 import '/components/doc_naming.dart';
 import '/custom_code/drive_photo_links.dart';
+import '/custom_code/pdf_subsection_photos.dart';
+import '/custom_code/subsection_photos.dart';
 import '/custom_code/pdf_phantoms.dart';
 import '/custom_code/phantoms.dart';
 import 'package:flutter/material.dart';
@@ -96,6 +98,8 @@ Future<void> exportAngiographyPDF(
           ...docRef.cnWCMOptPURL,
           ...docRef.cnWWorkstationOptPURL,
         ]),
+      if (inc('console'))
+        ...subsectionDriveSections(kIrsPhotos, docRef.snapshotData),
       if (inc('patient_table'))
         DrivePhotoSection('Patient Table', docRef.patientTablePicURL),
       if (inc('accessories'))
@@ -137,6 +141,15 @@ Future<void> exportAngiographyPDF(
   final patientTableGallery = results[8];
   final tubeGallery = results[9];
   final workstationOptGallery = results[10];
+
+  // Sub-section photos are embedded only when Drive isn't available.
+  final subFields = [
+    if (inc('console')) ...kIrsPhotos,
+  ];
+  final subGalleries = drive == null
+      ? await loadSubsectionGalleries(
+          subFields, docRef.snapshotData, _loadImages)
+      : <String, List<pw.ImageProvider>>{};
 
   // Phantom photos are embedded only when Drive isn't available.
   final phantomGalleries = <int, List<pw.ImageProvider>>{
@@ -270,6 +283,15 @@ Future<void> exportAngiographyPDF(
               'Console and Workstation',
               [...docRef.cnWCMOptPURL, ...docRef.cnWWorkstationOptPURL],
               [...consoleOptGallery, ...workstationOptGallery]),
+          ...subsectionPhotosPdf(
+            fields: kIrsPhotos,
+            data: docRef.snapshotData,
+            drive: drive,
+            galleries: subGalleries,
+            accent: _accent,
+            textColor: _textDark,
+            grid: _imageGrid,
+          ),
         ],
 
         // ====================== PATIENT TABLE ================================

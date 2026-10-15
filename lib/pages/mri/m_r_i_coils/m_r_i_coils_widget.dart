@@ -1,6 +1,8 @@
 // MANUALLY MIGRATED for offline photo upload (outbox pattern) — see
 // lib/components/photo_upload_outbox/. If this page is re-synced from
 // FlutterFlow, this migration must be reapplied.
+import '/components/subsection_photos_field.dart';
+import '/custom_code/subsection_photos.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
@@ -163,7 +165,6 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 330.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -679,6 +680,14 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kMriCoilPhotos[0],
+                                    data: mRICoilsMriRecord.snapshotData,
+                                    collectionPath: 'MRI',
+                                    docId: widget.docRefCoil!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/mri/coils',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -690,7 +699,6 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 330.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -1206,6 +1214,14 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kMriCoilPhotos[1],
+                                    data: mRICoilsMriRecord.snapshotData,
+                                    collectionPath: 'MRI',
+                                    docId: widget.docRefCoil!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/mri/coils',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -1217,7 +1233,6 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 330.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -1733,6 +1748,14 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kMriCoilPhotos[2],
+                                    data: mRICoilsMriRecord.snapshotData,
+                                    collectionPath: 'MRI',
+                                    docId: widget.docRefCoil!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/mri/coils',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -1744,7 +1767,6 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 330.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -2260,6 +2282,14 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kMriCoilPhotos[3],
+                                    data: mRICoilsMriRecord.snapshotData,
+                                    collectionPath: 'MRI',
+                                    docId: widget.docRefCoil!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/mri/coils',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -2271,7 +2301,6 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 330.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -2787,6 +2816,14 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kMriCoilPhotos[4],
+                                    data: mRICoilsMriRecord.snapshotData,
+                                    collectionPath: 'MRI',
+                                    docId: widget.docRefCoil!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/mri/coils',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -2798,7 +2835,6 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 330.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -3314,6 +3350,14 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kMriCoilPhotos[5],
+                                    data: mRICoilsMriRecord.snapshotData,
+                                    collectionPath: 'MRI',
+                                    docId: widget.docRefCoil!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/mri/coils',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -3325,7 +3369,6 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 330.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -3841,6 +3884,14 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kMriCoilPhotos[6],
+                                    data: mRICoilsMriRecord.snapshotData,
+                                    collectionPath: 'MRI',
+                                    docId: widget.docRefCoil!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/mri/coils',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -3852,7 +3903,6 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 330.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -4368,6 +4418,14 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kMriCoilPhotos[7],
+                                    data: mRICoilsMriRecord.snapshotData,
+                                    collectionPath: 'MRI',
+                                    docId: widget.docRefCoil!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/mri/coils',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -4391,7 +4449,7 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                           child: Align(
                             alignment: AlignmentDirectional(-1.0, 0.0),
                             child: Text(
-                              'Pictures',
+                              'General pictures',
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(

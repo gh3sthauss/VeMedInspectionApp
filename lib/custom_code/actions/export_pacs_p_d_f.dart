@@ -3,6 +3,8 @@ import '/backend/backend.dart';
 import '/custom_code/image_outbox/image_outbox_manager.dart';
 import '/components/doc_naming.dart';
 import '/custom_code/drive_photo_links.dart';
+import '/custom_code/pdf_subsection_photos.dart';
+import '/custom_code/subsection_photos.dart';
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -75,6 +77,8 @@ Future<void> exportPacsPDF(
       if (inc('detector')) DrivePhotoSection('Detector', docRef.detectorPicURL),
       if (inc('cassettes'))
         DrivePhotoSection('Cassettes', docRef.cassettesPicURL),
+      if (inc('cassettes'))
+        ...subsectionDriveSections(kCassettePhotos, docRef.snapshotData),
       if (inc('accessories'))
         DrivePhotoSection('Accessories', docRef.accessoriesPicURL),
       if (inc('cosmetic'))
@@ -111,6 +115,15 @@ Future<void> exportPacsPDF(
   final cassettesGallery = results[6];
   final detectorGallery = results[7];
   final dnTGallery = results[8];
+
+  // Sub-section photos are embedded only when Drive isn't available.
+  final subFields = [
+    if (inc('cassettes')) ...kCassettePhotos,
+  ];
+  final subGalleries = drive == null
+      ? await loadSubsectionGalleries(
+          subFields, docRef.snapshotData, _loadImages)
+      : <String, List<pw.ImageProvider>>{};
 
   // Hero image comes from the dedicated deviceImg field; falls back to the
   // first cosmetic photo if deviceImg wasn't populated for this record.
@@ -223,6 +236,15 @@ Future<void> exportPacsPDF(
           ]),
         ],
         ...sectionPhotos('Cassettes', docRef.cassettesPicURL, cassettesGallery),
+        ...subsectionPhotosPdf(
+          fields: kCassettePhotos,
+          data: docRef.snapshotData,
+          drive: drive,
+          galleries: subGalleries,
+          accent: _accent,
+          textColor: _textDark,
+          grid: _imageGrid,
+        ),
 
         // ========================= ACCESSORIES ================================
         ],

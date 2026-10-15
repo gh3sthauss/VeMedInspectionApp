@@ -3,6 +3,8 @@ import '/backend/backend.dart';
 import '/custom_code/image_outbox/image_outbox_manager.dart';
 import '/components/doc_naming.dart';
 import '/custom_code/drive_photo_links.dart';
+import '/custom_code/pdf_subsection_photos.dart';
+import '/custom_code/subsection_photos.dart';
 import '/custom_code/pdf_phantoms.dart';
 import '/custom_code/phantoms.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +77,11 @@ Future<void> exportMriPDF(
       if (inc('magnet')) DrivePhotoSection('Magnet', docRef.magnetPicURL),
       if (inc('cooler_compressor'))
         DrivePhotoSection('Cooler / Compressor', docRef.coolingSystemPicURL),
+      if (inc('cooler_compressor'))
+        ...subsectionDriveSections(kMriCoolingPhotos, docRef.snapshotData),
       if (inc('imager')) DrivePhotoSection('Imager', docRef.marsImagerPicURL),
+      if (inc('imager'))
+        ...subsectionDriveSections(kMriImagerPhotos, docRef.snapshotData),
       if (inc('ecg')) DrivePhotoSection('ECG', docRef.ecgPicURL),
       if (inc('power_stages'))
         DrivePhotoSection('Power Stages', [
@@ -92,6 +98,8 @@ Future<void> exportMriPDF(
       if (inc('local_service'))
         DrivePhotoSection('Local Service', docRef.localServicePicURL),
       if (inc('coils')) DrivePhotoSection('Coils', docRef.coilsPicURL),
+      if (inc('coils'))
+        ...subsectionDriveSections(kMriCoilPhotos, docRef.snapshotData),
       if (inc('phantoms'))
         ...phantomPhotoSections(phantomSchema, phantomData),
       if (inc('accessories'))
@@ -144,6 +152,17 @@ Future<void> exportMriPDF(
   final powerstagesGallery = results[13];
   final talesLastReplacementGallery = results[14];
   final ecgGallery = results[15];
+
+  // Sub-section photos are embedded only when Drive isn't available.
+  final subFields = [
+    if (inc('cooler_compressor')) ...kMriCoolingPhotos,
+    if (inc('imager')) ...kMriImagerPhotos,
+    if (inc('coils')) ...kMriCoilPhotos,
+  ];
+  final subGalleries = drive == null
+      ? await loadSubsectionGalleries(
+          subFields, docRef.snapshotData, _loadImages)
+      : <String, List<pw.ImageProvider>>{};
 
   // Phantom photos are embedded only when Drive isn't available.
   final phantomGalleries = <int, List<pw.ImageProvider>>{
@@ -250,6 +269,15 @@ Future<void> exportMriPDF(
         ]),
         ...sectionPhotos('Cooler / Compressor', docRef.coolingSystemPicURL,
             coolingSystemGallery),
+        ...subsectionPhotosPdf(
+          fields: kMriCoolingPhotos,
+          data: docRef.snapshotData,
+          drive: drive,
+          galleries: subGalleries,
+          accent: _accent,
+          textColor: _textDark,
+          grid: _imageGrid,
+        ),
 
         // ========================== COLD HEAD ================================
         ],
@@ -277,6 +305,15 @@ Future<void> exportMriPDF(
             ['Notes', docRef.marsImagerNotes],
         ]),
         ...sectionPhotos('Imager', docRef.marsImagerPicURL, marsImagerGallery),
+        ...subsectionPhotosPdf(
+          fields: kMriImagerPhotos,
+          data: docRef.snapshotData,
+          drive: drive,
+          galleries: subGalleries,
+          accent: _accent,
+          textColor: _textDark,
+          grid: _imageGrid,
+        ),
 
 
         // ============================= ECG ===================================
@@ -378,6 +415,15 @@ Future<void> exportMriPDF(
           ]),
         ],
         ...sectionPhotos('Coils', docRef.coilsPicURL, coilsGallery),
+        ...subsectionPhotosPdf(
+          fields: kMriCoilPhotos,
+          data: docRef.snapshotData,
+          drive: drive,
+          galleries: subGalleries,
+          accent: _accent,
+          textColor: _textDark,
+          grid: _imageGrid,
+        ),
 
 
         // ========================== PHANTOMS ==================================

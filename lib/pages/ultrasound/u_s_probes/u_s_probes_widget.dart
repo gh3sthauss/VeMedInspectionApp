@@ -1,3 +1,6 @@
+import '/auth/firebase_auth/auth_util.dart';
+import '/components/subsection_photos_field.dart';
+import '/custom_code/subsection_photos.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
 import '/components/notes_field.dart';
@@ -122,7 +125,6 @@ class _USProbesWidgetState extends State<USProbesWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 269.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -523,6 +525,14 @@ class _USProbesWidgetState extends State<USProbesWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kProbePhotos[0],
+                                    data: uSProbesUltrasoundRecord.snapshotData,
+                                    collectionPath: 'Ultrasound',
+                                    docId: widget.docRefProbes!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/ultrasound/probes',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -534,7 +544,6 @@ class _USProbesWidgetState extends State<USProbesWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 269.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -935,6 +944,14 @@ class _USProbesWidgetState extends State<USProbesWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kProbePhotos[1],
+                                    data: uSProbesUltrasoundRecord.snapshotData,
+                                    collectionPath: 'Ultrasound',
+                                    docId: widget.docRefProbes!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/ultrasound/probes',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -946,7 +963,6 @@ class _USProbesWidgetState extends State<USProbesWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 269.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -1347,6 +1363,14 @@ class _USProbesWidgetState extends State<USProbesWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kProbePhotos[2],
+                                    data: uSProbesUltrasoundRecord.snapshotData,
+                                    collectionPath: 'Ultrasound',
+                                    docId: widget.docRefProbes!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/ultrasound/probes',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -1358,7 +1382,6 @@ class _USProbesWidgetState extends State<USProbesWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 269.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -1759,6 +1782,14 @@ class _USProbesWidgetState extends State<USProbesWidget> {
                                       ),
                                     ),
                                   ),
+                                  SubsectionPhotosField(
+                                    field: kProbePhotos[3],
+                                    data: uSProbesUltrasoundRecord.snapshotData,
+                                    collectionPath: 'Ultrasound',
+                                    docId: widget.docRefProbes!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/ultrasound/probes',
+                                  ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
                                     .addToStart(SizedBox(height: 10.0))
@@ -1770,7 +1801,6 @@ class _USProbesWidgetState extends State<USProbesWidget> {
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: Container(
                               width: 100.0,
-                              height: 269.0,
                               constraints: BoxConstraints(
                                 minWidth: 330.0,
                               ),
@@ -2170,6 +2200,14 @@ class _USProbesWidgetState extends State<USProbesWidget> {
                                         ],
                                       ),
                                     ),
+                                  ),
+                                  SubsectionPhotosField(
+                                    field: kProbePhotos[4],
+                                    data: uSProbesUltrasoundRecord.snapshotData,
+                                    collectionPath: 'Ultrasound',
+                                    docId: widget.docRefProbes!.id,
+                                    storagePathPrefix:
+                                        'users/$currentUserUid/ultrasound/probes',
                                   ),
                                 ]
                                     .divide(SizedBox(height: 16.0))
