@@ -9,7 +9,6 @@ import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -477,15 +476,7 @@ class _MRIPowerstagesWidgetState extends State<MRIPowerstagesWidget> {
                           powerStages3SN: _model.textTextController3.text,
                         ));
 
-                        context.pushNamed(
-                          MriWidget.routeName,
-                          queryParameters: {
-                            'docRefMRI': serializeParam(
-                              widget.docDataPT,
-                              ParamType.DocumentReference,
-                            ),
-                          }.withoutNulls,
-                        );
+                        context.safePop();
                       },
                       text: 'Save',
                       options: FFButtonOptions(

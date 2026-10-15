@@ -8,7 +8,6 @@ import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -273,15 +272,7 @@ class _MMCosmeticWidgetState extends State<MMCosmeticWidget> {
                           cosmeticText: _model.textTextController.text,
                         ));
 
-                        context.pushNamed(
-                          MammographyWidget.routeName,
-                          queryParameters: {
-                            'docRefMamm': serializeParam(
-                              widget.docDataCC,
-                              ParamType.DocumentReference,
-                            ),
-                          }.withoutNulls,
-                        );
+                        context.safePop();
                       },
                       text: 'Save',
                       options: FFButtonOptions(

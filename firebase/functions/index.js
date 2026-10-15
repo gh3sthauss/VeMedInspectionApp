@@ -7,4 +7,6 @@ exports.onUserDeleted = functions.auth.user().onDelete(async (user) => {
   let userRef = firestore.doc("Users/" + user.uid);
 });
 
-exports.drivePhotoSync = require("./drive_sync").drivePhotoSync;
+const driveSync = require("./drive_sync");
+exports.drivePhotoSync = driveSync.drivePhotoSync;
+exports.drivePhotoUpload = driveSync.drivePhotoUpload;

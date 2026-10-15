@@ -9,7 +9,6 @@ import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/index.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -817,15 +816,7 @@ class _USSystemGeneralWidgetState extends State<USSystemGeneralWidget> {
                           sysGenDocName: _model.textTextController1.text,
                         ));
 
-                        context.pushNamed(
-                          UltrasoundWidget.routeName,
-                          queryParameters: {
-                            'docData': serializeParam(
-                              widget.docDataSysGen,
-                              ParamType.DocumentReference,
-                            ),
-                          }.withoutNulls,
-                        );
+                        context.safePop();
                       },
                       text: 'Save',
                       options: FFButtonOptions(

@@ -1,18 +1,22 @@
 // Google Drive photo links for the report PDFs.
 //
 // On export, the report's photo URLs are sent to the `drivePhotoSync` Cloud
-// Function (firebase/functions/drive_sync.js), which copies them into a shared
-// Drive folder per report with a sub-folder per section and returns the view
-// links. The PDF then shows those links instead of embedding every photo.
-// When the call fails (offline, timeout, Drive not configured) the exporter
-// falls back to embedding photos as before.
+// Function (firebase/functions/drive_sync.js), which sets up a shared Drive
+// folder per report with a sub-folder per section and returns the view links
+// within seconds; the photos themselves are copied in afterwards in the
+// background. The PDF then shows those links instead of embedding every
+// photo. When the call fails (offline, Drive not configured) the exporter
+// falls back to embedding photos and the user is told so.
 
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+
+import '/flutter_flow/nav/nav.dart' show appNavigatorKey;
 
 const _syncUrl =
     'https://us-central1-ve-med-on7ngs.cloudfunctions.net/drivePhotoSync';
@@ -64,43 +68,65 @@ Future<DrivePhotoLinks?> syncReportPhotosToDrive({
     for (final s in withPhotos) folderName(s.name): s.name,
   };
   if (withPhotos.isEmpty) return null;
-  try {
-    final idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
-    if (idToken == null) return null;
-    final res = await http
-        .post(
-          Uri.parse(_syncUrl),
-          headers: {
-            // Not "Authorization": Google's front end rejects Firebase ID
-            // tokens there before the request reaches the function.
-            'X-Firebase-Auth': idToken,
-            'Content-Type': 'application/json',
-          },
-          body: jsonEncode({
-            'data': {
-              'reportKey': '${collection}_$docId',
-              'title': title,
-              'sections': [
-                for (final s in withPhotos) {'name': s.name, 'urls': s.urls},
-              ],
+  final body = jsonEncode({
+    'data': {
+      'reportKey': '${collection}_$docId',
+      'title': title,
+      'sections': [
+        for (final s in withPhotos) {'name': s.name, 'urls': s.urls},
+      ],
+    },
+  });
+  // Two tries: one dropped request on a weak signal shouldn't change the PDF.
+  for (var attempt = 1; attempt <= 2; attempt++) {
+    try {
+      final idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
+      if (idToken == null) break;
+      final res = await http
+          .post(
+            Uri.parse(_syncUrl),
+            headers: {
+              // Not "Authorization": Google's front end rejects Firebase ID
+              // tokens there before the request reaches the function.
+              'X-Firebase-Auth': idToken,
+              'Content-Type': 'application/json',
             },
-          }),
-        )
-        .timeout(const Duration(seconds: 150));
-    if (res.statusCode != 200) {
+            body: body,
+          )
+          .timeout(const Duration(seconds: 45));
+      if (res.statusCode == 200) {
+        final result = (jsonDecode(res.body) as Map)['result'] as Map;
+        return DrivePhotoLinks(
+          result['reportUrl'] as String,
+          (result['sections'] as Map).map((k, v) =>
+              MapEntry(requestedNames[k as String] ?? k, v as String)),
+        );
+      }
       print('Drive photo sync failed: ${res.statusCode} ${res.body}');
-      return null;
+      // 4xx won't get better on a retry.
+      if (res.statusCode < 500) break;
+    } catch (e) {
+      print('Drive photo sync failed: $e');
     }
-    final result = (jsonDecode(res.body) as Map)['result'] as Map;
-    return DrivePhotoLinks(
-      result['reportUrl'] as String,
-      (result['sections'] as Map).map((k, v) =>
-          MapEntry(requestedNames[k as String] ?? k, v as String)),
-    );
-  } catch (e) {
-    print('Drive photo sync failed: $e');
-    return null;
   }
+  _tellPhotosEmbedded();
+  return null;
+}
+
+/// Lets the user know this PDF carries its photos itself rather than links,
+/// so it isn't a surprise that it's bigger than usual.
+void _tellPhotosEmbedded() {
+  final context = appNavigatorKey.currentContext;
+  if (context == null) return;
+  ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+    const SnackBar(
+      duration: Duration(seconds: 6),
+      content: Text(
+        "Couldn't reach Google Drive, so this PDF has the photos built in "
+        'instead of links. Export again with a connection to get links.',
+      ),
+    ),
+  );
 }
 
 /// Banner for the start of the report: one link to the whole photo folder.

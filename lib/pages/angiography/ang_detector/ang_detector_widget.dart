@@ -9,7 +9,6 @@ import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/index.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -601,15 +600,7 @@ class _AngDetectorWidgetState extends State<AngDetectorWidget> {
                           detectorCondition: _model.textTextController4.text,
                         ));
 
-                        context.pushNamed(
-                          AngiographyWidget.routeName,
-                          queryParameters: {
-                            'docData': serializeParam(
-                              widget.docDataAng,
-                              ParamType.DocumentReference,
-                            ),
-                          }.withoutNulls,
-                        );
+                        context.safePop();
                       },
                       text: 'Save',
                       options: FFButtonOptions(
