@@ -175,10 +175,13 @@ class VideoUploadQueue {
     try {
       final rows = await db.query('jobs', orderBy: 'id');
       for (final row in rows) {
+        final job = PendingVideo(row);
         try {
-          await _upload(PendingVideo(row));
+          await _upload(job);
         } catch (e) {
           debugPrint('Video upload paused: $e');
+          // Back to "Waiting for connection" until the next attempt.
+          progress.value = {...progress.value}..remove(job.id);
           break;
         }
       }
@@ -212,6 +215,9 @@ class VideoUploadQueue {
       await cancel(job.id);
       return;
     }
+    // Shows "Uploading" (rather than "Waiting for connection") from the
+    // first request on.
+    _setProgress(job.id, progress.value[job.id] ?? 0);
     var sessionUrl = job.sessionUrl;
     var folderUrl = job.folderUrl;
     if (sessionUrl == null) {
