@@ -1,16 +1,24 @@
+import '/components/share_doc_sheet.dart';
+import '/custom_code/doc_sharing.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Bottom sheet with Download / Delete actions for a single document row,
-/// replacing the pair of icon buttons previously placed directly on the
-/// card face.
+/// Bottom sheet with Download / Share / Delete actions for a single document
+/// row, replacing the pair of icon buttons previously placed directly on the
+/// card face. Given the report's [reference] and raw [data], it offers
+/// sharing, and for a report someone else shared with you it shows "Leave"
+/// instead of "Delete".
 Future<void> showDocActionsSheet(
   BuildContext context, {
   required String title,
   required Future<void> Function() onDownload,
   required Future<void> Function() onDelete,
+  DocumentReference? reference,
+  Map<String, dynamic>? data,
 }) {
+  final owner = data == null || isReportOwner(data);
   final theme = FlutterFlowTheme.of(context);
   return showModalBottomSheet(
     context: context,
@@ -58,16 +66,39 @@ Future<void> showDocActionsSheet(
                 await onDownload();
               },
             ),
-            _ActionRow(
-              icon: Icons.delete_outline_rounded,
-              label: 'Delete',
-              iconColor: theme.error,
-              labelColor: theme.error,
-              onTap: () async {
-                Navigator.of(sheetContext).pop();
-                await onDelete();
-              },
-            ),
+            if (reference != null)
+              _ActionRow(
+                icon: Icons.person_add_alt_1_rounded,
+                label: 'Share',
+                iconColor: theme.primary,
+                onTap: () async {
+                  Navigator.of(sheetContext).pop();
+                  await showShareDocSheet(context,
+                      reference: reference, title: title);
+                },
+              ),
+            if (owner)
+              _ActionRow(
+                icon: Icons.delete_outline_rounded,
+                label: 'Delete',
+                iconColor: theme.error,
+                labelColor: theme.error,
+                onTap: () async {
+                  Navigator.of(sheetContext).pop();
+                  await onDelete();
+                },
+              )
+            else
+              _ActionRow(
+                icon: Icons.logout_rounded,
+                label: 'Leave (remove from my list)',
+                iconColor: theme.error,
+                labelColor: theme.error,
+                onTap: () async {
+                  Navigator.of(sheetContext).pop();
+                  leaveReport(reference!);
+                },
+              ),
           ],
         ),
       );

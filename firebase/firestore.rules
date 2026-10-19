@@ -6,53 +6,59 @@ service cloud.firestore {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Inspection data is shared across the whole team - any signed-in user
-    // may read/write/delete, but the general public may not.
-    match /CT/{document} {
-      allow read, write: if request.auth != null;
+    // ---------------------------------------------------------------------
+    // Inspection reports. A report belongs to the user who created it
+    // (userID) and is shared with the emails in sharedWith (lower case).
+    // The owner and everyone it's shared with can read and edit it; only
+    // the owner can delete it or change who it's shared with - except that
+    // a collaborator may remove themselves ("Leave").
+    // ---------------------------------------------------------------------
+    function isReportCollection(c) {
+      return c in ['CT', 'MRI', 'Ultrasound', 'CArm', 'Fluoroscopy',
+                   'Mammography', 'XRay', 'PACS', 'DR', 'CR', 'Angiography'];
     }
 
-    match /MRI/{document} {
-      allow read, write: if request.auth != null;
+    function myEmail() {
+      return request.auth.token.email is string
+          ? request.auth.token.email.lower() : '';
     }
 
-    match /Ultrasound/{document} {
-      allow read, write: if request.auth != null;
+    function isOwner(data) {
+      return data.get('userID', '') == request.auth.uid;
     }
 
-    match /CArm/{document} {
-      allow read, write: if request.auth != null;
+    function isSharedWithMe(data) {
+      return myEmail() != '' && myEmail() in data.get('sharedWith', []);
     }
 
-    match /Fluoroscopy/{document} {
-      allow read, write: if request.auth != null;
+    function canAccess(data) {
+      return request.auth != null && (isOwner(data) || isSharedWithMe(data));
     }
 
-    match /Mammography/{document} {
-      allow read, write: if request.auth != null;
+    // A collaborator's update may touch anything except ownership and
+    // sharing, apart from taking their own email out of sharedWith.
+    function collaboratorUpdateAllowed() {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      return !changed.hasAny(['userID', 'ownerEmail', 'sharedWith'])
+          || (changed.hasOnly(['sharedWith'])
+              && request.resource.data.sharedWith
+                  == resource.data.sharedWith.removeAll([myEmail()]));
     }
 
-    match /XRay/{document} {
-      allow read, write: if request.auth != null;
-    }
-
-    match /PACS/{document} {
-      allow read, write: if request.auth != null;
-    }
-
-    match /DR/{document} {
-      allow read, write: if request.auth != null;
-    }
-
-    match /CR/{document} {
-      allow read, write: if request.auth != null;
+    match /{collection}/{document} {
+      allow read: if isReportCollection(collection) && canAccess(resource.data);
+      allow create: if isReportCollection(collection)
+          && request.auth != null
+          && request.resource.data.get('userID', '') == request.auth.uid;
+      allow update: if isReportCollection(collection)
+          && canAccess(resource.data)
+          && request.resource.data.get('userID', '') == resource.data.get('userID', '')
+          && (isOwner(resource.data) || collaboratorUpdateAllowed());
+      allow delete: if isReportCollection(collection)
+          && request.auth != null && isOwner(resource.data);
     }
 
     match /Test/{document} {
-      allow read, write: if request.auth != null;
-    }
-
-    match /Angiography/{document} {
       allow read, write: if request.auth != null;
     }
   }

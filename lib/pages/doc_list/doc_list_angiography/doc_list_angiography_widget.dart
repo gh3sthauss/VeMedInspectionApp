@@ -1,5 +1,6 @@
+import '/components/doc_row_title.dart';
+import '/custom_code/doc_sharing.dart';
 import '/components/pdf_progress.dart';
-import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/doc_actions_sheet.dart';
 import '/components/doc_naming.dart';
@@ -10,7 +11,6 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'doc_list_angiography_model.dart';
 export 'doc_list_angiography_model.dart';
 
@@ -66,11 +66,7 @@ class _DocListAngiographyWidgetState extends State<DocListAngiographyWidget> {
               Flexible(
                 child: StreamBuilder<List<AngiographyRecord>>(
                   stream: queryAngiographyRecord(
-                    queryBuilder: (angiographyRecord) =>
-                        angiographyRecord.where(
-                      'userID',
-                      isEqualTo: currentUserUid,
-                    ),
+                    queryBuilder: (angiographyRecord) => mineOrShared(angiographyRecord),
                   ),
                   builder: (context, snapshot) {
                     // Customize what your widget looks like when it's loading.
@@ -151,22 +147,15 @@ class _DocListAngiographyWidgetState extends State<DocListAngiographyWidget> {
                                       child: Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             20.0, 0.0, 0.0, 0.0),
-                                        child: Text(
-                                          smartDocName(
+                                        child: DocRowTitle(
+                                          title: smartDocName(
                                             listViewAngiographyRecord
                                                 .sysGenDocName,
                                             'Angiography',
                                             listViewAngiographyRecord
                                                 .reference.id,
                                           ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.readexPro(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.w600,
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
-                                          ),
+                                          data: listViewAngiographyRecord.snapshotData,
                                         ),
                                       ),
                                     ),
@@ -181,6 +170,8 @@ class _DocListAngiographyWidgetState extends State<DocListAngiographyWidget> {
                                         onTap: () {
                                           showDocActionsSheet(
                                             context,
+                                            reference: listViewAngiographyRecord.reference,
+                                            data: listViewAngiographyRecord.snapshotData,
                                             title: smartDocName(
                                               listViewAngiographyRecord
                                                   .sysGenDocName,

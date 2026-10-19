@@ -184,11 +184,32 @@ class HttpError extends Error {
   }
 }
 
-async function prepareReport(data, uid) {
+const REPORT_COLLECTIONS = ["CT", "MRI", "Ultrasound", "CArm", "Fluoroscopy",
+  "Mammography", "XRay", "PACS", "DR", "CR", "Angiography"];
+
+// Same access rule as firestore.rules: the report's owner, or someone it is
+// shared with (sharedWith holds lower-case emails).
+async function assertCanAccess(reportKey, user) {
+  const [collection, docId] = reportKey.split("_");
+  if (!REPORT_COLLECTIONS.includes(collection)) {
+    throw new HttpError(400, "Bad reportKey.");
+  }
+  const snap = await admin.firestore().doc(`${collection}/${docId}`).get();
+  const report = snap.data() || {};
+  const email = String(user.email || "").toLowerCase();
+  const shared = Array.isArray(report.sharedWith) ? report.sharedWith : [];
+  if (report.userID !== user.uid && !(email && shared.includes(email))) {
+    throw new HttpError(403, "No access to this report.");
+  }
+}
+
+async function prepareReport(data, user) {
+  const uid = user.uid;
   const reportKey = cleanName(data && data.reportKey, 200);
   if (!/^[A-Za-z]+_[A-Za-z0-9]+$/.test(reportKey)) {
     throw new HttpError(400, "Bad reportKey.");
   }
+  await assertCanAccess(reportKey, user);
   const title = cleanName(data.title) || reportKey;
   const sections = (Array.isArray(data.sections) ? data.sections : [])
       .slice(0, 40)
@@ -285,14 +306,14 @@ exports.drivePhotoSync = functions
       }
       try {
         const idToken = String(req.get("X-Firebase-Auth") || "");
-        let uid;
+        let user;
         try {
-          uid = (await admin.auth().verifyIdToken(idToken)).uid;
+          user = await admin.auth().verifyIdToken(idToken);
         } catch (_) {
           throw new HttpError(401, "Sign in first.");
         }
         const result =
-            await prepareReport((req.body && req.body.data) || {}, uid);
+            await prepareReport((req.body && req.body.data) || {}, user);
         res.json({result});
       } catch (e) {
         if (!(e instanceof HttpError)) functions.logger.error("drivePhotoSync", e);

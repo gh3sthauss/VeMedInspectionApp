@@ -1,5 +1,6 @@
+import '/components/doc_row_title.dart';
+import '/custom_code/doc_sharing.dart';
 import '/components/pdf_progress.dart';
-import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/doc_actions_sheet.dart';
 import '/components/pdf_section_selector.dart';
@@ -10,7 +11,6 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'doc_list_m_r_i_model.dart';
 export 'doc_list_m_r_i_model.dart';
 
@@ -65,10 +65,7 @@ class _DocListMRIWidgetState extends State<DocListMRIWidget> {
               Flexible(
                 child: StreamBuilder<List<MriRecord>>(
                   stream: queryMriRecord(
-                    queryBuilder: (mriRecord) => mriRecord.where(
-                      'userID',
-                      isEqualTo: currentUserUid,
-                    ),
+                    queryBuilder: (mriRecord) => mineOrShared(mriRecord),
                   ),
                   builder: (context, snapshot) {
                     // Customize what your widget looks like when it's loading.
@@ -148,20 +145,13 @@ class _DocListMRIWidgetState extends State<DocListMRIWidget> {
                                       child: Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             20.0, 0.0, 0.0, 0.0),
-                                        child: Text(
-                                          smartDocName(
+                                        child: DocRowTitle(
+                                          title: smartDocName(
                                             listViewMriRecord.sysGenDocName,
                                             'MRI',
                                             listViewMriRecord.reference.id,
                                           ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.readexPro(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.w600,
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
-                                          ),
+                                          data: listViewMriRecord.snapshotData,
                                         ),
                                       ),
                                     ),
@@ -176,6 +166,8 @@ class _DocListMRIWidgetState extends State<DocListMRIWidget> {
                                         onTap: () {
                                           showDocActionsSheet(
                                             context,
+                                            reference: listViewMriRecord.reference,
+                                            data: listViewMriRecord.snapshotData,
                                             title: smartDocName(
                                               listViewMriRecord.sysGenDocName,
                                               'MRI',

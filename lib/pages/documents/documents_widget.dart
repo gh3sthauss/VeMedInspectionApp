@@ -1,4 +1,4 @@
-import '/auth/firebase_auth/auth_util.dart';
+import '/custom_code/doc_sharing.dart';
 import '/backend/backend.dart';
 import '/components/logo_widget.dart';
 import '/components/modality_icons.dart';
@@ -44,7 +44,7 @@ class _DocumentsWidgetState extends State<DocumentsWidget> {
         _ModalitySpec(
           label: 'Angiography',
           countFuture: queryAngiographyRecordCount(
-            queryBuilder: (q) => q.where('userID', isEqualTo: currentUserUid),
+            queryBuilder: (q) => mineOrShared(q),
           ),
           onTap: () =>
               context.pushNamed(DocListAngiographyWidget.routeName),
@@ -52,35 +52,35 @@ class _DocumentsWidgetState extends State<DocumentsWidget> {
         _ModalitySpec(
           label: 'CT',
           countFuture: queryCtRecordCount(
-            queryBuilder: (q) => q.where('userID', isEqualTo: currentUserUid),
+            queryBuilder: (q) => mineOrShared(q),
           ),
           onTap: () => context.pushNamed(DocListCTWidget.routeName),
         ),
         _ModalitySpec(
           label: 'Ultrasound',
           countFuture: queryUltrasoundRecordCount(
-            queryBuilder: (q) => q.where('userID', isEqualTo: currentUserUid),
+            queryBuilder: (q) => mineOrShared(q),
           ),
           onTap: () => context.pushNamed(DocListUltrasoundWidget.routeName),
         ),
         _ModalitySpec(
           label: 'MRI',
           countFuture: queryMriRecordCount(
-            queryBuilder: (q) => q.where('userID', isEqualTo: currentUserUid),
+            queryBuilder: (q) => mineOrShared(q),
           ),
           onTap: () => context.pushNamed(DocListMRIWidget.routeName),
         ),
         _ModalitySpec(
           label: 'X-Ray',
           countFuture: queryXRayRecordCount(
-            queryBuilder: (q) => q.where('userID', isEqualTo: currentUserUid),
+            queryBuilder: (q) => mineOrShared(q),
           ),
           onTap: () => context.pushNamed(DocListXrayWidget.routeName),
         ),
         _ModalitySpec(
           label: 'Fluoroscopy',
           countFuture: queryFluoroscopyRecordCount(
-            queryBuilder: (q) => q.where('userID', isEqualTo: currentUserUid),
+            queryBuilder: (q) => mineOrShared(q),
           ),
           onTap: () =>
               context.pushNamed(DocListFlouroscopyWidget.routeName),
@@ -88,14 +88,14 @@ class _DocumentsWidgetState extends State<DocumentsWidget> {
         _ModalitySpec(
           label: 'C-Arm',
           countFuture: queryCArmRecordCount(
-            queryBuilder: (q) => q.where('userID', isEqualTo: currentUserUid),
+            queryBuilder: (q) => mineOrShared(q),
           ),
           onTap: () => context.pushNamed(DocListCArmWidget.routeName),
         ),
         _ModalitySpec(
           label: 'Mammography',
           countFuture: queryMammographyRecordCount(
-            queryBuilder: (q) => q.where('userID', isEqualTo: currentUserUid),
+            queryBuilder: (q) => mineOrShared(q),
           ),
           onTap: () =>
               context.pushNamed(DocListMammographyWidget.routeName),
@@ -103,21 +103,21 @@ class _DocumentsWidgetState extends State<DocumentsWidget> {
         _ModalitySpec(
           label: 'PACS',
           countFuture: queryPacsRecordCount(
-            queryBuilder: (q) => q.where('userID', isEqualTo: currentUserUid),
+            queryBuilder: (q) => mineOrShared(q),
           ),
           onTap: () => context.pushNamed(DocListPACSWidget.routeName),
         ),
         _ModalitySpec(
           label: 'DR',
           countFuture: queryDrRecordCount(
-            queryBuilder: (q) => q.where('userID', isEqualTo: currentUserUid),
+            queryBuilder: (q) => mineOrShared(q),
           ),
           onTap: () => context.pushNamed(DocListDRWidget.routeName),
         ),
         _ModalitySpec(
           label: 'CR',
           countFuture: queryCrRecordCount(
-            queryBuilder: (q) => q.where('userID', isEqualTo: currentUserUid),
+            queryBuilder: (q) => mineOrShared(q),
           ),
           onTap: () => context.pushNamed(DocListCRWidget.routeName),
         ),
