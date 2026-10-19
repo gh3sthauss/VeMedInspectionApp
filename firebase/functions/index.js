@@ -10,3 +10,4 @@ exports.onUserDeleted = functions.auth.user().onDelete(async (user) => {
 const driveSync = require("./drive_sync");
 exports.drivePhotoSync = driveSync.drivePhotoSync;
 exports.drivePhotoUpload = driveSync.drivePhotoUpload;
+exports.driveVideo = driveSync.driveVideo;

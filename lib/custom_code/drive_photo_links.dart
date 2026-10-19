@@ -222,3 +222,26 @@ pw.Widget driveSectionPhotosLink(String url, int count,
     ]),
   );
 }
+
+/// Under System General: a button to the report's Drive videos folder, when
+/// videos have finished uploading (they never live in the PDF itself).
+List<pw.Widget> systemGeneralVideosPdf(Map<String, dynamic> data,
+    {required PdfColor accent}) {
+  final videos = data['SysGenVideos'];
+  final url = data['SysGenVideoFolderUrl'];
+  final count = videos is List ? videos.length : 0;
+  if (count == 0 || url is! String || url.isEmpty) return const [];
+  return [
+    pw.Padding(
+      padding: const pw.EdgeInsets.only(top: 6),
+      child: pw.Row(children: [
+        drivePhotoButton(
+            count == 1
+                ? 'System General video (1)'
+                : 'System General videos ($count)',
+            url,
+            accent: accent),
+      ]),
+    ),
+  ];
+}

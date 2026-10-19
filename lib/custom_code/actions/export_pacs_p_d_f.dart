@@ -191,6 +191,7 @@ Future<void> exportPacsPDF(
           if (docRef.systemGeneralNotes.trim().isNotEmpty)
             ['Notes', docRef.systemGeneralNotes],
         ]),
+        ...systemGeneralVideosPdf(docRef.snapshotData, accent: _accent),
 
         // ================== CONSOLE AND WORKSTATION ======================
         ],

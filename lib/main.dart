@@ -1,3 +1,4 @@
+import '/custom_code/video_outbox/video_upload_queue.dart';
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -27,6 +28,7 @@ void main() async {
   ]);
 
   await ImageOutboxManager.instance.init();
+  await VideoUploadQueue.instance.init();
 
   runApp(MyApp());
 }
@@ -84,14 +86,19 @@ class _MyAppState extends State<MyApp> {
     // Drain anything queued from a previous offline session, then keep
     // retrying on reconnect and on a periodic fallback timer.
     ImageOutboxManager.instance.drainPending();
+    VideoUploadQueue.instance.drainPending();
     _connectivitySub = Connectivity().onConnectivityChanged.listen((results) {
       if (results.any((r) => r != ConnectivityResult.none)) {
         ImageOutboxManager.instance.drainPending();
+        VideoUploadQueue.instance.drainPending();
       }
     });
     _outboxDrainTimer = Timer.periodic(
       Duration(minutes: 2),
-      (_) => ImageOutboxManager.instance.drainPending(),
+      (_) {
+        ImageOutboxManager.instance.drainPending();
+        VideoUploadQueue.instance.drainPending();
+      },
     );
   }
 

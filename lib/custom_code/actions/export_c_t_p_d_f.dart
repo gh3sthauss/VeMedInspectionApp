@@ -215,6 +215,7 @@ Future<void> exportCtPDF(
           if (docRef.sysGenNotes.trim().isNotEmpty)
             ['Notes', docRef.sysGenNotes],
         ]),
+        ...systemGeneralVideosPdf(docRef.snapshotData, accent: _accent),
 
         // ============================ GANTRY =================================
         ],

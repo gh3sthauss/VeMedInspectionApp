@@ -1,6 +1,7 @@
 // MANUALLY MIGRATED for offline photo upload (outbox pattern) — see
 // lib/components/photo_upload_outbox/. If this page is re-synced from
 // FlutterFlow, this migration must be reapplied.
+import '/components/system_general_videos_field.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
@@ -679,6 +680,12 @@ class _MMSystemGeneralWidgetState extends State<MMSystemGeneralWidget> {
                                     mMSystemGeneralMammographyRecord.deviceImg
                                         .toList(),
                               ),
+                            ),
+                            SystemGeneralVideosField(
+                              collectionPath: 'Mammography',
+                              docId: widget.docDataSysGen!.id,
+                              modalityLabel: 'Mammography',
+                              data: mMSystemGeneralMammographyRecord.snapshotData,
                             ),
                             NotesField(
                               controller: _model.notesTextController ??=

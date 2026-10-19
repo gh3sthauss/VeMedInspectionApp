@@ -105,6 +105,30 @@ function driveClient(token) {
         type: "anyone",
       });
     },
+    // Opens a resumable upload and returns its session URL. Whoever holds
+    // that URL can upload this one file (no Drive credentials needed), so
+    // the phone can send a video straight to Drive.
+    async startResumable(name, parentId, contentType, size) {
+      const res = await fetch(`${UPLOAD}/files?uploadType=resumable&fields=id`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json; charset=UTF-8",
+          "X-Upload-Content-Type": contentType,
+          "X-Upload-Content-Length": String(size),
+        },
+        body: JSON.stringify({name, parents: [parentId]}),
+      });
+      const location = res.headers.get("location");
+      if (!res.ok || !location) {
+        throw new Error(`Drive resumable start failed: ${res.status} ${await res.text()}`);
+      }
+      return location;
+    },
+    async parentsOf(id) {
+      const f = await call("GET", `${DRIVE}/files/${id}?fields=parents,trashed`);
+      return f && !f.trashed ? (f.parents || []) : [];
+    },
     async upload(name, parentId, contentType, bytes) {
       const boundary = `vemed${crypto.randomBytes(12).toString("hex")}`;
       const meta = JSON.stringify({name, parents: [parentId]});
@@ -203,6 +227,38 @@ async function assertCanAccess(reportKey, user) {
   }
 }
 
+// Makes sure the shared root folder and this report's folder exist (renamed
+// if the title changed, shared by link), and records them in
+// driveSync/{reportKey}. `sameReport` is false when the report folder had to
+// be (re)created, i.e. any sub-folder ids saved before are stale.
+async function ensureReportFolder(drive, reportKey, title) {
+  const db = admin.firestore();
+  const configRef = db.doc("driveSync/_config");
+  const config = (await configRef.get()).data() || {};
+  let rootId = await drive.alive(config.rootFolderId);
+  if (!rootId) {
+    rootId = await drive.createFolder(ROOT_FOLDER_NAME);
+    await configRef.set({rootFolderId: rootId}, {merge: true});
+  }
+
+  const stateRef = db.doc(`driveSync/${reportKey}`);
+  const state = (await stateRef.get()).data() || {};
+  let reportId = await drive.alive(state.folderId);
+  const sameReport = !!reportId && reportId === state.folderId;
+  let shared = !!state.shared && sameReport;
+  if (!reportId) {
+    reportId = await drive.createFolder(title, rootId);
+  } else if (state.title !== title) {
+    await drive.rename(reportId, title);
+  }
+  if (!shared) {
+    await drive.shareWithLink(reportId);
+    shared = true;
+  }
+  await stateRef.set({folderId: reportId, title, shared}, {merge: true});
+  return {stateRef, state, reportId, sameReport, shared};
+}
+
 async function prepareReport(data, user) {
   const uid = user.uid;
   const reportKey = cleanName(data && data.reportKey, 200);
@@ -223,34 +279,10 @@ async function prepareReport(data, user) {
 
   const db = admin.firestore();
   const drive = driveClient(await getAccessToken());
-
-  // Shared root folder, created once.
-  const configRef = db.doc("driveSync/_config");
-  const config = (await configRef.get()).data() || {};
-  let rootId = await drive.alive(config.rootFolderId);
-  if (!rootId) {
-    rootId = await drive.createFolder(ROOT_FOLDER_NAME);
-    await configRef.set({rootFolderId: rootId}, {merge: true});
-  }
-
-  const stateRef = db.doc(`driveSync/${reportKey}`);
-  const state = (await stateRef.get()).data() || {};
+  const {stateRef, state, reportId, sameReport, shared} =
+      await ensureReportFolder(drive, reportKey, title);
   // Folders saved by the earlier one-step version live under `sections`.
   const savedFolders = state.folders || state.sections || {};
-
-  // Report folder (renamed if the brand/model/SN changed since last time).
-  let reportId = await drive.alive(state.folderId);
-  const sameReport = !!reportId && reportId === state.folderId;
-  let shared = !!state.shared && sameReport;
-  if (!reportId) {
-    reportId = await drive.createFolder(title, rootId);
-  } else if (state.title !== title) {
-    await drive.rename(reportId, title);
-  }
-  if (!shared) {
-    await drive.shareWithLink(reportId);
-    shared = true;
-  }
 
   // Section folders, in parallel. One left over from a deleted report folder
   // is gone too, so it's only reused while the report folder is the same.
@@ -445,5 +477,86 @@ exports.drivePhotoUpload = functions
       } catch (e) {
         functions.logger.error(`drivePhotoUpload ${reportKey}`, e);
         await filesRef.set({leaseUntil: 0}, {merge: true});
+      }
+    });
+
+// ---------------------------------------------------------------------------
+// driveVideo (POST, header X-Firebase-Auth: <Firebase ID token>)
+// Videos go straight from the phone to Drive (never through Firebase
+// Storage): this hands out a resumable upload session for one video, or
+// trashes one. Videos live in the report folder's "System General - Videos".
+// body: {data: {action: "start", reportKey, title, fileName, mimeType, size}}
+//   -> {result: {sessionUrl, folderUrl}}
+// body: {data: {action: "delete", reportKey, fileId}} -> {result: {ok: true}}
+// ---------------------------------------------------------------------------
+
+const VIDEO_FOLDER_NAME = "00 System General - Videos";
+const MAX_VIDEO_BYTES = 10 * 1024 * 1024 * 1024;
+
+async function videoAction(data, user) {
+  const reportKey = cleanName(data && data.reportKey, 200);
+  if (!/^[A-Za-z]+_[A-Za-z0-9]+$/.test(reportKey)) {
+    throw new HttpError(400, "Bad reportKey.");
+  }
+  await assertCanAccess(reportKey, user);
+  const drive = driveClient(await getAccessToken());
+
+  if (data.action === "start") {
+    const size = Number(data.size);
+    if (!(size > 0 && size <= MAX_VIDEO_BYTES)) {
+      throw new HttpError(400, "Bad video size.");
+    }
+    const mime = /^video\/[\w.+-]+$/.test(String(data.mimeType || "")) ?
+      data.mimeType : "video/mp4";
+    const fileName = cleanName(data.fileName, 150) || "video.mp4";
+    const title = cleanName(data.title) || reportKey;
+    const {stateRef, state, reportId, sameReport} =
+        await ensureReportFolder(drive, reportKey, title);
+    let videoFolderId = sameReport ? await drive.alive(state.videoFolderId) : null;
+    if (!videoFolderId) {
+      videoFolderId = await drive.createFolder(VIDEO_FOLDER_NAME, reportId);
+      await stateRef.set({videoFolderId}, {merge: true});
+    }
+    const sessionUrl =
+        await drive.startResumable(fileName, videoFolderId, mime, size);
+    return {sessionUrl, folderUrl: folderUrl(videoFolderId)};
+  }
+
+  if (data.action === "delete") {
+    const fileId = String(data.fileId || "");
+    if (!/^[\w-]{10,}$/.test(fileId)) throw new HttpError(400, "Bad fileId.");
+    const state =
+        (await admin.firestore().doc(`driveSync/${reportKey}`).get()).data() || {};
+    // Only videos of this report can be removed through it.
+    const parents = await drive.parentsOf(fileId);
+    if (!state.videoFolderId || !parents.includes(state.videoFolderId)) {
+      throw new HttpError(403, "Not a video of this report.");
+    }
+    await drive.trash(fileId);
+    return {ok: true};
+  }
+
+  throw new HttpError(400, "Unknown action.");
+}
+
+exports.driveVideo = functions
+    .runWith({secrets: SECRETS, timeoutSeconds: 60, memory: "256MB"})
+    .https.onRequest(async (req, res) => {
+      if (req.method !== "POST") {
+        res.status(405).json({error: "POST only."});
+        return;
+      }
+      try {
+        let user;
+        try {
+          user = await admin.auth().verifyIdToken(String(req.get("X-Firebase-Auth") || ""));
+        } catch (_) {
+          throw new HttpError(401, "Sign in first.");
+        }
+        const result = await videoAction((req.body && req.body.data) || {}, user);
+        res.json({result});
+      } catch (e) {
+        if (!(e instanceof HttpError)) functions.logger.error("driveVideo", e);
+        res.status(e.status || 500).json({error: e.status ? e.message : "Video request failed."});
       }
     });
