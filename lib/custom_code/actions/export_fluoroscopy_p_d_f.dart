@@ -4,6 +4,7 @@ import '/custom_code/image_outbox/image_outbox_manager.dart';
 import '/components/doc_naming.dart';
 import '/components/pdf_progress.dart';
 import '/custom_code/drive_photo_links.dart';
+import '/custom_code/pdf_cover_hero.dart';
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -139,6 +140,7 @@ Future<void> exportFluoroscopyPDF(
       ? deviceImg.first
       : (deviceLocal ??
           (cosmeticGallery.isNotEmpty ? cosmeticGallery.first : null));
+  await prepareCoverHero(heroImage);
 
   // Drive link for a section when synced, otherwise its embedded photo grid.
   List<pw.Widget> sectionPhotos(String name, List<String> urls,
@@ -432,21 +434,7 @@ pw.Widget _buildCoverPage(
       // Hero: the actual device photo when one was captured, otherwise the
       // branded modality icon with its label.
       if (heroImage != null)
-        // Same full-width box as always; the photo is scaled down to fit
-        // inside it (centered) instead of being cropped to fill it.
-        pw.Center(
-          child: pw.Container(
-            width: double.infinity,
-            height: 360,
-            padding: const pw.EdgeInsets.all(4),
-            decoration: pw.BoxDecoration(
-              border: pw.Border.all(color: _borderColor, width: 1),
-              borderRadius: const pw.BorderRadius.all(pw.Radius.circular(6)),
-            ),
-            child: pw.Image(heroImage,
-                fit: pw.BoxFit.contain, alignment: pw.Alignment.center),
-          ),
-        )
+        coverHeroBox(heroImage, borderColor: _borderColor)
       else
         pw.Center(
           child: pw.Stack(
