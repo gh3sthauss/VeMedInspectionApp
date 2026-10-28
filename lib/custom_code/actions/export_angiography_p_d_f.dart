@@ -553,19 +553,21 @@ pw.Widget _buildCoverPage(
       // Hero: the actual device photo when one was captured, otherwise the
       // branded modality icon with its label.
       if (heroImage != null)
+        // Whole photo, scaled to fit (portrait photos aren't cropped):
+        // the frame takes the photo's own shape, at most full width x 430.
         pw.Center(
-          child: pw.Container(
-            width: double.infinity,
-            height: 360,
-            decoration: pw.BoxDecoration(
-              border: pw.Border.all(color: _borderColor, width: 1),
-              borderRadius: const pw.BorderRadius.all(pw.Radius.circular(6)),
-            ),
-            child: pw.ClipRRect(
-              horizontalRadius: 6,
-              verticalRadius: 6,
-              child: pw.Image(heroImage,
-                  fit: pw.BoxFit.cover, alignment: pw.Alignment.center),
+          child: pw.ConstrainedBox(
+            constraints: const pw.BoxConstraints(maxHeight: 430),
+            child: pw.Container(
+              decoration: pw.BoxDecoration(
+                border: pw.Border.all(color: _borderColor, width: 1),
+                borderRadius: const pw.BorderRadius.all(pw.Radius.circular(6)),
+              ),
+              child: pw.ClipRRect(
+                horizontalRadius: 6,
+                verticalRadius: 6,
+                child: pw.Image(heroImage, fit: pw.BoxFit.contain),
+              ),
             ),
           ),
         )
