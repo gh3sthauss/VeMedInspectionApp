@@ -82,6 +82,8 @@ Future<void> exportUltrasoundPDF(
       ],
     ),
     sections: [
+      if (inc('system_general'))
+        DrivePhotoSection('System General', docRef.deviceImg),
       if (inc('probes'))
         ...subsectionDriveSections(kProbePhotos, docRef.snapshotData),
       if (inc('software'))
@@ -193,6 +195,7 @@ Future<void> exportUltrasoundPDF(
           if (docRef.systemGeneralNotes.trim().isNotEmpty)
             ['Notes', docRef.systemGeneralNotes],
         ]),
+        ...sectionPhotos('System General', docRef.deviceImg, const []),
         ...systemGeneralVideosPdf(docRef.snapshotData, accent: _accent),
 
         // ============================ PROBES ================================

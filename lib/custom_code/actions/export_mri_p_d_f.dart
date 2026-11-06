@@ -76,6 +76,8 @@ Future<void> exportMriPDF(
       ],
     ),
     sections: [
+      if (inc('system_general'))
+        DrivePhotoSection('System General', docRef.deviceImg),
       if (inc('magnet')) DrivePhotoSection('Magnet', docRef.magnetPicURL),
       if (inc('cooler_compressor'))
         DrivePhotoSection('Cooler / Compressor', docRef.coolingSystemPicURL),
@@ -240,6 +242,7 @@ Future<void> exportMriPDF(
           if (docRef.systemGeneralNotes.trim().isNotEmpty)
             ['Notes', docRef.systemGeneralNotes],
         ]),
+        ...sectionPhotos('System General', docRef.deviceImg, const []),
         ...systemGeneralVideosPdf(docRef.snapshotData, accent: _accent),
 
         // ============================ MAGNET =================================

@@ -80,6 +80,8 @@ Future<void> exportCtPDF(
       ],
     ),
     sections: [
+      if (inc('system_general'))
+        DrivePhotoSection('System General', docRef.deviceImg),
       if (inc('gantry')) DrivePhotoSection('Gantry', docRef.gantryPicURL),
       if (inc('gantry'))
         ...subsectionDriveSections(kCtGantryPhotos, docRef.snapshotData),
@@ -217,6 +219,7 @@ Future<void> exportCtPDF(
           if (docRef.sysGenNotes.trim().isNotEmpty)
             ['Notes', docRef.sysGenNotes],
         ]),
+        ...sectionPhotos('System General', docRef.deviceImg, const []),
         ...systemGeneralVideosPdf(docRef.snapshotData, accent: _accent),
 
         // ============================ GANTRY =================================

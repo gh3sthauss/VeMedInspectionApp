@@ -71,6 +71,8 @@ Future<void> exportCArmPDF(
       ],
     ),
     sections: [
+      if (inc('system_general'))
+        DrivePhotoSection('System General', docRef.deviceImg),
       if (inc('tube')) DrivePhotoSection('Tube', docRef.tubePicURL),
       if (inc('detector')) DrivePhotoSection('Detector', docRef.detectorPicURL),
       if (inc('software'))
@@ -176,6 +178,7 @@ Future<void> exportCArmPDF(
           if (docRef.systemGeneralNotes.trim().isNotEmpty)
             ['Notes', docRef.systemGeneralNotes],
         ]),
+        ...sectionPhotos('System General', docRef.deviceImg, const []),
         ...systemGeneralVideosPdf(docRef.snapshotData, accent: _accent),
 
         // ============================ TUBE =================================

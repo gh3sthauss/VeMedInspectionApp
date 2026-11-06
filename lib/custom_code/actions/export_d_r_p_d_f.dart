@@ -71,6 +71,8 @@ Future<void> exportDrPDF(
       ],
     ),
     sections: [
+      if (inc('system_general'))
+        DrivePhotoSection('System General', docRef.deviceImg),
       if (inc('console'))
         DrivePhotoSection('Console and Workstation', [
           ...docRef.cnWCMOptPURL,
@@ -193,6 +195,7 @@ Future<void> exportDrPDF(
           if (docRef.systemGeneralNotes.trim().isNotEmpty)
             ['Notes', docRef.systemGeneralNotes],
         ]),
+        ...sectionPhotos('System General', docRef.deviceImg, const []),
         ...systemGeneralVideosPdf(docRef.snapshotData, accent: _accent),
 
         // ================== CONSOLE AND WORKSTATION ======================
