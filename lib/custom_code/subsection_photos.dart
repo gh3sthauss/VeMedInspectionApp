@@ -26,6 +26,12 @@ List<SubsectionPhotoField> _numbered(String label, String key, int count) => [
 /// CT / Angiography Console & Workstations: the IRS card.
 const kIrsPhotos = [SubsectionPhotoField('Console - IRS', 'CnWIRSPicURL')];
 
+/// Mammography Accessories: the Compression Paddle.
+const kCompressionPaddlePhotos = [
+  SubsectionPhotoField(
+      'Accessories - Compression Paddle', 'AccessoriesCompressionPaddlePicURL'),
+];
+
 /// CT Gantry: Model / Tube / Detector cards.
 const kCtGantryPhotos = [
   SubsectionPhotoField('Gantry - Model', 'GantryModelPicURL'),

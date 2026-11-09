@@ -5,6 +5,8 @@ import '/components/doc_naming.dart';
 import '/components/pdf_progress.dart';
 import '/custom_code/drive_photo_links.dart';
 import '/custom_code/pdf_cover_hero.dart';
+import '/custom_code/pdf_subsection_photos.dart';
+import '/custom_code/subsection_photos.dart';
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -80,6 +82,9 @@ Future<void> exportMammographyPDF(
       if (inc('tube')) DrivePhotoSection('Tube', docRef.tubePicURL),
       if (inc('accessories'))
         DrivePhotoSection('Accessories', docRef.accessoriesPicURL),
+      if (inc('accessories'))
+        ...subsectionDriveSections(
+            kCompressionPaddlePhotos, docRef.snapshotData),
       if (inc('cosmetic'))
         DrivePhotoSection('Cosmetic Condition', docRef.cosmeticPicURL),
       if (inc('delivery'))
@@ -114,6 +119,10 @@ Future<void> exportMammographyPDF(
   final detectorGallery = results[6];
   final dnTGallery = results[7];
   final tubeGallery = results[8];
+  final subGalleries = drive == null && inc('accessories')
+      ? await loadSubsectionGalleries(
+          kCompressionPaddlePhotos, docRef.snapshotData, _loadImages)
+      : <String, List<pw.ImageProvider>>{};
 
   // Hero image comes from the dedicated deviceImg field; falls back to the
   // first cosmetic photo if deviceImg wasn't populated for this record.
@@ -254,6 +263,15 @@ Future<void> exportMammographyPDF(
         ]),
         ...sectionPhotos('Accessories', docRef.accessoriesPicURL,
             accessoriesGallery),
+        ...subsectionPhotosPdf(
+          fields: kCompressionPaddlePhotos,
+          data: docRef.snapshotData,
+          drive: drive,
+          galleries: subGalleries,
+          accent: _accent,
+          textColor: _textDark,
+          grid: _imageGrid,
+        ),
 
 
         // ====================== COSMETIC CONDITION =============================

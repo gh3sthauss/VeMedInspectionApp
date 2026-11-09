@@ -6,7 +6,9 @@ import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
 import '/components/notes_field.dart';
 import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
+import '/components/subsection_photos_field.dart';
 import '/components/yes_no_field.dart';
+import '/custom_code/subsection_photos.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -49,6 +51,8 @@ class _MMAccessoriesWidgetState extends State<MMAccessoriesWidget> {
     _model.textInputFocusNode2 ??= FocusNode();
 
     _model.textInputFocusNode3 ??= FocusNode();
+
+    _model.textInputFocusNode4 ??= FocusNode();
   }
 
   @override
@@ -84,8 +88,6 @@ class _MMAccessoriesWidgetState extends State<MMAccessoriesWidget> {
 
         final mMAccessoriesMammographyRecord = snapshot.data!;
         final accessoriesData = mMAccessoriesMammographyRecord.snapshotData;
-        _model.compressionPaddle ??=
-            accessoriesData['AccessoriesCompressionPaddle'] as String? ?? '';
         _model.biopsy ??= accessoriesData['AccessoriesBiopsy'] as String? ?? '';
 
         return GestureDetector(
@@ -473,11 +475,135 @@ class _MMAccessoriesWidgetState extends State<MMAccessoriesWidget> {
                             ),
                           ),
                         ),
-                        YesNoField(
-                          label: 'Compression Paddle',
-                          value: _model.compressionPaddle!,
-                          onChanged: (v) => safeSetState(
-                              () => _model.compressionPaddle = v),
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 2.0, 0.0),
+                          child: Container(
+                            width: 320.0,
+                            child: TextFormField(
+                              controller: _model.textInputTextController4 ??=
+                                  TextEditingController(
+                                text: mMAccessoriesMammographyRecord
+                                    .snapshotData['AccessoriesCompressionPaddle'] as String?,
+                              ),
+                              focusNode: _model.textInputFocusNode4,
+                              onChanged: (_) => EasyDebounce.debounce(
+                                '_model.textInputTextController4',
+                                Duration(milliseconds: 2000),
+                                () => safeSetState(() {}),
+                              ),
+                              textCapitalization: TextCapitalization.words,
+                              obscureText: false,
+                              decoration: InputDecoration(
+                                labelText: 'Compression Paddle',
+                                labelStyle: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.plusJakartaSans(
+                                        fontWeight: FontWeight.normal,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                      color: Color(0xFF14181B),
+                                      fontSize: 16.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.normal,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                                alignLabelWithHint: false,
+                                hintText: ' ',
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFFE0E3E7),
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(50.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFF4B39EF),
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(50.0),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFFFF5963),
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(50.0),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFFFF5963),
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(50.0),
+                                ),
+                                filled: true,
+                                fillColor: Color(0xFFF0F7FF),
+                                contentPadding: EdgeInsetsDirectional.fromSTEB(
+                                    20.0, 10.0, 0.0, 10.0),
+                                suffixIcon: _model.textInputTextController4!
+                                        .text.isNotEmpty
+                                    ? InkWell(
+                                        onTap: () async {
+                                          _model.textInputTextController4
+                                              ?.clear();
+                                          safeSetState(() {});
+                                        },
+                                        child: Icon(
+                                          Icons.clear,
+                                          color: Color(0xFF757575),
+                                          size: 22.0,
+                                        ),
+                                      )
+                                    : null,
+                              ),
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    font: GoogleFonts.plusJakartaSans(
+                                      fontWeight: FontWeight.normal,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                                    color: Color(0xFF14181B),
+                                    fontSize: 16.0,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FontWeight.normal,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                              validator: _model
+                                  .textInputTextController4Validator
+                                  .asValidator(context),
+                              inputFormatters: [
+                                if (!isAndroid && !isiOS)
+                                  TextInputFormatter.withFunction(
+                                      (oldValue, newValue) {
+                                    return TextEditingValue(
+                                      selection: newValue.selection,
+                                      text: newValue.text.toCapitalization(
+                                          TextCapitalization.words),
+                                    );
+                                  }),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SubsectionPhotosField(
+                          field: kCompressionPaddlePhotos[0],
+                          data: accessoriesData,
+                          collectionPath: 'Mammography',
+                          docId: widget.docDataA!.id,
+                          storagePathPrefix:
+                              'users/$currentUserUid/mammography/accessories',
                         ),
                         YesNoField(
                           label: 'Biopsy',
@@ -561,7 +687,7 @@ class _MMAccessoriesWidgetState extends State<MMAccessoriesWidget> {
                           'AccessoriesBucky':
                               _model.textInputTextController3.text,
                           'AccessoriesCompressionPaddle':
-                              _model.compressionPaddle ?? '',
+                              _model.textInputTextController4.text,
                           'AccessoriesBiopsy': _model.biopsy ?? '',
                         });
 
