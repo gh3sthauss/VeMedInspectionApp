@@ -224,6 +224,7 @@ Future<void> exportMammographyPDF(
         _infoTable(rows: [
           ['Model', docRef.tube1Model],
           ['Year of Manufacture', docRef.tube1YOM],
+          ['Tomosynthesis', '${docRef.snapshotData['TubeTomosynthesis'] ?? ''}'],
           if (docRef.tubeNotes.trim().isNotEmpty)
             ['Notes', docRef.tubeNotes],
         ]),
@@ -237,6 +238,7 @@ Future<void> exportMammographyPDF(
           ['Model', docRef.accessoriesPModal],
           ['Model No.', docRef.accessoriesPModelNo],
           ['Serial Number', docRef.accessoriesPSN],
+          ['Bucky', '${docRef.snapshotData['AccessoriesBucky'] ?? ''}'],
           ['CDs', docRef.accessoriesCDs],
           ['Spare Parts', docRef.accessoriesSpareP],
           if (docRef.accessoriesNotes.trim().isNotEmpty)

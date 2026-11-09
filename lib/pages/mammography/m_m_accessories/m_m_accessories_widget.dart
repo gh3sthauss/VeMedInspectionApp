@@ -46,6 +46,8 @@ class _MMAccessoriesWidgetState extends State<MMAccessoriesWidget> {
     _model.textInputFocusNode1 ??= FocusNode();
 
     _model.textInputFocusNode2 ??= FocusNode();
+
+    _model.textInputFocusNode3 ??= FocusNode();
   }
 
   @override
@@ -344,6 +346,128 @@ class _MMAccessoriesWidgetState extends State<MMAccessoriesWidget> {
                             ),
                           ),
                         ),
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 2.0, 0.0),
+                          child: Container(
+                            width: 320.0,
+                            child: TextFormField(
+                              controller: _model.textInputTextController3 ??=
+                                  TextEditingController(
+                                text: mMAccessoriesMammographyRecord
+                                    .snapshotData['AccessoriesBucky'] as String?,
+                              ),
+                              focusNode: _model.textInputFocusNode3,
+                              onChanged: (_) => EasyDebounce.debounce(
+                                '_model.textInputTextController3',
+                                Duration(milliseconds: 2000),
+                                () => safeSetState(() {}),
+                              ),
+                              textCapitalization: TextCapitalization.words,
+                              obscureText: false,
+                              decoration: InputDecoration(
+                                labelText: 'Bucky',
+                                labelStyle: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      font: GoogleFonts.plusJakartaSans(
+                                        fontWeight: FontWeight.normal,
+                                        fontStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .fontStyle,
+                                      ),
+                                      color: Color(0xFF14181B),
+                                      fontSize: 16.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.normal,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                                alignLabelWithHint: false,
+                                hintText: ' ',
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFFE0E3E7),
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(50.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFF4B39EF),
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(50.0),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFFFF5963),
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(50.0),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFFFF5963),
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(50.0),
+                                ),
+                                filled: true,
+                                fillColor: Color(0xFFF0F7FF),
+                                contentPadding: EdgeInsetsDirectional.fromSTEB(
+                                    20.0, 10.0, 0.0, 10.0),
+                                suffixIcon: _model.textInputTextController3!
+                                        .text.isNotEmpty
+                                    ? InkWell(
+                                        onTap: () async {
+                                          _model.textInputTextController3
+                                              ?.clear();
+                                          safeSetState(() {});
+                                        },
+                                        child: Icon(
+                                          Icons.clear,
+                                          color: Color(0xFF757575),
+                                          size: 22.0,
+                                        ),
+                                      )
+                                    : null,
+                              ),
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    font: GoogleFonts.plusJakartaSans(
+                                      fontWeight: FontWeight.normal,
+                                      fontStyle: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .fontStyle,
+                                    ),
+                                    color: Color(0xFF14181B),
+                                    fontSize: 16.0,
+                                    letterSpacing: 0.0,
+                                    fontWeight: FontWeight.normal,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                              validator: _model
+                                  .textInputTextController3Validator
+                                  .asValidator(context),
+                              inputFormatters: [
+                                if (!isAndroid && !isiOS)
+                                  TextInputFormatter.withFunction(
+                                      (oldValue, newValue) {
+                                    return TextEditingValue(
+                                      selection: newValue.selection,
+                                      text: newValue.text.toCapitalization(
+                                          TextCapitalization.words),
+                                    );
+                                  }),
+                              ],
+                            ),
+                          ),
+                        ),
                       ]
                           .divide(SizedBox(height: 16.0))
                           .addToStart(SizedBox(height: 20.0)),
@@ -409,13 +533,17 @@ class _MMAccessoriesWidgetState extends State<MMAccessoriesWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        widget.docDataA!
-                            .update(createMammographyRecordData(
-                          accessoriesNotes: _model.notesTextController.text,
-                          accessoriesCDs: _model.textInputTextController1.text,
-                          accessoriesSpareP:
-                              _model.textInputTextController2.text,
-                        ));
+                        widget.docDataA!.update({
+                          ...createMammographyRecordData(
+                            accessoriesNotes: _model.notesTextController.text,
+                            accessoriesCDs:
+                                _model.textInputTextController1.text,
+                            accessoriesSpareP:
+                                _model.textInputTextController2.text,
+                          ),
+                          'AccessoriesBucky':
+                              _model.textInputTextController3.text,
+                        });
 
                         context.safePop();
                       },

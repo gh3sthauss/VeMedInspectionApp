@@ -18,6 +18,9 @@ class MMTubeModel extends FlutterFlowModel<MMTubeWidget> {
   TextEditingController? textTextController2;
   String? Function(BuildContext, String?)? textTextController2Validator;
 
+  // Yes/No selection: 'Yes', 'No' or '' (stored raw as TubeTomosynthesis).
+  String? tomosynthesis;
+
   // State field(s) for the Notes widget.
   FocusNode? notesFocusNode;
   TextEditingController? notesTextController;

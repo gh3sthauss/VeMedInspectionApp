@@ -18,6 +18,11 @@ class MMAccessoriesModel extends FlutterFlowModel<MMAccessoriesWidget> {
   TextEditingController? textInputTextController2;
   String? Function(BuildContext, String?)? textInputTextController2Validator;
 
+  // State field(s) for the Bucky textInput (stored raw as AccessoriesBucky).
+  FocusNode? textInputFocusNode3;
+  TextEditingController? textInputTextController3;
+  String? Function(BuildContext, String?)? textInputTextController3Validator;
+
   // State field(s) for the Notes widget.
   FocusNode? notesFocusNode;
   TextEditingController? notesTextController;
@@ -36,6 +41,9 @@ class MMAccessoriesModel extends FlutterFlowModel<MMAccessoriesWidget> {
 
     textInputFocusNode2?.dispose();
     textInputTextController2?.dispose();
+
+    textInputFocusNode3?.dispose();
+    textInputTextController3?.dispose();
 
     notesFocusNode?.dispose();
     notesTextController?.dispose();
