@@ -4433,66 +4433,66 @@ class _MRICoilsWidgetState extends State<MRICoilsWidget> {
                               ),
                             ),
                           ),
+                          Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      25.0, 0.0, 25.0, 0.0),
+                                  child: Align(
+                                    alignment: AlignmentDirectional(-1.0, 0.0),
+                                    child: Text(
+                                      'General pictures',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            font: GoogleFonts.readexPro(
+                                              fontWeight: FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontWeight,
+                                              fontStyle: FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                            ),
+                                            fontSize: 16.0,
+                                            letterSpacing: 0.0,
+                                            fontWeight: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .fontWeight,
+                                            fontStyle: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .fontStyle,
+                                          ),
+                                    ),
+                                  )),
+                              wrapWithModel(
+                                model: _photoModel,
+                                updateCallback: () => safeSetState(() {}),
+                                child: PhotoUploadOutboxWidget(
+                                  collectionPath: 'MRI',
+                                  docId: widget.docRefCoil!.id,
+                                  arrayFieldName: 'CoilsPicURL',
+                                  storagePathPrefix: 'users/$currentUserUid/mri/coils',
+                                  existingPhotoUrls:
+                                      mRICoilsMriRecord.coilsPicURL.toList(),
+                                ),
+                              ),
+                              NotesField(
+                                controller: _model.notesTextController ??=
+                                    TextEditingController(
+                                  text: mRICoilsMriRecord.coilsNotes,
+                                ),
+                                focusNode: _model.notesFocusNode,
+                                validator: _model.notesTextControllerValidator,
+                              ),
+                            ],
+                          ),
                         ]
                             .divide(SizedBox(height: 16.0))
                             .addToStart(SizedBox(height: 20.0))
                             .addToEnd(SizedBox(height: 20.0)),
                       ),
                     ),
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              25.0, 0.0, 25.0, 0.0),
-                          child: Align(
-                            alignment: AlignmentDirectional(-1.0, 0.0),
-                            child: Text(
-                              'General pictures',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    font: GoogleFonts.readexPro(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                    fontSize: 16.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontStyle,
-                                  ),
-                            ),
-                          )),
-                      wrapWithModel(
-                        model: _photoModel,
-                        updateCallback: () => safeSetState(() {}),
-                        child: PhotoUploadOutboxWidget(
-                          collectionPath: 'MRI',
-                          docId: widget.docRefCoil!.id,
-                          arrayFieldName: 'CoilsPicURL',
-                          storagePathPrefix: 'users/$currentUserUid/mri/coils',
-                          existingPhotoUrls:
-                              mRICoilsMriRecord.coilsPicURL.toList(),
-                        ),
-                      ),
-                      NotesField(
-                        controller: _model.notesTextController ??=
-                            TextEditingController(
-                          text: mRICoilsMriRecord.coilsNotes,
-                        ),
-                        focusNode: _model.notesFocusNode,
-                        validator: _model.notesTextControllerValidator,
-                      ),
-                    ],
                   ),
                   Align(
                     alignment: AlignmentDirectional(0.0, 1.0),
