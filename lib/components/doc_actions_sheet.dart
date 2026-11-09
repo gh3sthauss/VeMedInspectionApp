@@ -85,7 +85,7 @@ Future<void> showDocActionsSheet(
                 labelColor: theme.error,
                 onTap: () async {
                   Navigator.of(sheetContext).pop();
-                  await onDelete();
+                  if (await _confirmDelete(context, title)) await onDelete();
                 },
               )
             else
@@ -104,6 +104,29 @@ Future<void> showDocActionsSheet(
       );
     },
   );
+}
+
+Future<bool> _confirmDelete(BuildContext context, String title) async {
+  final theme = FlutterFlowTheme.of(context);
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: const Text('Delete report?'),
+      content: Text('"$title" will be permanently deleted. '
+          "This can't be undone."),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(dialogContext, false),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(dialogContext, true),
+          child: Text('Delete', style: TextStyle(color: theme.error)),
+        ),
+      ],
+    ),
+  );
+  return confirmed == true;
 }
 
 class _ActionRow extends StatelessWidget {

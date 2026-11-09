@@ -6,7 +6,6 @@ import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
 import '/components/notes_field.dart';
 import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
-import '/components/yes_no_field.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -80,9 +79,6 @@ class _MMTubeWidgetState extends State<MMTubeWidget> {
         }
 
         final mMTubeMammographyRecord = snapshot.data!;
-        _model.tomosynthesis ??= mMTubeMammographyRecord
-                .snapshotData['TubeTomosynthesis'] as String? ??
-            '';
 
         return GestureDetector(
           onTap: () {
@@ -303,12 +299,6 @@ class _MMTubeWidgetState extends State<MMTubeWidget> {
                             ),
                           ),
                         ),
-                        YesNoField(
-                          label: 'Tomosynthesis',
-                          value: _model.tomosynthesis!,
-                          onChanged: (v) =>
-                              safeSetState(() => _model.tomosynthesis = v),
-                        ),
                       ]
                           .divide(SizedBox(height: 16.0))
                           .addToStart(SizedBox(height: 20.0)),
@@ -373,14 +363,12 @@ class _MMTubeWidgetState extends State<MMTubeWidget> {
                     alignment: AlignmentDirectional(0.0, 1.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        widget.docRefSoft!.update({
-                          ...createMammographyRecordData(
-                            tubeNotes: _model.notesTextController.text,
-                            tube1Model: _model.textTextController1.text,
-                            tube1YOM: _model.textTextController2.text,
-                          ),
-                          'TubeTomosynthesis': _model.tomosynthesis ?? '',
-                        });
+                        widget.docRefSoft!
+                            .update(createMammographyRecordData(
+                          tubeNotes: _model.notesTextController.text,
+                          tube1Model: _model.textTextController1.text,
+                          tube1YOM: _model.textTextController2.text,
+                        ));
 
                         context.safePop();
                       },

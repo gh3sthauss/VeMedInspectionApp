@@ -212,6 +212,10 @@ Future<void> exportMammographyPDF(
           ['Size', docRef.detectorSize],
           ['Year of Manufacture', docRef.detectorYOM],
           ['Condition', docRef.detectorCondition],
+          [
+            'Tomosynthesis',
+            '${docRef.snapshotData['DetectorTomosynthesis'] ?? ''}'
+          ],
           if (docRef.detectorNotes.trim().isNotEmpty)
             ['Notes', docRef.detectorNotes],
         ]),
@@ -224,7 +228,6 @@ Future<void> exportMammographyPDF(
         _infoTable(rows: [
           ['Model', docRef.tube1Model],
           ['Year of Manufacture', docRef.tube1YOM],
-          ['Tomosynthesis', '${docRef.snapshotData['TubeTomosynthesis'] ?? ''}'],
           if (docRef.tubeNotes.trim().isNotEmpty)
             ['Notes', docRef.tubeNotes],
         ]),
@@ -239,6 +242,11 @@ Future<void> exportMammographyPDF(
           ['Model No.', docRef.accessoriesPModelNo],
           ['Serial Number', docRef.accessoriesPSN],
           ['Bucky', '${docRef.snapshotData['AccessoriesBucky'] ?? ''}'],
+          [
+            'Compression Paddle',
+            '${docRef.snapshotData['AccessoriesCompressionPaddle'] ?? ''}'
+          ],
+          ['Biopsy', '${docRef.snapshotData['AccessoriesBiopsy'] ?? ''}'],
           ['CDs', docRef.accessoriesCDs],
           ['Spare Parts', docRef.accessoriesSpareP],
           if (docRef.accessoriesNotes.trim().isNotEmpty)

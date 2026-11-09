@@ -6,6 +6,7 @@ import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
 import '/components/notes_field.dart';
 import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
+import '/components/yes_no_field.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -82,6 +83,10 @@ class _MMAccessoriesWidgetState extends State<MMAccessoriesWidget> {
         }
 
         final mMAccessoriesMammographyRecord = snapshot.data!;
+        final accessoriesData = mMAccessoriesMammographyRecord.snapshotData;
+        _model.compressionPaddle ??=
+            accessoriesData['AccessoriesCompressionPaddle'] as String? ?? '';
+        _model.biopsy ??= accessoriesData['AccessoriesBiopsy'] as String? ?? '';
 
         return GestureDetector(
           onTap: () {
@@ -468,6 +473,18 @@ class _MMAccessoriesWidgetState extends State<MMAccessoriesWidget> {
                             ),
                           ),
                         ),
+                        YesNoField(
+                          label: 'Compression Paddle',
+                          value: _model.compressionPaddle!,
+                          onChanged: (v) => safeSetState(
+                              () => _model.compressionPaddle = v),
+                        ),
+                        YesNoField(
+                          label: 'Biopsy',
+                          value: _model.biopsy!,
+                          onChanged: (v) =>
+                              safeSetState(() => _model.biopsy = v),
+                        ),
                       ]
                           .divide(SizedBox(height: 16.0))
                           .addToStart(SizedBox(height: 20.0)),
@@ -543,6 +560,9 @@ class _MMAccessoriesWidgetState extends State<MMAccessoriesWidget> {
                           ),
                           'AccessoriesBucky':
                               _model.textInputTextController3.text,
+                          'AccessoriesCompressionPaddle':
+                              _model.compressionPaddle ?? '',
+                          'AccessoriesBiopsy': _model.biopsy ?? '',
                         });
 
                         context.safePop();

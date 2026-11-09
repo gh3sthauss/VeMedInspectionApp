@@ -26,6 +26,9 @@ class MMDetectorModel extends FlutterFlowModel<MMDetectorWidget> {
   TextEditingController? textTextController4;
   String? Function(BuildContext, String?)? textTextController4Validator;
 
+  // Yes/No selection: 'Yes', 'No' or '' (stored raw as DetectorTomosynthesis).
+  String? tomosynthesis;
+
   // State field(s) for the Notes widget.
   FocusNode? notesFocusNode;
   TextEditingController? notesTextController;

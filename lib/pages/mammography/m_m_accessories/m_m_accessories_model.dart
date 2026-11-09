@@ -23,6 +23,11 @@ class MMAccessoriesModel extends FlutterFlowModel<MMAccessoriesWidget> {
   TextEditingController? textInputTextController3;
   String? Function(BuildContext, String?)? textInputTextController3Validator;
 
+  // Yes/No selections: 'Yes', 'No' or '' (stored raw as
+  // AccessoriesCompressionPaddle and AccessoriesBiopsy).
+  String? compressionPaddle;
+  String? biopsy;
+
   // State field(s) for the Notes widget.
   FocusNode? notesFocusNode;
   TextEditingController? notesTextController;

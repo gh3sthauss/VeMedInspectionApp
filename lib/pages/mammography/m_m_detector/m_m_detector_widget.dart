@@ -6,6 +6,7 @@ import '/backend/backend.dart';
 import '/components/compact_app_bar.dart';
 import '/components/notes_field.dart';
 import '/components/photo_upload_outbox/photo_upload_outbox_widget.dart';
+import '/components/yes_no_field.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -84,6 +85,9 @@ class _MMDetectorWidgetState extends State<MMDetectorWidget> {
         }
 
         final mMDetectorMammographyRecord = snapshot.data!;
+        _model.tomosynthesis ??= mMDetectorMammographyRecord
+                .snapshotData['DetectorTomosynthesis'] as String? ??
+            '';
 
         return GestureDetector(
           onTap: () {
@@ -525,6 +529,12 @@ class _MMDetectorWidgetState extends State<MMDetectorWidget> {
                             ),
                           ),
                         ),
+                        YesNoField(
+                          label: 'Tomosynthesis',
+                          value: _model.tomosynthesis!,
+                          onChanged: (v) =>
+                              safeSetState(() => _model.tomosynthesis = v),
+                        ),
                       ]
                           .divide(SizedBox(height: 16.0))
                           .addToStart(SizedBox(height: 10.0)),
@@ -591,13 +601,16 @@ class _MMDetectorWidgetState extends State<MMDetectorWidget> {
                     child: FFButtonWidget(
                       onPressed: () async {
                         widget.docDataDetector!
-                            .update(createMammographyRecordData(
-                          detectorNotes: _model.notesTextController.text,
-                          detectorModel: _model.textTextController1.text,
-                          detectorSize: _model.textTextController2.text,
-                          detectorYOM: _model.textTextController3.text,
-                          detectorCondition: _model.textTextController4.text,
-                        ));
+                            .update({
+                          ...createMammographyRecordData(
+                            detectorNotes: _model.notesTextController.text,
+                            detectorModel: _model.textTextController1.text,
+                            detectorSize: _model.textTextController2.text,
+                            detectorYOM: _model.textTextController3.text,
+                            detectorCondition: _model.textTextController4.text,
+                          ),
+                          'DetectorTomosynthesis': _model.tomosynthesis ?? '',
+                        });
 
                         context.safePop();
                       },
