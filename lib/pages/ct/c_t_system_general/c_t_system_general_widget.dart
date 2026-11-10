@@ -1,6 +1,7 @@
 // MANUALLY MIGRATED for offline photo upload (outbox pattern) — see
 // lib/components/photo_upload_outbox/. If this page is re-synced from
 // FlutterFlow, this migration must be reapplied.
+import '/custom_code/pdf_cover_hero.dart';
 import '/components/system_general_videos_field.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
@@ -776,6 +777,9 @@ class _CTSystemGeneralWidgetState extends State<CTSystemGeneralWidget> {
                                     'users/$currentUserUid/ct/systemGeneral',
                                 existingPhotoUrls:
                                     cTSystemGeneralCtRecord.deviceImg.toList(),
+                                coverFieldName: kCoverImgField,
+                                coverUrl: cTSystemGeneralCtRecord
+                                    .snapshotData[kCoverImgField] as String?,
                               ),
                             ),
                           ],

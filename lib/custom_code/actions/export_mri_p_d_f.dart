@@ -127,7 +127,7 @@ Future<void> exportMriPDF(
     embedded(docRef.otherNotesPhotosURL),
     embedded(docRef.cnWConsoleOptionsPicsURL),
     embedded(docRef.cnWWSOptionsPicsURL),
-    _loadImages(docRef.deviceImg),
+    _loadImages(coverPhotoUrl(docRef.deviceImg, docRef.snapshotData)),
     embedded(docRef.accessoriesPicURL),
     embedded(docRef.coilsPicURL),
     embedded(docRef.coolingSystemPicURL),

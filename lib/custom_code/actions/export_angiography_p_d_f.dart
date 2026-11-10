@@ -126,7 +126,7 @@ Future<void> exportAngiographyPDF(
     embedded(docRef.otherNotesPhotosURL),
     embedded(docRef.softwareOptPicsURL),
     embedded(docRef.cnWCMOptPURL),
-    _loadImages(docRef.deviceImg),
+    _loadImages(coverPhotoUrl(docRef.deviceImg, docRef.snapshotData)),
     embedded(docRef.accessoriesPicURL),
     embedded(docRef.detectorPicURL),
     embedded(docRef.dnTPicURL),

@@ -108,7 +108,7 @@ Future<void> exportUltrasoundPDF(
         : _loadImages(docRef.cosmeticPicURL.take(1).toList()),
     embedded(docRef.otherNotesPhotosURL),
     embedded(docRef.softwareOptPicsURL),
-    _loadImages(docRef.deviceImg),
+    _loadImages(coverPhotoUrl(docRef.deviceImg, docRef.snapshotData)),
     embedded(docRef.accessoriesPicURL),
     embedded(docRef.dnTPicURL),
   ]);

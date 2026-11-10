@@ -29,7 +29,16 @@ class PhotoUploadOutboxWidget extends StatefulWidget {
     required this.arrayFieldName,
     required this.storagePathPrefix,
     this.existingPhotoUrls = const [],
+    this.coverFieldName,
+    this.coverUrl,
   });
+
+  /// When set, each uploaded photo gets a star to pick the one used on the
+  /// PDF cover; the chosen URL is written to this field on the document.
+  final String? coverFieldName;
+
+  /// The currently picked cover URL (null or stale means the first photo).
+  final String? coverUrl;
 
   /// Firestore collection the target document lives in, e.g. 'CT'.
   final String collectionPath;
@@ -196,6 +205,9 @@ class _PhotoUploadOutboxWidgetState extends State<PhotoUploadOutboxWidget> {
         .doc(widget.docId)
         .update({
       widget.arrayFieldName: FieldValue.arrayRemove([url]),
+      // Removing the cover photo falls back to the first one.
+      if (widget.coverFieldName != null && widget.coverUrl == url)
+        widget.coverFieldName!: FieldValue.delete(),
     });
     ImageOutboxManager.instance.enqueueDeletion(url);
   }
@@ -290,6 +302,27 @@ class _PhotoUploadOutboxWidgetState extends State<PhotoUploadOutboxWidget> {
         _selectionMode = false;
       });
     }
+  }
+
+  /// The photo currently on the PDF cover: the picked one if it still
+  /// exists, otherwise the first uploaded photo.
+  String? get _effectiveCover {
+    final urls = widget.existingPhotoUrls;
+    if (urls.isEmpty) return null;
+    return urls.contains(widget.coverUrl) ? widget.coverUrl : urls.first;
+  }
+
+  /// Not awaited, same as removal: offline it lands in the local cache now.
+  void _setCover(String url) {
+    FirebaseFirestore.instance
+        .collection(widget.collectionPath)
+        .doc(widget.docId)
+        .update({widget.coverFieldName!: url});
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Cover photo set for the PDF'),
+      duration: Duration(seconds: 2),
+    ));
   }
 
   @override
@@ -442,6 +475,33 @@ class _PhotoUploadOutboxWidgetState extends State<PhotoUploadOutboxWidget> {
                   Icons.cloud_upload_outlined,
                   color: Colors.white,
                   size: 13.0,
+                ),
+              ),
+            ),
+          // Cover star: filled on the cover photo, outlined on the others
+          // (tap to pick). Only shown when there is a choice to make.
+          if (!isPending &&
+              !_selectionMode &&
+              widget.coverFieldName != null &&
+              widget.existingPhotoUrls.length > 1)
+            Positioned(
+              right: 2.0,
+              bottom: 2.0,
+              child: GestureDetector(
+                onTap: url == _effectiveCover ? null : () => _setCover(url!),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.black54,
+                    shape: BoxShape.circle,
+                  ),
+                  padding: const EdgeInsets.all(4.0),
+                  child: Icon(
+                    url == _effectiveCover ? Icons.star : Icons.star_border,
+                    color: url == _effectiveCover
+                        ? const Color(0xFFFFC107)
+                        : Colors.white,
+                    size: 18.0,
+                  ),
                 ),
               ),
             ),

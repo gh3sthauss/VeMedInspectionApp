@@ -105,7 +105,7 @@ Future<void> exportCrPDF(
     embedded(docRef.otherNotesPhotosURL),
     embedded(docRef.cnWWorkstationOptPURL),
     embedded(docRef.cnWCMOptPURL),
-    _loadImages(docRef.deviceImg),
+    _loadImages(coverPhotoUrl(docRef.deviceImg, docRef.snapshotData)),
     embedded(docRef.accessoriesPicURL),
     embedded(docRef.cassettesPicURL),
     embedded(docRef.detectorPicURL),

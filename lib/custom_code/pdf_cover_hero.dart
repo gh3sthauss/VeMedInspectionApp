@@ -9,6 +9,18 @@ import 'package:pdf/widgets.dart' as pw;
 
 const double kCoverHeroHeight = 360;
 
+/// Raw Firestore field holding the System General photo URL picked for the
+/// PDF cover. Empty or missing means "use the first photo".
+const String kCoverImgField = 'CoverImg';
+
+/// The System General photo to put on the cover: the one picked by the
+/// user if it is still among the photos, otherwise the first one.
+List<String> coverPhotoUrl(List<String> deviceImg, Map<String, dynamic> data) {
+  final picked = data[kCoverImgField];
+  if (picked is String && deviceImg.contains(picked)) return [picked];
+  return deviceImg.take(1).toList();
+}
+
 final Expando<pw.ImageProvider> _backdrops = Expando();
 
 Uint8List? _blurredBackdrop(Uint8List bytes) {
